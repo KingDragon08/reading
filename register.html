@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+<title>几木易康</title>
+<link href="css/weui.min.css" rel="stylesheet" type="text/css">
+<link href="css/example.css" rel="stylesheet" type="text/css">
+<link href="css/register.css" rel="stylesheet" type="text/css">
+<link href="css/common.css" rel="stylesheet" type="text/css">
+<style>
+.active{background:url(image/sub-bg.jpg) repeat-x;}
+.white-font{color:#fff;}
+</style>
+</head>
+<body>
+	<form action="reg.php" method="post" name="f" onSubmit="return check();">
+        <div class="user gray-bg white-border-3 circle mt-20" style="background:url('image/logo.jpg') no-repeat center center; background-size:cover;"></div>
+        <p class="intro">欢迎注册几木易康微信公众平台</p>
+        <input type="tel" class="text-input" placeholder="手机号码" maxlength="11" id="tel" name="username" required />
+        <div class="text-input">
+            <input type="tel" class="yanzheng-left" placeholder="输入验证码" maxlength="6" id="yanzheng" name="yanzheng" required/>
+            <div class="yanzheng-right active" onClick="sendSMS()" id="send">发送验证码</div>
+        </div>
+        <input type="password" class="text-input" placeholder="输入密码" id="password" name="password" required />
+        <input type="password" class="text-input" placeholder="再输入一次密码" id="re-password" name="re-password" required />
+        <input type="submit" class="submit" name="submit" value="完 成" disabled id="submit"/>
+        <input type="hidden" id="data" value="1" />
+    	<a href="login.html" style="display:block; width:100%; text-align:center; color:#ffffff; font-size:12px;">我已有账号?直接登录</a>
+    </form>
+    
+    <div class="weui_dialog_alert" style="display:none;">
+        <div class="weui_mask"></div>
+        <div class="weui_dialog">
+            <div class="weui_dialog_hd"><strong class="weui_dialog_title">提示</strong></div>
+            <div class="weui_dialog_bd">弹窗内容，告知当前页面信息等</div>
+            <div class="weui_dialog_ft">
+                <a href="#" class="weui_btn_dialog primary" onClick="hide();">确定</a>
+            </div>
+        </div>
+    </div>
+</body>
+ <script src="js/jquery.min.js"></script>
+<script>
+sms = false;
+code = 0;
+function check()
+{
+	if($("#tel").val().length != 11)
+	{
+		$(".weui_dialog_alert .weui_dialog_bd").html("手机号码必须是11位");
+		$(".weui_dialog_alert").show();
+		return false;	
+	}
+	if(sms == false)
+	{
+		$(".weui_dialog_alert .weui_dialog_bd").html("还木有发送验证码呢");
+		$(".weui_dialog_alert").show(400);
+		return false;
+	}
+	if($("#yanzheng").val() != code)
+	{
+		$(".weui_dialog_alert .weui_dialog_bd").html("验证码不正确");
+		$(".weui_dialog_alert").show(400);
+		return false;
+	}
+	if($("#password").val().length < 6)
+	{
+		$(".weui_dialog_alert .weui_dialog_bd").html("密码不能少于6位");
+		$(".weui_dialog_alert").show();
+		return false;	
+	}
+	if($("#re-password").val() != $("#password").val())
+	{
+		$(".weui_dialog_alert .weui_dialog_bd").html("两次密码不一致");
+		$(".weui_dialog_alert").show();
+		return false;
+	}
+	return true;
+}
+
+function hide()
+{
+	$(".weui_dialog_alert").hide();
+}
+
+function check_username(username)
+{
+	$("#data").val(1);
+	$.ajax({
+		url:"deal.php",
+		data:{action:'check_phone',phone:username},
+		type:'POST',
+		success: function(data){
+				if(data > 0)
+				{
+					$("#data").val(0);
+				}
+			},
+		error:function(){
+				$(".weui_dialog_alert .weui_dialog_bd").html("服务器忙，请稍后重试");
+				$(".weui_dialog_alert").show();
+			}
+	});
+}
+
+function sendSMS()
+{
+	if($("#tel").val().length == 11)
+	{
+		$("#send").removeClass('active');
+		var phone = $("#tel").val();
+		$.ajax({
+			url:'sms/sendSMS.php',
+			type:'POST',
+			data:{phone:phone},
+			dataType:"json",
+			success: function(data){
+					//console.log(data);
+					if(data.status == 'true')
+					{
+						sms = true;
+						code = data.code;
+						$("#submit").removeAttr('disabled');
+						$("#send").html("验证码已发送");
+					}
+					else
+					{
+						$(".weui_dialog_alert .weui_dialog_bd").html("短信发送失败，请检查您的手机号码");
+						$(".weui_dialog_alert").show();
+					}
+				}
+			});
+	}
+	else
+	{
+		$(".weui_dialog_alert .weui_dialog_bd").html("手机号码必须是11位");
+		$(".weui_dialog_alert").show();
+	}
+}
+
+</script>
+</html>

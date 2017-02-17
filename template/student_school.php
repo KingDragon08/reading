@@ -20,24 +20,16 @@
         $user = new User($_SESSION['username'],$_SESSION['password']);
         $user_info = $user->get_user_info();
         //处理更改信息的表单
-        if(isset($_GET['grade']) && isset($_GET['class']) && isset($_GET['school']))
+        if(isset($_GET['grade']))
         {
-          $grade = $_GET['grade'];
-          $class = $_GET['class'];
-          $school = $_GET['school'];
-          if(!is_numeric($class) || strlen($class)<1)
-          {
-            tips("班级代号必须是纯数字");
-          }
-          else
-          {
-            if(!is_numeric($school) || strlen($school)<1)
+            $grade = $_GET['grade'];
+            if(!is_numeric($grade) || strlen($grade)<1)
             {
-              tips("学校代号必须是纯数字");
+              tips("年级必须是纯数字");
             }
             else
             {
-              $result = $user->change_learn_info($grade,$class,$school);
+              $result = $user->change_learn_info($grade);
               if($result==1)
               {
                 tips("更改成功");
@@ -46,13 +38,8 @@
               }
               if($result==2)
               {
-                tips("更改失败,班级代号不存在");
+                tips("更改失败");
               }
-              if($result==3)
-              {
-                tips("更改失败,学校代号不存在");
-              }
-            }
           }
         }
       }
@@ -81,7 +68,7 @@
           <tr>
             <td width="100" height="50" align="center" valign="middle">班级</td>
             <td width="200" height="50" align="left" valign="middle">
-              <input type="text" name="class" id="class" value="<?php echo $user_info->class;?>" class="form-control" placeholder="请询问老师后填入班级代号">
+              <input type="text" name="class" disabled="disabled" id="class" value="<?php echo $user_info->class;?>" class="form-control" placeholder="请询问老师后填入班级代号">
               </td>
             <td width="100" height="50" align="left" valign="middle" class="gray f12" style="padding-left:1em;">
                 <?php echo $user->get_class();?>
@@ -90,7 +77,7 @@
           <tr>
             <td width="100" height="50" align="center" valign="middle">学校</td>
             <td width="200" height="50" align="left" valign="middle">
-              <input type="text" name="school" id="school" value="<?php echo $user_info->school;?>" class="form-control" placeholder="请询问老师后填入学校代号">
+              <input type="text" name="school" disabled="disabled" id="school" value="<?php echo $user_info->school;?>" class="form-control" placeholder="请询问老师后填入学校代号">
             </td>
             <td width="100" height="50" align="left" valign="middle" class="gray f12" style="padding-left:1em;">
                 <?php echo $user->get_school();?>

@@ -1,3 +1,6 @@
+<?php
+  session_start();
+?>
 <!DOCTYPE html>
 <html>
   <head>
@@ -7,22 +10,25 @@
     <link rel="stylesheet" href="css/index.css" media="screen">
     <script type="text/javascript" src="js/jquery.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
-    <title>我的书架</title>
+    <title>乐智悦读-全本阅读</title>
   </head>
   <body>
     <!-- top nav start-->
-      <nav class="nav">
-        <div class="container">
-            <img src="img/logo.jpg" alt="" class="logo">
-            <span class="contact">
-              <i class="glyphicon glyphicon-earphone red"></i>
-              合作联系方式：010-65583232
-            </span>
-            <span class="login navbar-right">
-              <a href="javascript:void(0);" onclick="open_login_panel()">登录</a>
-            </span>
-        </div>
-      </nav>
+      <?php
+        include_once("top.php");
+        include_once("class/common.php");
+        if(!isLogin())//如果没有登录则跳转到首页
+        {
+          header("Location:login.php");
+        }
+        else
+        {
+          $user = $GLOBALS['user'];
+          $common = new Common();
+          $role = $user->get_user_info()->role;
+          $user_id = $user->get_user_id();
+        }
+      ?>
     <!-- top nav end -->
     <!-- main nav start -->
       <div class="container main-nav">
@@ -30,26 +36,291 @@
             <img src="img/nav-brand.png" alt="">
         </div>
         <ul class="navigator">
-          <li><a href="index.html">首页</a></li>
-          <li><a href="full_reading.html" class="active">全本阅读</a></li>
-          <li><a href="＃">语音朗读</a></li>
+          <li><a href="index.php">首页</a></li>
+          <li><a href="full_reading.php" class="active">全本阅读</a></li>
+          <li><a href="ing.php">语音朗读</a></li>
           <li><a href="＃">测评中心</a></li>
         </ul>
       </div>
     <!-- main nav end -->
+
+
+
+
+
+<!--  学生开始 -->
+<?php
+  if($role == "学生")
+  {
+?>
+<!-- division panel start -->
+  <div class="w100 forget">
+    <div class="forget_cover">
+      全本阅读
+      <div class="float_right" style="margin-right:5.8em;">
+        <button class="btn btn-success" onclick="location.href='full_reading.php'">全部书单</button>
+        <button class="btn btn-success active" onclick="location.href='book_shelf.php'">我的任务</button>
+      </div>
+    </div>
+  </div>
+<!-- division panel end -->
+<!-- filter panel start -->
+<br>
+<div class="row">
+  <div class="container">
+    <div class="col-lg-8">
+      选择书单类型:&nbsp;&nbsp;&nbsp;&nbsp;
+      <div class="btn-group">
+          <button type="button" class="btn btn-default">学段</button>
+          <button type="button" class="btn btn-default dropdown-toggle"
+              data-toggle="dropdown">
+              <span class="caret"></span>
+              <span class="sr-only">选择</span>
+          </button>
+          <ul class="dropdown-menu" role="menu">
+            <?php
+              $grades = $common->get_grade();
+              foreach ($grades as $grade)
+              {
+            ?>
+                <li><a href="javascript:void(0);" onclick="grade_change(<?php echo $grade->id?>)"><?php echo $grade->grade_name?></a></li>
+            <?php
+              }
+            ?>
+          </ul>
+      </div>
+      &nbsp;&nbsp;
+      <div class="btn-group">
+          <button type="button" class="btn btn-default">图书类型</button>
+          <button type="button" class="btn btn-default dropdown-toggle"
+              data-toggle="dropdown">
+              <span class="caret"></span>
+              <span class="sr-only">选择</span>
+          </button>
+          <ul class="dropdown-menu" role="menu">
+            <?php
+              $types = $common->get_book_type();
+              $status = isset($_GET['status'])?intval($_GET['status']):-1;
+              foreach ($types as $type)
+              {
+            ?>
+                <li><a href="javascript:void(0);" onclick="type_change(<?php echo $type->id?>)"><?php echo $type->name?></a></li>
+            <?php
+              }
+            ?>
+          </ul>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <form action="" method="get" name="search" id="search" onsubmit="return check_search()">
+          <div class="input-group">
+            <input type="text" name="s" class="form-control" id="search_keywords">
+            <span class="input-group-addon">
+              <i class="glyphicon glyphicon-search" style="cursor:pointer;" onclick="$('#search').submit()"></i>
+            </span>
+          </div>
+      </form>
+    </div>
+  </div>
+  <br>
+  <div class="container">
+    <div class="col-lg-8">
+      测评状态:&nbsp;&nbsp;&nbsp;&nbsp;
+      <span class="radio btn-group">
+        <label>
+          <input type="radio" name="exam_status" id="exam_status1" value="1" <?php if($status==1) echo "checked"; ?> onclick="change_status(1)">通过测评
+        </label>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <label>
+          <input type="radio" name="exam_status" id="exam_status2" value="2" <?php if($status==2) echo "checked"; ?> onclick="change_status(2)">未通过测评
+        </label>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <label>
+          <input type="radio" name="exam_status" id="exam_status3" value="3" <?php if($status==3) echo "checked"; ?> onclick="change_status(3)">未测试
+        </label>
+      </span>
+    </div>
+    <div class="col-lg-4">&nbsp;</div>
+</div>
+<!-- filter panel end -->
+<!-- booklist panel start -->
+<div class="container mt20">
+  <div class="col-lg-12">
+
+    <?php
+      $grade = isset($_GET['grade'])?intval($_GET['grade']):0;
+      $type = isset($_GET['type'])?intval($_GET['type']):0;
+      $status = isset($_GET['status'])?intval($_GET['status']):-1;
+      $page =isset($_GET['page'])?intval($_GET['page']):1;
+      if(isset($_GET['s']))
+      {
+        $books = $common->search_books_task($_GET['s'],$user_id,$page);
+      }
+      else
+      {
+        $books = $common->get_books_task($user_id,$grade,$type,$status,$page);
+      }
+      foreach($books as $book)
+      {
+    ?>
+    <div class="col-lg-4 mb20">
+      <div class="col-lg-6 book_img">
+        <a href="book.php?book=<?php echo $book->id;?>">
+          <img src="<?php echo $book->coverimg; ?>" width="100%"/>
+        </a>
+        <a href="javascript:void(0);" class="label label-lg label-success ml20" onclick="exam(<?php echo $book->id;?>)">
+          <i class="glyphicon glyphicon-tags"></i>
+          我要测评
+        </a>
+      </div>
+      <div class="col-lg-6 book_info" style="display:table;">
+        <div style="display:table-cell; vertical-align:middle;">
+          <p>书名：<?php echo $book->name;?></p>
+          <p class="gray f12">作者：<?php echo $book->author;?></p>
+          <p class="gray f12">积分：<?php echo $book->score;?>分</p>
+          <!-- <p class="gray f12">剩余：30天</p> -->
+        </div>
+      </div>
+    </div>
+    <?php
+        }
+    ?>
+
+
+    </div>
+  </div>
+  <center>
+    <ul class="pagination">
+        <li><a href="#">上一页</a></li>
+        <li class="active"><a href="#">1</a></li>
+        <li><a href="#">2</a></li>
+        <li><a href="#">3</a></li>
+        <li><a href="#">4</a></li>
+        <li><a href="#">5</a></li>
+        <li><a href="#">下一页</a></li>
+    </ul>
+  </center>
+</div>
+<!-- booklist panel end -->
+
+<script type="text/javascript">
+  var grade = <?php echo isset($_GET['grade'])?intval($_GET['grade']):0 ?>;
+  var type = <?php echo isset($_GET['type'])?intval($_GET['type']):0 ?>;
+  var status = <?php echo isset($_GET['status'])?intval($_GET['status']):-1?>;
+
+  function grade_change(id)
+  {
+    if(type == 0)
+    {
+      if(status == -1)
+      {
+        location.href = "book_shelf.php?grade="+id;
+      }
+      else
+      {
+        location.href = "book_shelf.php?grade="+id+"&status="+status;
+      }
+    }
+    else
+    {
+      if(status == -1)
+      {
+        location.href = "book_shelf.php?grade="+id+"&type="+type;
+      }
+      else
+      {
+        location.href = "book_shelf.php?grade="+id+"&type="+type+"&status="+status;
+      }
+    }
+  }
+
+  function type_change(id)
+  {
+    if(grade == 0)
+    {
+      if(status == -1)
+      {
+        location.href = "book_shelf.php?type="+id;
+      }
+      else
+      {
+        location.href = "book_shelf.php?type="+id+"&status="+status;
+      }
+    }
+    else
+    {
+      if(status == -1)
+      {
+        location.href = "book_shelf.php?type="+id+"&grade="+grade;
+      }
+      else
+      {
+        location.href = "book_shelf.php?type="+id+"&grade="+grade+"&status="+status;
+      }
+    }
+  }
+
+  function change_status(id)
+  {
+    if(grade == 0)
+    {
+      if(type == 0)
+      {
+        location.href = "book_shelf.php?status="+id;
+      }
+      else
+      {
+        location.href = "book_shelf.php?status="+id+"&type="+type;
+      }
+    }
+    else
+    {
+      if(type == 0)
+      {
+        location.href = "book_shelf.php?status="+id+"&grade="+grade;
+      }
+      else
+      {
+        location.href = "book_shelf.php?status="+id+"&grade="+grade+"&type="+type;
+      }
+    }
+  }
+
+
+
+</script>
+
+<?php
+  }
+  else
+  {
+    exit();
+  }
+?>
+
+
+
+<!-- 学生结束 -->
+
+
+
+
+
+
+
     <!-- division panel start -->
-      <div class="w100 forget">
+      <!-- <div class="w100 forget">
         <div class="forget_cover">
           全本阅读
           <div class="float_right" style="margin-right:5.8em;">
-            <button class="btn btn-success" onclick="location.href='full_reading.html'">我的书单</button>
-            <button class="btn btn-success active" onclick="location.href='book_shelf.html'">我的任务</button>
+            <button class="btn btn-success" onclick="location.href='full_reading.php'">全部书单</button>
+            <button class="btn btn-success active" onclick="location.href='book_shelf.php'">我的任务</button>
           </div>
         </div>
-      </div>
+      </div> -->
     <!-- division panel end -->
     <!-- filter panel start -->
-    <br>
+    <!-- <br>
     <div class="row">
       <div class="container">
         <div class="col-lg-8">
@@ -119,23 +390,23 @@
           测评状态:&nbsp;&nbsp;&nbsp;&nbsp;
           <span class="radio btn-group">
             <label>
-              <input type="radio" name="exam_status" id="exam_status1" value="1" checked onclick="location.href='#'">通过测评
+              <input type="radio" name="exam_status1" id="exam_status1" value="1" checked onclick="location.href='#'">通过测评
             </label>
             &nbsp;&nbsp;&nbsp;&nbsp;
             <label>
-              <input type="radio" name="exam_status" id="exam_status2" value="2" onclick="location.href='#'">未通过测评
+              <input type="radio" name="exam_status1" id="exam_status2" value="2" onclick="location.href='#'">未通过测评
             </label>
             &nbsp;&nbsp;&nbsp;&nbsp;
             <label>
-              <input type="radio" name="exam_status" id="exam_status3" value="3" onclick="location.href='#'">未测试
+              <input type="radio" name="exam_status1" id="exam_status3" value="3" onclick="location.href='#'">未测试
             </label>
           </span>
         </div>
         <div class="col-lg-4">&nbsp;</div>
-    </div>
+    </div> -->
     <!-- filter panel end -->
     <!-- booklist panel start -->
-    <div class="container mt20">
+    <!-- <div class="container mt20">
       <div class="col-lg-12">
         <div class="col-lg-4 mb20">
           <div class="col-lg-6 book_img">
@@ -293,7 +564,7 @@
             <li><a href="#">下一页</a></li>
         </ul>
       </center>
-    </div>
+    </div> -->
     <!-- booklist panel end -->
     <!-- footer start -->
       <div class="footer">
@@ -320,50 +591,24 @@
         </table>
       </div>
     <!-- footer end -->
-    <!-- login start -->
-    <div class="cover" style="display:none;">
-      <div class="login_panel">
-        <p style="margin-top:10px;">
-          &nbsp;
-          <i class="glyphicon glyphicon-remove float_right" style="cursor:pointer;" onclick="close_login_panel()">&nbsp;</i>
-        </p>
-        <center><h4>登录小学教师辅助教学工具平台</h4></center>
-        <form action="" method="post" onsubmit="return login_check()">
-          <table width="80%" height="auto" align="center" border="0" class="login_table">
-            <tr>
-              <td width="20%" height="50" align="center" valign="bottom">
-                <i class="glyphicon glyphicon-user gray f20"></i>
-              </td>
-              <td width="60%" align="left" valign="bottom">
-                <input type="tel" placeholder="请输入您的手机号码" class="login_input" id="username">
-              </td>
-              <td width="20%" height="50" align="center" valign="bottom">&nbsp;</td>
-            </tr>
-            <tr>
-              <td width="20%" height="50" align="center" valign="bottom">
-                <i class="glyphicon glyphicon-lock gray f20"></i>
-              </td>
-              <td width="60%" align="left" valign="bottom">
-                <input type="password" placeholder="请输入密码" class="login_input" id="password">
-              </td>
-              <td width="20%" height="50" align="center" valign="bottom">
-                <a href="forget.html" class="forget_btn">忘记密码</a>
-              </td>
-            </tr>
-            <tr>
-              <td height="120" align="center" valign="middle" style="border:none;">
-                <input type="checkbox" name="remeber">&nbsp;&nbsp;记住我
-              </td>
-              <td colspan="2" align="right" valign="middle" style="border:none;">
-                <input type="submit" name="submit" class="btn btn-success lear_more" value="登录" style="width:60%;">
-              </td>
-            </tr>
-          </table>
-        </form>
-      </div>
-    </div>
-    <!-- login end -->
   </body>
-  <script type="text/javascript" src="js/login.js"></script>
-  <script type="text/javascript" src="js/full_reading.js"></script>
+  <script type="text/javascript">
+    //测评
+    function exam(book)
+    {
+      openwin("temp.php");
+    }
+
+    //弹出窗口
+    function openwin(url)
+    {
+      var width = 800;
+      var height = 600;
+      var left = parseInt((screen.availWidth/2) - (width/2));//屏幕居中
+      var top = parseInt((screen.availHeight/2) - (height/2));
+      var windowFeatures = "width=" + width + ",height=" + height + ",status,resizable,left=" + left + ",top=" + top + "screenX=" + left + ",screenY=" + top;
+      windowFeatures += ",location='no',menubar='no',resizable='no',status='no',titlebar='no',toolbar='no'";
+      newWindow = window.open(url, "subWind", windowFeatures);
+    }
+  </script>
 </html>

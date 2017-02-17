@@ -24,8 +24,8 @@
     </div>
     <ul class="navigator">
       <li><a href="＃" class="active">首页</a></li>
-      <li><a href="full_reading.html">全本阅读</a></li>
-      <li><a href="＃">语音朗读</a></li>
+      <li><a href="full_reading.php">全本阅读</a></li>
+      <li><a href="ing.php">语音朗读</a></li>
       <li><a href="＃">测评中心</a></li>
     </ul>
   </div>

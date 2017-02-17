@@ -34,8 +34,8 @@
         </div>
         <ul class="navigator">
           <li><a href="index.php">首页</a></li>
-          <li><a href="＃">全本阅读</a></li>
-          <li><a href="＃">语音朗读</a></li>
+          <li><a href="full_reading.php">全本阅读</a></li>
+          <li><a href="ing.php">语音朗读</a></li>
           <li><a href="＃">测评中心</a></li>
         </ul>
       </div>
@@ -43,6 +43,7 @@
     <!-- forget panel start -->
       <div class="w100 forget">
         <div class="forget_cover">
+          个人中心
         </div>
       </div>
       <br>
@@ -51,12 +52,12 @@
           if($role == "学生")
           {
             echo '<iframe src="template/student_left.php" id="menu" width="20%" height="auto" style="float:left;" frameborder="0"></iframe>';
-            echo '<iframe src="template/student_right.php" width="80%" height="auto" id="main" name="main" style="float:left; padding-left:10px; padding-top:2em;" frameborder="0"></iframe>';
+            echo '<iframe src="template/student_right.php" width="80%" height="auto" id="main" name="main" style="float:left; padding-left:10px; margin-top:2em;" frameborder="0"></iframe>';
           }
           else
           {
             echo '<iframe src="template/teacher_left.php" width="20%" height="auto" style="float:left;" frameborder="0"></iframe>';
-            echo '<iframe src="template/teacher_right.php" width="80%" height="auto" id="main" name="main" style="float:left; padding-left:10px; padding-top:2em;" frameborder="0"></iframe>';
+            echo '<iframe src="template/teacher_right.php" width="80%" height="auto" id="main" name="main" style="float:left; padding-left:10px; margin-top:2em;" frameborder="0"></iframe>';
           }
         ?>
       </div>
@@ -91,12 +92,17 @@
   <script type="text/javascript">
     $().ready(function(){
       $("#menu").load(function () {
-          var mainheight = $(this).contents().find("body").height() + 30;
+          var mainheight = $(this).contents().find("body").height() + 100;
           $(this).height(mainheight);
       });
       $("#main").load(function () {
-          var mainheight = $(this).contents().find("body").height() + 30;
-          $(this).height(mainheight);
+          // var mainheight = $(this).contents().find("body").offsetHeight;
+          // $(this).height(mainheight);
+          var iframe = document.getElementById("main");
+          var bHeight = iframe.contentWindow.document.body.scrollHeight;
+          var dHeight = iframe.contentWindow.document.documentElement.scrollHeight;
+          var height = Math.max(bHeight, dHeight);
+          iframe.height = height;
       });
     });
   </script>

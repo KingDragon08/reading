@@ -4,6 +4,7 @@
       var $username = false;
       var $password = false;
       var $user_info = false;
+      var $book_shelf_pages = 0;
 
 
       function User($username='',$password='')
@@ -44,6 +45,14 @@
         if($this->user_info->role == "")//没有角色
         {
           $this->user_info->role = "学生";
+        }
+        if($this->user_info->role == 1)//学生
+        {
+          $this->user_info->role = "学生";
+        }
+        if($this->user_info->role == 2)//教师
+        {
+          $this->user_info->role = "教师";
         }
       }
       /**
@@ -102,7 +111,7 @@
       }
 
       /**
-      *获取班级
+      *获取班级名字
       **/
       function get_class()
       {
@@ -113,7 +122,7 @@
       }
 
       /**
-      *获取学校
+      *获取学校名字
       **/
       function get_school()
       {
@@ -227,6 +236,140 @@
       }
 
       /**
+      *获取同班同学信息
+      **/
+      function get_classmates()
+      {
+        global $db;
+        $user_id = $this->get_user_id();
+        $class = $this->get_user_info()->class;
+        if($class != "")
+        {
+          $sql = "select id,name,headimg from rd_user where class='$class' order by addtime";
+          $classmates = $db->get_results($sql);
+          $ret = array();
+          foreach ($classmates as $student)
+          {
+              if($student->name == "")
+              {
+                $student->name = "新手";
+              }
+              if($student->headimg == "")
+              {
+                $student->headimg = "https://placeholdit.imgix.net/~text?txtsize=60&txt=暂无头像&w=200&h=200";
+              }
+              $ret[] = $student;
+          }
+          return $ret;
+        }
+        else
+        {
+          return NULL;
+        }
+        return NULL;
+      }
+
+      /**
+      *获取我的书架上的书
+      **/
+      function get_books($page)
+      {
+        global $db;
+        $user_id = $this->get_user_id();
+        $ret = array();
+        // //首先获取书单中的全部书籍
+        // $now = time();
+        // $sql = "select a.book_list_id from rd_user_read_list as a left join".
+        //         " rd_read_list as b on a.book_list_id=b.id where a.user_id='$user_id' and b.endtime>'$now'";
+        // // echo $sql;
+        // $results = $db->get_results($sql);
+        // foreach($results as $result)
+        // {
+        //   $book_list_id = $result->book_list_id;
+        //   $sql = "select * from rd_book as a left join rd_book_list as b on a.id=b.book_id ".
+        //           "where b.list_id='$book_list_id'";
+        //   $books = $db->get_results($sql);
+        //   foreach($books as $book)
+        //   {
+        //     $book->type = $db->get_var("select name from rd_book_type where id='$book->type'");
+        //     $ret[] = $book;
+        //   }
+        // }
+        //然后获取书架上的单本书
+        $sql = "select * from rd_book as a left join rd_user_read_book as b on a.id=b.book_id ".
+                "where b.user_id='$user_id' and removed=0";
+        // print $sql;
+        $books = $db->get_results($sql);
+        foreach($books as $book)
+        {
+          $book->type = $db->get_var("select name from rd_book_type where id='$book->type'");
+          $ret[] = $book;
+        }
+        $page_num = 10;
+        $total = count($ret);
+        $start = ($page-1) * $page_num;
+        $end = $start + $page_num;
+        if($start >= ($total-1))
+        {
+          $start = $total - $page_num;
+        }
+        if($start < 1)
+        {
+          $start = 0;
+        }
+        if($end > $total)
+        {
+          $end = $total;
+        }
+        $this->book_shelf_pages = ceil($total/$page_num);
+        return array_slice($ret,$start,($end-$start));
+      }
+
+      /**
+      *获取我的书架上的书的页数
+      **/
+      function get_book_shelf_pages()
+      {
+        return $this->book_shelf_pages;
+      }
+
+      /**
+      *当用户角色为教师时
+      *获取教师所承担的班级
+      **/
+      function get_teacher_classes()
+      {
+        global $db;
+        $role = $this->user_info->role;
+        if($role == "教师")
+        {
+          $user_id = $this->get_user_id();
+          $sql = "select * from rd_class where teacher_id='$user_id'";
+          $ret = array();
+          $results = $db->get_results($sql);
+          if($results)
+          {
+            foreach($results as $result)
+            {
+              $result->school = $db->get_var("select schoolname from rd_school where id='$result->school'");
+              $result->num = $db->get_var("select count(*) from rd_user where class='$result->id'");
+              //除去老师自己
+              if($result->num-1 > 0)
+              {
+                $result->num--;
+              }
+              $ret[] = $result;
+            }
+          }
+          return $ret;
+        }
+        else
+        {
+          return "";
+        }
+      }
+
+      /**
       *回复信息
       **/
       function reply_msg($msg_id,$title,$reply)
@@ -239,7 +382,8 @@
         $title = "[回复]:".$title;
         $sendtime = time();
         $sql = "insert into rd_msg(msg_from,msg_to,msg_title,msg_content,sendtime,msg_type,msg_status)".
-                "values('$user_id','$msg_from','$title','$reply','$sendtime','2','0')";
+                "values('$user_id','$msg_from','". $db->escape($title) ."','". $db->escape($reply) .
+                "','$sendtime','2','0')";
         $db->query($sql);
       }
 
@@ -303,26 +447,26 @@
       /**
       *更改学籍信息
       **/
-      function change_learn_info($grade,$class,$school)
+      function change_learn_info($grade)
       {
         global $db;
         //检查班级是否存在
-        $sql = "select count(*) from rd_class where id='". $db->escape($class) ."'";
-        $c_result = $db->get_var($sql);
-        if($c_result != 1)
-        {
-          return 2;
-        }
-        //检查学校是否存在
-        $sql = "select count(*) from rd_school where id='". $db->escape($school) ."'";
-        $s_result = $db->get_var($sql);
-        if($s_result != 1)
-        {
-          return 3;
-        }
+        // $sql = "select count(*) from rd_class where id='". $db->escape($class) ."'";
+        // $c_result = $db->get_var($sql);
+        // if($c_result != 1)
+        // {
+        //   return 2;
+        // }
+        // //检查学校是否存在
+        // $sql = "select count(*) from rd_school where id='". $db->escape($school) ."'";
+        // $s_result = $db->get_var($sql);
+        // if($s_result != 1)
+        // {
+        //   return 3;
+        // }
         //更改user数据表
         $user_id = $this->get_user_id();
-        $sql = "update rd_user set grade='". $db->escape($grade) ."',class='". $db->escape($class) ."',school='". $db->escape($school) ."' where id='$user_id'";
+        $sql = "update rd_user set grade='". $db->escape($grade) ."' where id='$user_id'";
         $db->query($sql);
         return 1;
       }
@@ -343,6 +487,99 @@
         }
       }
 
+      /**
+      *发送邮件
+      **/
+      function send_email($id,$title,$content)
+      {
+        global $db;
+        $user_id = $this->get_user_id();
+        $id = intval($id);
+        $ret = array();
+        //验证是否为同班同学关系
+        $class = $this->get_user_info()->class;
+        if($class == "")
+        {
+          $ret['error'] = 1;
+          $ret['msg'] = '尚未加入班级';
+          return $ret;
+        }
+        $sql = "select class from rd_user where id='". $db->escape($id) ."'";
+        $msg_to_class = $db->get_var($sql);
+        if($msg_to_class == "")
+        {
+          $ret['error'] = 1;
+          $ret['msg'] = '邮件接受者尚未加入班级';
+          return $ret;
+        }
+        if($class != $msg_to_class)
+        {
+          $ret['error'] = 1;
+          $ret['msg'] = '你们不是同班同学关系哟';
+          return $ret;
+        }
+        $sendtime = time();
+        $sql = "insert into rd_msg(msg_from,msg_to,msg_title,msg_content,sendtime,msg_type,msg_status)".
+                "values('$user_id','$id','". $db->escape($title) ."','". $db->escape($content) .
+                "','$sendtime','2','0')";
+        $db->query($sql);
+        $ret['error'] = 0;
+        $ret['msg'] = '发送成功';
+        return $ret;
+      }
+
+      /**
+      *推送书单
+      **/
+      function push_booklist($books,$classes,$endtime)
+      {
+        global $db;
+        $role = $this->user_info->role;
+        $user_id = $this->get_user_id();
+        $addtime = time();
+        $endtime = strtotime($endtime);
+        if($role != "教师")
+        {
+          return "";
+        }
+        //创建书单
+        $sql = "insert into rd_read_list(user_id,type,endtime,addtime)values(".
+                "'$user_id','1','$endtime','$addtime')";
+        $db->query($sql);
+        //获取创建书单的id
+        $read_list_id = $db->get_var("select id from rd_read_list where addtime='$addtime'");
+        //写入书单的书列表
+        foreach($books as $book)
+        {
+          $sql = "insert into rd_book_list(book_id,list_id)values(".
+                  "'$book','$read_list_id')";
+          $db->query($sql);
+        }
+        //推送给对应班级的学生
+        foreach($classes as $class)
+        {
+          //获取班级里的所有学生
+          $sql = "select id from rd_user where class='$class'";
+          $students = $db->get_results($sql);
+          if($students)
+          {
+            foreach($students as $student)
+            {
+              //写入学生的书架
+              $sql = "insert into rd_user_read_list(user_id,book_list_id)values(".
+                      "'$student->id','$read_list_id')";
+              $db->query($sql);
+              //给学生发邮件
+              if($student->id != $user_id)
+              {
+                $sql = "insert into rd_msg(msg_from,msg_to,msg_content,sendtime,msg_type,msg_status,msg_title)values(".
+                        "'$user_id','$student->id','老师给你推送书单啦,快去全本阅读－我的任务下边查看吧!','$addtime','1','0','新书单来啦')";
+                $db->query($sql);
+              }
+            }
+          }
+        }
+      }
 
 
   }

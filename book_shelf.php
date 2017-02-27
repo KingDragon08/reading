@@ -71,6 +71,27 @@
     <div class="col-lg-8">
       选择书单类型:&nbsp;&nbsp;&nbsp;&nbsp;
       <div class="btn-group">
+          <button type="button" class="btn btn-default">书单类型</button>
+          <button type="button" class="btn btn-default dropdown-toggle"
+              data-toggle="dropdown">
+              <span class="caret"></span>
+              <span class="sr-only">选择</span>
+          </button>
+          <ul class="dropdown-menu" role="menu">
+            <?php
+              $types = $common->get_list_type();
+              $status = isset($_GET['status'])?intval($_GET['status']):-1;
+              foreach ($types as $type)
+              {
+            ?>
+                <li><a href="javascript:void(0);" onclick="type_change(<?php echo $type->id?>)"><?php echo $type->name?></a></li>
+            <?php
+              }
+            ?>
+          </ul>
+      </div>
+      &nbsp;&nbsp;
+      <div class="btn-group">
           <button type="button" class="btn btn-default">学段</button>
           <button type="button" class="btn btn-default dropdown-toggle"
               data-toggle="dropdown">
@@ -84,27 +105,6 @@
               {
             ?>
                 <li><a href="javascript:void(0);" onclick="grade_change(<?php echo $grade->id?>)"><?php echo $grade->grade_name?></a></li>
-            <?php
-              }
-            ?>
-          </ul>
-      </div>
-      &nbsp;&nbsp;
-      <div class="btn-group">
-          <button type="button" class="btn btn-default">图书类型</button>
-          <button type="button" class="btn btn-default dropdown-toggle"
-              data-toggle="dropdown">
-              <span class="caret"></span>
-              <span class="sr-only">选择</span>
-          </button>
-          <ul class="dropdown-menu" role="menu">
-            <?php
-              $types = $common->get_book_type();
-              $status = isset($_GET['status'])?intval($_GET['status']):-1;
-              foreach ($types as $type)
-              {
-            ?>
-                <li><a href="javascript:void(0);" onclick="type_change(<?php echo $type->id?>)"><?php echo $type->name?></a></li>
             <?php
               }
             ?>
@@ -132,11 +132,11 @@
         </label>
         &nbsp;&nbsp;&nbsp;&nbsp;
         <label>
-          <input type="radio" name="exam_status" id="exam_status2" value="2" <?php if($status==2) echo "checked"; ?> onclick="change_status(2)">未通过测评
+          <input type="radio" name="exam_status" id="exam_status2" value="2" <?php if($status==0) echo "checked"; ?> onclick="change_status(0)">未通过测评
         </label>
         &nbsp;&nbsp;&nbsp;&nbsp;
         <label>
-          <input type="radio" name="exam_status" id="exam_status3" value="3" <?php if($status==3) echo "checked"; ?> onclick="change_status(3)">未测试
+          <input type="radio" name="exam_status" id="exam_status3" value="3" <?php if($status==2) echo "checked"; ?> onclick="change_status(2)">未测试
         </label>
       </span>
     </div>
@@ -154,31 +154,28 @@
       $page =isset($_GET['page'])?intval($_GET['page']):1;
       if(isset($_GET['s']))
       {
-        $books = $common->search_books_task($_GET['s'],$user_id,$page);
+        $books = $common->search_lists_task($_GET['s'],$user_id);
       }
       else
       {
-        $books = $common->get_books_task($user_id,$grade,$type,$status,$page);
+        $books = $common->get_lists_task($user_id,$grade,$type,$status,$page);
       }
       foreach($books as $book)
       {
     ?>
     <div class="col-lg-4 mb20">
       <div class="col-lg-6 book_img">
-        <a href="book.php?book=<?php echo $book->id;?>">
+        <a href="task.php?task=<?php echo $book->id;?>">
           <img src="<?php echo $book->coverimg; ?>" width="100%"/>
-        </a>
-        <a href="javascript:void(0);" class="label label-lg label-success ml20" onclick="exam(<?php echo $book->id;?>)">
-          <i class="glyphicon glyphicon-tags"></i>
-          我要测评
         </a>
       </div>
       <div class="col-lg-6 book_info" style="display:table;">
         <div style="display:table-cell; vertical-align:middle;">
-          <p>书名：<?php echo $book->name;?></p>
+          <p>名字：<?php echo $book->name;?></p>
           <p class="gray f12">作者：<?php echo $book->author;?></p>
-          <p class="gray f12">积分：<?php echo $book->score;?>分</p>
-          <!-- <p class="gray f12">剩余：30天</p> -->
+          <p class="gray f12">学段：<?php echo $book->grade;?></p>
+          <p class="gray f12">类型：<?php echo $book->type;?></p>
+          <p class="gray f12">剩余时间：<?php echo $book->restime;?></p>
         </div>
       </div>
     </div>
@@ -189,17 +186,32 @@
 
     </div>
   </div>
+  <?php
+  if(!isset($_GET['s']))
+  {
+  ?>
   <center>
     <ul class="pagination">
-        <li><a href="#">上一页</a></li>
-        <li class="active"><a href="#">1</a></li>
-        <li><a href="#">2</a></li>
-        <li><a href="#">3</a></li>
-        <li><a href="#">4</a></li>
-        <li><a href="#">5</a></li>
-        <li><a href="#">下一页</a></li>
+        <?php
+          $url = "book_shelf.php?grade=".$grade."&type=".$type."&status=".$status."&page=";
+          $prior_page = $page-1>0?$page-1:1;
+          $next_page = $page+1>$common->get_pages()?$common->get_pages():$page+1;
+        ?>
+        <li><a href="<?php echo $url.$prior_page;?>">上一页</a></li>
+        <?php
+          for($i=1; $i<=$common->get_pages(); $i++)
+          {
+        ?>
+          <li class="<?php if($i==$page){echo 'active';}?>"><a href="<?php echo $url.$i;?>"><?php echo $i;?></a></li>
+        <?php
+          }
+        ?>
+        <li><a href="<?php echo $url.$next_page;?>">下一页</a></li>
     </ul>
   </center>
+<?php
+}
+?>
 </div>
 <!-- booklist panel end -->
 
@@ -207,6 +219,11 @@
   var grade = <?php echo isset($_GET['grade'])?intval($_GET['grade']):0 ?>;
   var type = <?php echo isset($_GET['type'])?intval($_GET['type']):0 ?>;
   var status = <?php echo isset($_GET['status'])?intval($_GET['status']):-1?>;
+  $().ready(function(){
+    $(".book_info").each(function(){
+      $(this).height($(this).parent().find(".book_img").height());
+    });
+  });
 
   function grade_change(id)
   {
@@ -566,31 +583,9 @@
       </center>
     </div> -->
     <!-- booklist panel end -->
-    <!-- footer start -->
-      <div class="footer">
-        <table width="90%" height="160" align="center">
-          <tr>
-            <td width="65%" align="left" height="160" valign="middle">
-              Copyright (c) 2016 北京乐智起航文化发展有限公司 All Rights Reserved.
-            </td>
-            <td width="35%" align="left" height="160" valign="middle">
-                <p>
-                  <i class="glyphicon glyphicon-map-marker"></i>
-                  地址：北京市海淀区首都师范大学出版社
-                </p>
-                <p>
-                  <i class="glyphicon glyphicon-earphone"></i>
-                  电话：123-456-7890
-                </p>
-                <p>
-                  <i class="glyphicon glyphicon-envelope"></i>
-                  邮箱：helloworld@gmail.com
-                </p>
-            </td>
-          </tr>
-        </table>
-      </div>
-    <!-- footer end -->
+    <?php
+      include_once("footer.php")
+    ?>
   </body>
   <script type="text/javascript">
     //测评

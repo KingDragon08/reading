@@ -114,7 +114,7 @@ ul.navigator li a.active,ul.navigator li a:hover{
 }
 .intro{
   width: 100%; height: 430px;
-  background: url('../img/ad_bg.jpg') center center no-repeat;
+  background: url('../img/ad_bg.png') center center no-repeat;
   background-size: cover;
   position: relative;
 }

@@ -3010,7 +3010,7 @@ fieldset[disabled] .btn-primary:hover
     color: #337ab7;background-color: #fff;
 }.btn-success
 {
-    color: #fff;border-color: #4cae4c;background-color: #5cb85c;
+    color: #fff;border-color: #4cae4c;background-color: #71cba4;
 }.btn-success.focus,
 .btn-success:focus
 {
@@ -3059,10 +3059,10 @@ fieldset[disabled] .btn-success:focus,
 fieldset[disabled] .btn-success:hover
 {
     border-color: #4cae4c;
-    background-color: #5cb85c;
+    background-color: #71cba4;
 }.btn-success .badge
 {
-    color: #5cb85c;background-color: #fff;
+    color: #71cba4;background-color: #fff;
 }.btn-info
 {
     color: #fff;border-color: #46b8da;background-color: #5bc0de;
@@ -4342,7 +4342,7 @@ fieldset[disabled] .navbar-inverse .btn-link:hover
 .pagination > .active > span:focus,
 .pagination > .active > span:hover
 {
-    z-index: 2;cursor: default;color: #fff;border-color: #5cb85c;background-color: #5cb85c;
+    z-index: 2;cursor: default;color: #fff;border-color: #71cba4;background-color: #71cba4;
 }.pagination > .disabled > a,
 .pagination > .disabled > a:focus,
 .pagination > .disabled > a:hover,
@@ -4445,7 +4445,7 @@ a.label:hover
     background-color: #286090;
 }.label-success
 {
-    background-color: #5cb85c;
+    background-color: #71cba4;
 }.label-success[href]:focus,
 .label-success[href]:hover
 {
@@ -4667,7 +4667,7 @@ a.thumbnail:hover
     -webkit-animation: progress-bar-stripes 2s linear infinite                                                                                          ;-o-animation: progress-bar-stripes 2s linear infinite;animation: progress-bar-stripes 2s linear infinite;
 }.progress-bar-success
 {
-    background-color: #5cb85c;
+    background-color: #71cba4;
 }.progress-striped .progress-bar-success
 {
     background-image: -webkit-linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent)                                        ;background-image:      -o-linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);background-image:         linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);

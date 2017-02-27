@@ -57,7 +57,7 @@
       <div class="container">
         <div class="col-lg-8"></div>
         <div class="col-lg-4">
-          <form action="search.php" method="get" target="_blank" name="search" id="search" onsubmit="return check_search()">
+          <form action="search.php" method="get" name="search" id="search" onsubmit="return check_search()">
               <div class="input-group">
                 <input type="text" class="form-control" name="s" id="search_keywords">
                 <span class="input-group-addon">
@@ -76,7 +76,7 @@
           $keywords = isset($_GET['s'])?$_GET['s']:-1;
           if($keywords != -1)
           {
-            $books = $common->search_books($keywords,$user_id);
+            $books = $common->search_book_list($keywords,$user_id);
             if($books)
             {
               foreach($books as $book)
@@ -88,7 +88,7 @@
               </div>
               <div class="col-lg-6 book_info" style="display:table;">
                 <div style="display:table-cell; vertical-align:middle;">
-                  <p>书名：<?php echo $book->name;?></p>
+                  <p>名字：<?php echo $book->name;?></p>
                   <p>作者：<?php echo $book->author;?></p>
                   <p>学段：<?php echo $book->grade;?></p>
                   <?php
@@ -140,79 +140,10 @@
 
     </div>
     <!-- booklist panel end -->
+    <?php
+      include_once("footer.php");
+    ?>
 
-
-
-
-    <!-- footer start -->
-      <div class="footer">
-        <table width="90%" height="160" align="center">
-          <tr>
-            <td width="65%" align="left" height="160" valign="middle">
-              Copyright (c) 2016 北京乐智起航文化发展有限公司 All Rights Reserved.
-            </td>
-            <td width="35%" align="left" height="160" valign="middle">
-                <p>
-                  <i class="glyphicon glyphicon-map-marker"></i>
-                  地址：北京市海淀区首都师范大学出版社
-                </p>
-                <p>
-                  <i class="glyphicon glyphicon-earphone"></i>
-                  电话：123-456-7890
-                </p>
-                <p>
-                  <i class="glyphicon glyphicon-envelope"></i>
-                  邮箱：helloworld@gmail.com
-                </p>
-            </td>
-          </tr>
-        </table>
-      </div>
-    <!-- footer end -->
-    <!-- login start -->
-    <div class="cover" style="display:none;">
-      <div class="login_panel">
-        <p style="margin-top:10px;">
-          &nbsp;
-          <i class="glyphicon glyphicon-remove float_right" style="cursor:pointer;" onclick="close_login_panel()">&nbsp;</i>
-        </p>
-        <center><h4>登录小学教师辅助教学工具平台</h4></center>
-        <form action="" method="post" onsubmit="return login_check()">
-          <table width="80%" height="auto" align="center" border="0" class="login_table">
-            <tr>
-              <td width="20%" height="50" align="center" valign="bottom">
-                <i class="glyphicon glyphicon-user gray f20"></i>
-              </td>
-              <td width="60%" align="left" valign="bottom">
-                <input type="tel" placeholder="请输入您的手机号码" class="login_input" id="username">
-              </td>
-              <td width="20%" height="50" align="center" valign="bottom">&nbsp;</td>
-            </tr>
-            <tr>
-              <td width="20%" height="50" align="center" valign="bottom">
-                <i class="glyphicon glyphicon-lock gray f20"></i>
-              </td>
-              <td width="60%" align="left" valign="bottom">
-                <input type="password" placeholder="请输入密码" class="login_input" id="password">
-              </td>
-              <td width="20%" height="50" align="center" valign="bottom">
-                <a href="forget.html" class="forget_btn">忘记密码</a>
-              </td>
-            </tr>
-            <tr>
-              <td height="120" align="center" valign="middle" style="border:none;">
-                <input type="checkbox" name="remeber">&nbsp;&nbsp;记住我
-              </td>
-              <td colspan="2" align="right" valign="middle" style="border:none;">
-                <input type="submit" name="submit" class="btn btn-success lear_more" value="登录" style="width:60%;">
-              </td>
-            </tr>
-          </table>
-        </form>
-      </div>
-    </div>
-    <!-- login end -->
   </body>
-  <script type="text/javascript" src="js/login.js"></script>
   <script type="text/javascript" src="js/full_reading.js"></script>
 </html>

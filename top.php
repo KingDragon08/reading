@@ -18,7 +18,15 @@
           }
           else
           {
-            echo '<a href="home.php" class="noline">你好,'.$user->get_user_info()->name.
+            if($user->get_user_info()->role == "学生")
+            {
+              $role_type = "学员";
+            }
+            if($user->get_user_info()->role == "教师")
+            {
+              $role_type = "老师";
+            }
+            echo '<a href="home.php" class="noline">你好,'.$user->get_user_info()->name.$role_type.
                 '&nbsp;&nbsp;&nbsp;&nbsp;<img class="headimg" src="'.$user->get_user_info()->headimg.'"/></a>';
             echo '&nbsp;&nbsp;&nbsp;&nbsp;<a href="controller/logout.php">退出</a>';
           }

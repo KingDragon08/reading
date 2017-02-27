@@ -39,8 +39,9 @@
     $book = intval($_GET['book']);
     $user = new User($_SESSION['username'],$_SESSION['password']);
     $user_id = $user->get_user_id();
-    $sql = "insert into rd_user_read_book(user_id,book_id,removed)values('$user_id',".
-            "'$book',0)";
+    // $sql = "insert into rd_user_read_book(user_id,book_id,removed)values('$user_id',".
+            // "'$book',0)";
+    $sql = "insert into rd_user_read_list(user_id,book_list_id)values('$user_id','$book')";
     $db->query($sql);
     echo "<script>alert('加入书架成功');</script>";
     header("Location:$from_url");

@@ -117,3 +117,15 @@ function check_register() {
     }
     return true;
 }
+
+//弹出窗口
+function openwin(url)
+{
+  var width = 800;
+  var height = 600;
+  var left = parseInt((screen.availWidth/2) - (width/2));//屏幕居中
+  var top = parseInt((screen.availHeight/2) - (height/2));
+  var windowFeatures = "width=" + width + ",height=" + height + ",status,resizable,left=" + left + ",top=" + top + "screenX=" + left + ",screenY=" + top;
+  windowFeatures += ",location='no',menubar='no',resizable='no',status='no',titlebar='no',toolbar='no'";
+  newWindow = window.open(url, "subWind", windowFeatures);
+}

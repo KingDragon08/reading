@@ -309,119 +309,72 @@
 
 <?php
   }
-  else
-  {
-    exit();
-  }
 ?>
-
-
 
 <!-- 学生结束 -->
 
 
-
-
-
-
-
-    <!-- division panel start -->
-      <!-- <div class="w100 forget">
-        <div class="forget_cover">
-          全本阅读
-          <div class="float_right" style="margin-right:5.8em;">
-            <button class="btn btn-success" onclick="location.href='full_reading.php'">全部书单</button>
-            <button class="btn btn-success active" onclick="location.href='book_shelf.php'">我的任务</button>
-          </div>
-        </div>
-      </div> -->
-    <!-- division panel end -->
-    <!-- filter panel start -->
-    <!-- <br>
-    <div class="row">
-      <div class="container">
-        <div class="col-lg-8">
-          选择书单类型:&nbsp;&nbsp;&nbsp;&nbsp;
-          <div class="btn-group">
-              <button type="button" class="btn btn-default">书单类型</button>
-              <button type="button" class="btn btn-default dropdown-toggle"
-                  data-toggle="dropdown">
-                  <span class="caret"></span>
-                  <span class="sr-only">选择</span>
-              </button>
-              <ul class="dropdown-menu" role="menu">
-                  <li><a href="#">类型一</a></li>
-                  <li><a href="#">类型二</a></li>
-                  <li><a href="#">类型三</a></li>
-              </ul>
-          </div>
-          &nbsp;&nbsp;
-          <div class="btn-group">
-              <button type="button" class="btn btn-default">学段</button>
-              <button type="button" class="btn btn-default dropdown-toggle"
-                  data-toggle="dropdown">
-                  <span class="caret"></span>
-                  <span class="sr-only">选择</span>
-              </button>
-              <ul class="dropdown-menu" role="menu">
-                  <li><a href="#">一年级</a></li>
-                  <li><a href="#">二年级</a></li>
-                  <li><a href="#">三年级</a></li>
-                  <li><a href="#">四年级</a></li>
-                  <li><a href="#">五年级</a></li>
-                  <li><a href="#">六年级</a></li>
-              </ul>
-          </div>
-          &nbsp;&nbsp;
-          <div class="btn-group">
-              <button type="button" class="btn btn-default">图书类型</button>
-              <button type="button" class="btn btn-default dropdown-toggle"
-                  data-toggle="dropdown">
-                  <span class="caret"></span>
-                  <span class="sr-only">选择</span>
-              </button>
-              <ul class="dropdown-menu" role="menu">
-                  <li><a href="#">图书类型一</a></li>
-                  <li><a href="#">图书类型二</a></li>
-                  <li><a href="#">图书类型三</a></li>
-                  <li><a href="#">图书类型四</a></li>
-                  <li><a href="#">图书类型五</a></li>
-                  <li><a href="#">图书类型六</a></li>
-              </ul>
-          </div>
-        </div>
-        <div class="col-lg-4">
-          <form action="" method="post" name="search" id="search" onsubmit="return check_search()">
-              <div class="input-group">
-                <input type="text" class="form-control" id="search_keywords">
-                <span class="input-group-addon">
-                  <i class="glyphicon glyphicon-search" style="cursor:pointer;" onclick="$('#search').submit()"></i>
-                </span>
-              </div>
-          </form>
+<!--教师开始-->
+<?php
+if($role == "教师")
+{
+?>
+  <!-- division panel start -->
+    <div class="w100 forget">
+      <div class="forget_cover">
+        全本阅读
+        <div class="float_right" style="margin-right:5.8em;">
+          <button class="btn btn-success" onclick="location.href='full_reading.php'">书单定制</button>
+          <button class="btn btn-success active" onclick="location.href='book_shelf.php'">书单管理</button>
         </div>
       </div>
-      <br>
-      <div class="container">
-        <div class="col-lg-8">
-          测评状态:&nbsp;&nbsp;&nbsp;&nbsp;
-          <span class="radio btn-group">
-            <label>
-              <input type="radio" name="exam_status1" id="exam_status1" value="1" checked onclick="location.href='#'">通过测评
-            </label>
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <label>
-              <input type="radio" name="exam_status1" id="exam_status2" value="2" onclick="location.href='#'">未通过测评
-            </label>
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <label>
-              <input type="radio" name="exam_status1" id="exam_status3" value="3" onclick="location.href='#'">未测试
-            </label>
-          </span>
+    </div>
+  <!-- division panel end -->
+  <!-- filter panel start -->
+  <br>
+  <div class="row">
+    <div class="container">
+      <div class="col-lg-8">
+        选择书单类型:&nbsp;&nbsp;&nbsp;&nbsp;
+
+        <div class="btn-group">
+            <button type="button" class="btn btn-default">学段</button>
+            <button type="button" class="btn btn-default dropdown-toggle"
+                data-toggle="dropdown">
+                <span class="caret"></span>
+                <span class="sr-only">选择</span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <?php
+                $grades = $common->get_grade();
+                foreach ($grades as $grade)
+                {
+              ?>
+                  <li><a href="javascript:void(0);" onclick="grade_change(<?php echo $grade->id?>)"><?php echo $grade->grade_name?></a></li>
+              <?php
+                }
+              ?>
+            </ul>
         </div>
-        <div class="col-lg-4">&nbsp;</div>
-    </div> -->
-    <!-- filter panel end -->
+      </div>
+      <div class="col-lg-4">
+        <form action="" method="post" name="search" id="search" onsubmit="return check_search()">
+            <div class="input-group">
+              <input type="text" class="form-control" id="search_keywords">
+              <span class="input-group-addon">
+                <i class="glyphicon glyphicon-search" style="cursor:pointer;" onclick="$('#search').submit()"></i>
+              </span>
+            </div>
+        </form>
+      </div>
+    </div>
+    <br>
+  <!-- filter panel end -->
+  
+<?php
+}
+?>
+
     <!-- booklist panel start -->
     <!-- <div class="container mt20">
       <div class="col-lg-12">

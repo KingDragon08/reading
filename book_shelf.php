@@ -219,11 +219,6 @@
   var grade = <?php echo isset($_GET['grade'])?intval($_GET['grade']):0 ?>;
   var type = <?php echo isset($_GET['type'])?intval($_GET['type']):0 ?>;
   var status = <?php echo isset($_GET['status'])?intval($_GET['status']):-1?>;
-  $().ready(function(){
-    $(".book_info").each(function(){
-      $(this).height($(this).parent().find(".book_img").height());
-    });
-  });
 
   function grade_change(id)
   {
@@ -350,7 +345,7 @@ if($role == "教师")
                 foreach ($grades as $grade)
                 {
               ?>
-                  <li><a href="javascript:void(0);" onclick="grade_change(<?php echo $grade->id?>)"><?php echo $grade->grade_name?></a></li>
+                  <li><a href="book_shelf.php?grade=<?php echo $grade->id;?>"><?php echo $grade->grade_name?></a></li>
               <?php
                 }
               ?>
@@ -358,9 +353,9 @@ if($role == "教师")
         </div>
       </div>
       <div class="col-lg-4">
-        <form action="" method="post" name="search" id="search" onsubmit="return check_search()">
+        <form action="" method="get" name="search" id="search" onsubmit="return check_search()">
             <div class="input-group">
-              <input type="text" class="form-control" id="search_keywords">
+              <input type="text" name="s" class="form-control" id="search_keywords">
               <span class="input-group-addon">
                 <i class="glyphicon glyphicon-search" style="cursor:pointer;" onclick="$('#search').submit()"></i>
               </span>
@@ -370,177 +365,125 @@ if($role == "教师")
     </div>
     <br>
   <!-- filter panel end -->
-  
+  <!-- booklist panel start -->
+  <?php
+    $books = "123";
+    $page = 1;
+    if(isset($_GET['page']))
+    {
+      $page = $_GET['page'];
+    }
+    if($page<1)
+    {
+      $page = 1;
+    }
+    if(isset($_GET['grade']))
+    {
+      $grade = intval($_GET['grade']);
+      $books = $common->get_teacher_list_by_grade($user_id,$grade,$page);
+    }
+    else
+    {
+      if(isset($_GET['s']))
+      {
+        $keywords = $_GET['s'];
+        $books = $common->get_teacher_list_by_keywords($user_id,$keywords);
+      }
+      else
+      {
+        $books = $common->get_teacher_read_list($user_id,$page);
+      }
+    }
+  ?>
+  <div class="container mt20">
+    <?php
+      if($books)
+      {
+        foreach($books as $book)
+        {
+    ?>
+          <div class="col-lg-4 mb20">
+            <div class="col-lg-6 book_img">
+              <a href="list.php?list=<?php echo $book->id;?>">
+                <img src="<?php echo $book->coverimg; ?>" width="100%"/>
+              </a>
+            </div>
+            <div class="col-lg-6 book_info" style="display:table;">
+              <div style="display:table-cell; vertical-align:middle;">
+                <p>名字：<?php echo $book->name;?></p>
+                <p class="gray f12">作者：<?php echo $book->author;?></p>
+                <p class="gray f12">学段：<?php echo $book->grade;?></p>
+                <p class="gray f12">剩余时间：<?php echo $book->restime;?></p>
+              </div>
+            </div>
+          </div>
+    <?php
+        }
+      }
+      else
+      {
+    ?>
+        <center>
+          <img src="img/gongchengshi.jpeg" style="margin-top:20px;"/>
+          <br>
+          <p class="gray" id="tips">
+            暂无满足条件的书单...
+          </p>
+        </center>
+    <?php
+      }
+    ?>
+  </div>
+  <!-- booklist panel end -->
 <?php
 }
 ?>
 
-    <!-- booklist panel start -->
-    <!-- <div class="container mt20">
-      <div class="col-lg-12">
-        <div class="col-lg-4 mb20">
-          <div class="col-lg-6 book_img">
-            <img src="img/book1.png" width="100%"/>
-          </div>
-          <div class="col-lg-6 book_info" style="display:table;">
-            <div style="display:table-cell; vertical-align:middle;">
-              <p>书名：红楼梦</p>
-              <p class="gray f12">作者：曹雪芹</p>
-              <p class="gray f12">积分：7分</p>
-              <p class="gray f12">剩余：30天</p>
-            </div>
-          </div>
-          <div class="col-lg-12">
-            <a href="#" class="label label-lg label-success ml20">
-              <i class="glyphicon glyphicon-tags"></i>
-              我要测评
-            </a>
-            <i class="glyphicon">&nbsp;</i>
-            <a href="#" class="label label-success label-lg">
-              <i class="glyphicon glyphicon-trash"></i>
-              移除
-            </a>
-          </div>
-        </div>
-        <div class="col-lg-4 mb20">
-          <div class="col-lg-6 book_img">
-            <img src="img/book1.png" width="100%"/>
-          </div>
-          <div class="col-lg-6 book_info" style="display:table;">
-            <div style="display:table-cell; vertical-align:middle;">
-              <p>书名：红楼梦</p>
-              <p class="gray f12">作者：曹雪芹</p>
-              <p class="gray f12">积分：7分</p>
-              <p class="gray f12">剩余：30天</p>
-            </div>
-          </div>
-          <div class="col-lg-12">
-            <a href="#" class="label label-lg label-success ml20">
-              <i class="glyphicon glyphicon-tags"></i>
-              我要测评
-            </a>
-            <i class="glyphicon">&nbsp;</i>
-            <a href="#" class="label label-success label-lg">
-              <i class="glyphicon glyphicon-trash"></i>
-              移除
-            </a>
-          </div>
-        </div>
-        <div class="col-lg-4 mb20">
-          <div class="col-lg-6 book_img">
-            <img src="img/book1.png" width="100%"/>
-          </div>
-          <div class="col-lg-6 book_info" style="display:table;">
-            <div style="display:table-cell; vertical-align:middle;">
-              <p>书名：红楼梦</p>
-              <p class="gray f12">作者：曹雪芹</p>
-              <p class="gray f12">积分：7分</p>
-              <p class="gray f12">剩余：30天</p>
-            </div>
-          </div>
-          <div class="col-lg-12">
-            <a href="#" class="label label-lg label-success ml20">
-              <i class="glyphicon glyphicon-tags"></i>
-              我要测评
-            </a>
-            <i class="glyphicon">&nbsp;</i>
-            <a href="#" class="label label-success label-lg">
-              <i class="glyphicon glyphicon-trash"></i>
-              移除
-            </a>
-          </div>
-        </div>
-        <div class="col-lg-4 mb20">
-          <div class="col-lg-6 book_img">
-            <img src="img/book1.png" width="100%"/>
-          </div>
-          <div class="col-lg-6 book_info" style="display:table;">
-            <div style="display:table-cell; vertical-align:middle;">
-              <p>书名：红楼梦</p>
-              <p class="gray f12">作者：曹雪芹</p>
-              <p class="gray f12">积分：7分</p>
-              <p class="gray f12">剩余：30天</p>
-            </div>
-          </div>
-          <div class="col-lg-12">
-            <a href="#" class="label label-lg label-success ml20">
-              <i class="glyphicon glyphicon-tags"></i>
-              我要测评
-            </a>
-            <i class="glyphicon">&nbsp;</i>
-            <a href="#" class="label label-success label-lg">
-              <i class="glyphicon glyphicon-trash"></i>
-              移除
-            </a>
-          </div>
-        </div>
-        <div class="col-lg-4 mb20">
-          <div class="col-lg-6 book_img">
-            <img src="img/book1.png" width="100%"/>
-          </div>
-          <div class="col-lg-6 book_info" style="display:table;">
-            <div style="display:table-cell; vertical-align:middle;">
-              <p>书名：红楼梦</p>
-              <p class="gray f12">作者：曹雪芹</p>
-              <p class="gray f12">积分：7分</p>
-              <p class="gray f12">剩余：30天</p>
-            </div>
-          </div>
-          <div class="col-lg-12">
-            <a href="#" class="label label-lg label-success ml20">
-              <i class="glyphicon glyphicon-tags"></i>
-              我要测评
-            </a>
-            <i class="glyphicon">&nbsp;</i>
-            <a href="#" class="label label-success label-lg">
-              <i class="glyphicon glyphicon-trash"></i>
-              移除
-            </a>
-          </div>
-        </div>
-        <div class="col-lg-4 mb20">
-          <div class="col-lg-6 book_img">
-            <img src="img/book1.png" width="100%"/>
-          </div>
-          <div class="col-lg-6 book_info" style="display:table;">
-            <div style="display:table-cell; vertical-align:middle;">
-              <p>书名：红楼梦</p>
-              <p class="gray f12">作者：曹雪芹</p>
-              <p class="gray f12">积分：7分</p>
-              <p class="gray f12">剩余：30天</p>
-            </div>
-          </div>
-          <div class="col-lg-12">
-            <a href="#" class="label label-lg label-success ml20">
-              <i class="glyphicon glyphicon-tags"></i>
-              我要测评
-            </a>
-            <i class="glyphicon">&nbsp;</i>
-            <a href="#" class="label label-success label-lg">
-              <i class="glyphicon glyphicon-trash"></i>
-              移除
-            </a>
-          </div>
-        </div>
-      </div>
-      <center>
-        <ul class="pagination">
-            <li><a href="#">上一页</a></li>
-            <li class="active"><a href="#">1</a></li>
-            <li><a href="#">2</a></li>
-            <li><a href="#">3</a></li>
-            <li><a href="#">4</a></li>
-            <li><a href="#">5</a></li>
-            <li><a href="#">下一页</a></li>
-        </ul>
-      </center>
-    </div> -->
-    <!-- booklist panel end -->
+<?php
+  if(!isset($_GET['s']))
+  {
+    $url = '';
+    $prior_url = '';
+    $next_url = '';
+    $page = isset($_GET['page'])?intval($_GET['page']):1;
+    $grade = isset($_GET['grade'])?intval($_GET['grade']):-1;
+    if($grade != -1)
+    {
+      $url .= "grade=$grade&";
+    }
+?>
+    <center>
+      <ul class="pagination">
+          <li><a href="book_shelf.php?<?php echo $url;?>page=<?php echo $page-1>0?$page-1:1;?>">上一页</a></li>
+          <?php
+            for($i=1;$i<=$common->get_pages();$i++)
+            {
+          ?>
+              <li class="<?php if($i==$page) echo 'active';?>"><a href="book_shelf.php?<?php echo $url;?>page=<?php echo $i;?>"><?php echo $i;?></a></li>
+          <?php
+            }
+          ?>
+          <li><a href="book_shelf.php?<?php echo $url;?>page=<?php echo $page+1>$common->get_pages()?$common->get_pages():$page+1;?>">下一页</a></li>
+      </ul>
+    </center>
+
+<?php
+  }
+?>
+  </div>
     <?php
       include_once("footer.php")
     ?>
   </body>
   <script type="text/javascript">
+
+    //设置等高
+    $().ready(function(){
+      $(".book_info").each(function(){
+        $(this).height($(this).parent().find(".book_img").height());
+      });
+    });
+
     //测评
     function exam(book)
     {

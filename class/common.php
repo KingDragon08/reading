@@ -462,5 +462,92 @@ class Common
       }
     }
 
+    /**
+    *分页获取教师的所有书单
+    **/
+    function get_teacher_read_list($user_id,$page)
+    {
+      global $db;
+      $page_num = 6;
+      $start = ($page-1)*$page_num;
+      $end = $start + $page_num;
+      $sql = "select * from rd_read_list where user_id='$user_id' order by id desc limit $start,$end";
+      $results = $db->get_results($sql);
+      $ret = [];
+      if($results)
+      {
+        foreach($results as $item)
+        {
+          //获取书单下的第一本书封面
+          $item->coverimg = $this->get_book_list_coverimg($item->id);
+          $item->restime = $this->get_restime($item->endtime-time());
+          $item->author = $this->get_list_author($item->user_id);
+          $item->grade = $this->get_book_list_grade($item->grade);
+          $ret[] = $item;
+        }
+      }
+      //获取最大页数
+      $sql = "select count(*) from rd_read_list where user_id='$user_id'";
+      $this->pages = ceil($db->get_var($sql)/$page_num);
+      return $ret;
+    }
+
+    /**
+    *按学段分页获取教师书单
+    **/
+    function get_teacher_list_by_grade($user_id,$grade,$page)
+    {
+      global $db;
+      $page_num = 6;
+      $start = ($page-1)*$page_num;
+      $end = $start + $page_num;
+      $grade = $grade>0?$grade:1;
+      $sql = "select * from rd_read_list where user_id='$user_id' and grade='$grade' order by id desc limit $start,$end";
+      $results = $db->get_results($sql);
+      $ret = [];
+      if($results)
+      {
+        foreach($results as $item)
+        {
+          //获取书单下的第一本书封面
+          $item->coverimg = $this->get_book_list_coverimg($item->id);
+          $item->restime = $this->get_restime($item->endtime-time());
+          $item->author = $this->get_list_author($item->user_id);
+          $item->grade = $this->get_book_list_grade($item->grade);
+          $ret[] = $item;
+        }
+      }
+      //获取最大页数
+      $sql = "select count(*) from rd_read_list where user_id='$user_id' and grade='$grade'";
+      $this->pages = ceil($db->get_var($sql)/$page_num);
+      return $ret;
+    }
+
+    /**
+    *根据关键字搜索教师的书单
+    **/
+    function get_teacher_list_by_keywords($user_id,$keywords)
+    {
+      global $db;
+      $sql = "select * from rd_read_list where user_id='$user_id' and ".
+              "name like '%".$db->escape($keywords)."%' order by id desc";
+      $results = $db->get_results($sql);
+      $ret = [];
+      if($results)
+      {
+        foreach($results as $item)
+        {
+          //获取书单下的第一本书封面
+          $item->coverimg = $this->get_book_list_coverimg($item->id);
+          $item->restime = $this->get_restime($item->endtime-time());
+          $item->author = $this->get_list_author($item->user_id);
+          $item->grade = $this->get_book_list_grade($item->grade);
+          $ret[] = $item;
+        }
+      }
+      return $ret;
+    }
+
+
 }
 ?>

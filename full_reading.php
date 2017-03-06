@@ -348,6 +348,12 @@
               <i class="glyphicon glyphicon-send">&nbsp;</i>推送书单
             </span>
           </div>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <div class="btn-group" onclick="javascript:del_cookie('books'); alert('删除成功');">
+            <span class="btn btn-default">
+              删除所有已选图书
+            </span>
+          </div>
         </div>
         <div class="col-lg-4">
           <form action="" method="get" name="search" id="search" onsubmit="return check_search()">

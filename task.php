@@ -183,7 +183,7 @@
       //测评
       function exam(book)
       {
-        openwin("temp.php");
+        openwin("exam.php?book="+book);
       }
     </script>
   </body>

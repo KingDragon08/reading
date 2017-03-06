@@ -442,7 +442,7 @@ class Common
     function get_list_name($list_id)
     {
       global $db;
-      return $db->get_var("select name from rd_read_list");
+      return $db->get_var("select name from rd_read_list where id='$list_id'");
     }
 
     /**

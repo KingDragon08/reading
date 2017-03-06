@@ -435,42 +435,38 @@ if($role == "教师")
     ?>
   </div>
   <!-- booklist panel end -->
-<?php
-}
-?>
-
-<?php
-  if(!isset($_GET['s']))
-  {
-    $url = '';
-    $prior_url = '';
-    $next_url = '';
-    $page = isset($_GET['page'])?intval($_GET['page']):1;
-    $grade = isset($_GET['grade'])?intval($_GET['grade']):-1;
-    if($grade != -1)
+  <?php
+    if(!isset($_GET['s']))
     {
-      $url .= "grade=$grade&";
-    }
-?>
-    <center>
-      <ul class="pagination">
-          <li><a href="book_shelf.php?<?php echo $url;?>page=<?php echo $page-1>0?$page-1:1;?>">上一页</a></li>
-          <?php
-            for($i=1;$i<=$common->get_pages();$i++)
-            {
-          ?>
-              <li class="<?php if($i==$page) echo 'active';?>"><a href="book_shelf.php?<?php echo $url;?>page=<?php echo $i;?>"><?php echo $i;?></a></li>
-          <?php
-            }
-          ?>
-          <li><a href="book_shelf.php?<?php echo $url;?>page=<?php echo $page+1>$common->get_pages()?$common->get_pages():$page+1;?>">下一页</a></li>
-      </ul>
-    </center>
-
+      $url = '';
+      $prior_url = '';
+      $next_url = '';
+      $page = isset($_GET['page'])?intval($_GET['page']):1;
+      $grade = isset($_GET['grade'])?intval($_GET['grade']):-1;
+      if($grade != -1)
+      {
+        $url .= "grade=$grade&";
+      }
+  ?>
+      <center>
+        <ul class="pagination">
+            <li><a href="book_shelf.php?<?php echo $url;?>page=<?php echo $page-1>0?$page-1:1;?>">上一页</a></li>
+            <?php
+              for($i=1;$i<=$common->get_pages();$i++)
+              {
+            ?>
+                <li class="<?php if($i==$page) echo 'active';?>"><a href="book_shelf.php?<?php echo $url;?>page=<?php echo $i;?>"><?php echo $i;?></a></li>
+            <?php
+              }
+            ?>
+            <li><a href="book_shelf.php?<?php echo $url;?>page=<?php echo $page+1>$common->get_pages()?$common->get_pages():$page+1;?>">下一页</a></li>
+        </ul>
+      </center>
+  </div>
 <?php
   }
+}
 ?>
-  </div>
     <?php
       include_once("footer.php")
     ?>

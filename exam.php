@@ -129,11 +129,19 @@
             $answers[] = $_POST['question_8'];
             $answers[] = $_POST['question_9'];
             $answers[] = $_POST['question_10'];
+            $answer_time = $_COOKIE["answer_time"];
+            setCookie("answer_time",0);
+            $_COOKIE["answer_time"] = 0;
             $exam = new Exam($book);
+            //获取得分情况
             $scores = $exam->scores($question_ids,$answers);
-            var_dump($scores);
-            exit();
+            //写入得分情况并返回测试结果ID
+            $exam_result_id = $exam->write_scores($user_id,$book,$scores,$answer_time,$answers,$question_ids);
+            //转到测试结果页
+            header("Location:exam_report.php?exam=$exam_result_id");
         }
+        else
+        {
       ?>
       <form action="" method="post" onsubmit="return check();">
       <div id="myCarousel" class="carousel slide" style="width:599px; float:left; height:565px; border-right:1px solid #ccc;">
@@ -141,6 +149,33 @@
         <div class="carousel-inner" style="height:565px;">
           <?php
             $exam = new Exam($book);
+            //检查当前用户是否可以在当天进行测试
+            //0 可以答题
+            //1 已经通过
+            //2 当天答题次数已经达到3次
+            $can_exam = $exam->can_exam($user_id,$book);
+            if($can_exam>0)
+            {
+          ?>
+            <center>
+              <img src="img/gongchengshi.jpeg" style="margin-top:20px;"/>
+              <br>
+              <p class="gray" id="tips">
+                <?php
+                  if($can_exam==1)
+                  {
+                    echo "你已经通过该本书的测试了哟";
+                  }
+                  if($can_exam==2)
+                  {
+                    echo "当天答题次数已超过三次,明天再来或换本书测试吧!";
+                  }
+                ?>
+              </p>
+            </center>
+          <?php
+              exit();
+            }
             $questions = $exam->get_questions();
             $counter = 1;
             if(!$questions[9])
@@ -186,6 +221,7 @@
           <?php
               $counter++;
             }
+          }
           ?>
         </div>
     </div>
@@ -201,12 +237,53 @@
         <input type="button" class="btn btn-default form-control" value="第9题" onclick="slide2page(8)">
         <input type="button" class="btn btn-default form-control" value="第10题" onclick="slide2page(9)">
         <input type="submit" class="btn btn-danger form-control" value="交卷">
+        <span id="time" style="display:inline-block; margin-top:20px;"></span>
     </div>
     </form>
+    <script type="text/javascript" src="js/cookie.js"></script>
     <script>
+        answer_time = 0;
+        answer_interval = "";
         $().ready(function(){
           $('#myCarousel').carousel('pause');
+          if(!get_cookie("answer_time"))
+          {
+              set_cookie("answer_time",0)
+          }
+          else
+          {
+            answer_time = get_cookie("answer_time");
+          }
+          answer_interval = setInterval("count_time()",1000);
         });
+
+        //计时
+        function count_time()
+        {
+          answer_time++;
+          set_cookie("answer_time",answer_time);
+          var temp = answer_time;
+          var hours = Math.floor(temp/3600);
+          if(hours<10)
+          {
+            hours = "0"+hours;
+          }
+          temp = temp%3600;
+          var minutes = Math.floor(temp/60);
+          if(minutes<10)
+          {
+            minutes = "0"+minutes;
+          }
+          temp = temp%60;
+          var seconds = temp;
+          if(seconds<10)
+          {
+            seconds = "0"+seconds;
+          }
+          var time_string = hours+":"+minutes+":"+seconds;
+          $("#time").html(time_string);
+        }
+
         function prev_page()
         {
           $("#myCarousel").carousel('prev');
@@ -235,7 +312,12 @@
           });
           if(counter>9)
           {
+            clearInterval(answer_interval);
             ret = true;
+          }
+          else
+          {
+            alert("你还有题没答完噢");
           }
           return ret;
         }

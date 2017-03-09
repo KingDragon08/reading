@@ -15,7 +15,7 @@
       .item{height:565px; width: 600px;}
       .question_title{margin-left:30px; margin-top:40px; font-size: 16px; font-weight: bold;}
       .answers{margin-left: 30px; margin-top:20px;}
-      .question_ctr{margin-left: 30px; margin-top:20px; text-align: center;}
+      .question_ctr{margin-top:50px; text-align: center; clear: both;}
       .btn{margin-bottom: 8px;}
     </style>
   </head>
@@ -130,8 +130,8 @@
             $answers[] = $_POST['question_9'];
             $answers[] = $_POST['question_10'];
             $answer_time = $_COOKIE["answer_time"];
-            setCookie("answer_time",0);
-            $_COOKIE["answer_time"] = 0;
+            setCookie("answer_time",600);
+            $_COOKIE["answer_time"] = 600;
             $exam = new Exam($book);
             //获取得分情况
             $scores = $exam->scores($question_ids,$answers);
@@ -143,7 +143,7 @@
         else
         {
       ?>
-      <form action="" method="post" onsubmit="return check();">
+      <form action="" id="kd_exam" method="post" onsubmit="return check();">
       <div id="myCarousel" class="carousel slide" style="width:599px; float:left; height:565px; border-right:1px solid #ccc;">
         <!-- 轮播（Carousel）项目 -->
         <div class="carousel-inner" style="height:565px;">
@@ -195,26 +195,44 @@
             {
           ?>
               <div class="item <?php if($counter==1){echo "active";}?>">
-                <div class="question_title">
-                  第<?php echo $counter;?>题：<?php echo $question->question;?>
-                </div>
                 <div class="answers">
-                  <label class="checkbox-inline">
-                    <input type="radio" name="question_<?php echo $counter;?>" onclick="answer(<?php echo $counter;?>)" value="1">&nbsp;&nbsp;<?php echo $question->choice1;?>
-                  </label><br><br>
-                  <label class="checkbox-inline">
-                    <input type="radio" name="question_<?php echo $counter;?>" onclick="answer(<?php echo $counter;?>)" value="2">&nbsp;&nbsp;<?php echo $question->choice2;?>
-                  </label><br><br>
-                  <label class="checkbox-inline">
-                    <input type="radio" name="question_<?php echo $counter;?>" onclick="answer(<?php echo $counter;?>)" value="3">&nbsp;&nbsp;<?php echo $question->choice3;?>
-                  </label><br><br>
-                  <label class="checkbox-inline">
-                    <input type="radio" name="question_<?php echo $counter;?>" onclick="answer(<?php echo $counter;?>)" value="4">&nbsp;&nbsp;<?php echo $question->choice4;?>
-                  </label>
+                  <div class="question_title">
+                      第<?php echo $counter;?>题：<?php echo $question->question;?>
+                  </div>
+                  <table style="margin-top:30px; width:100%;">
+                    <tr>
+                      <td width="40%" valign="middle">
+                          <img src="<?php echo $questions[10];?>" alt="图书封面走丢了" style="max-width:80%;">
+                      </td>
+                      <td width="60%" valign="middle">
+                          <label class="checkbox-inline">
+                            <input type="radio" name="question_<?php echo $counter;?>" onclick="answer(<?php echo $counter;?>)" value="1">&nbsp;&nbsp;<?php echo $question->choice1;?>
+                          </label><br><br>
+                          <label class="checkbox-inline">
+                            <input type="radio" name="question_<?php echo $counter;?>" onclick="answer(<?php echo $counter;?>)" value="2">&nbsp;&nbsp;<?php echo $question->choice2;?>
+                          </label><br><br>
+                          <label class="checkbox-inline">
+                            <input type="radio" name="question_<?php echo $counter;?>" onclick="answer(<?php echo $counter;?>)" value="3">&nbsp;&nbsp;<?php echo $question->choice3;?>
+                          </label><br><br>
+                          <label class="checkbox-inline">
+                            <input type="radio" name="question_<?php echo $counter;?>" onclick="answer(<?php echo $counter;?>)" value="4">&nbsp;&nbsp;<?php echo $question->choice4;?>
+                          </label>
+                          <input type="radio" style="display:none;" name="question_<?php echo $counter;?>" checked="checked" value="5">
+                      </td>
+                    </tr>
+                  </table>
                 </div>
                 <div class="question_ctr">
-                  <input type="button" class="btn btn-default" value="上一题" onclick="prev_page()">
-                  <input type="button" class="btn btn-default" value="下一题" onclick="next_page()">
+                  <?php
+                    if($counter!=1)
+                    {
+                      echo '<input type="button" class="btn btn-default" value="上一题" onclick="prev_page()">&nbsp;';
+                    }
+                    if($counter!=10)
+                    {
+                      echo '<input type="button" class="btn btn-default" value="下一题" onclick="next_page()">';
+                    }
+                  ?>
                 </div>
                 <input type="hidden" name="question_id_<?php echo $counter;?>" value="<?php echo $question->id;?>">
               </div>
@@ -242,33 +260,46 @@
     </form>
     <script type="text/javascript" src="js/cookie.js"></script>
     <script>
-        answer_time = 0;
+        answer_time = 10*60;
         answer_interval = "";
         $().ready(function(){
           $('#myCarousel').carousel('pause');
-          if(!get_cookie("answer_time"))
-          {
-              set_cookie("answer_time",0)
-          }
-          else
-          {
-            answer_time = get_cookie("answer_time");
-          }
+          // if(!get_cookie("answer_time"))
+          // {
+          set_cookie("answer_time",600)
+          // }
+          // else
+          // {
+          //   answer_time = get_cookie("answer_time");
+          // }
           answer_interval = setInterval("count_time()",1000);
         });
 
         //计时
         function count_time()
         {
-          answer_time++;
+          answer_time--;
           set_cookie("answer_time",answer_time);
-          var temp = answer_time;
-          var hours = Math.floor(temp/3600);
-          if(hours<10)
+          if(answer_time<0)
           {
-            hours = "0"+hours;
+            alert("时间到，自动交卷");
+            clearInterval(answer_interval);
+            $("#answer_panel input").each(function(){
+              if(!$(this).hasClass("active"))
+              {
+                $(this).addClass("active");
+              }
+            });
+            $("#kd_exam").submit();
+            return;
           }
-          temp = temp%3600;
+          var temp = answer_time;
+          // var hours = Math.floor(temp/3600);
+          // if(hours<10)
+          // {
+          //   hours = "0"+hours;
+          // }
+          // temp = temp%3600;
           var minutes = Math.floor(temp/60);
           if(minutes<10)
           {
@@ -280,7 +311,8 @@
           {
             seconds = "0"+seconds;
           }
-          var time_string = hours+":"+minutes+":"+seconds;
+          // var time_string = hours+":"+minutes+":"+seconds;
+          var time_string = minutes+":"+seconds;
           $("#time").html(time_string);
         }
 

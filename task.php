@@ -139,7 +139,7 @@
                   if($book->status==0)
                   {
                 ?>
-                    <a href="javascript:void(0);" class="btn btn-success ml20" onclick="exam(<?php echo $book->id;?>)">
+                    <a href="javascript:void(0);" class="btn btn-danger ml20" onclick="exam(<?php echo $book->id;?>)">
                       <i class="glyphicon glyphicon-tags"></i>
                         测评未通过
                     </a>
@@ -148,7 +148,7 @@
                   if($book->status==1)
                   {
                 ?>
-                    <a href="javascript:void(0);" class="btn btn-success ml20">
+                    <a href="javascript:void(0);" class="btn btn-primary ml20">
                       <i class="glyphicon glyphicon-tags"></i>
                         测评通过
                     </a>

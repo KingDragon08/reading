@@ -415,12 +415,14 @@ class Common
         foreach($ret as $item)
         {
           $book_id = $item->id;
-          $sql = "select count(id) from rd_read_log where user_id='$user_id' and list_id='$list_id' ".
-                  "and book_id='$book_id'";
+          // $sql = "select count(id) from rd_read_log where user_id='$user_id' and list_id='$list_id' ".
+          //         "and book_id='$book_id'";
+          $sql = "select count(id) from rd_user_exam_scores where user_id='$user_id' and book_id='$book_id'";
           if($db->get_var($sql))
           {
-            $sql = "select status from rd_read_log where user_id='$user_id' and list_id='$list_id' ".
-                    "and book_id='$book_id'";
+            // $sql = "select status from rd_read_log where user_id='$user_id' and list_id='$list_id' ".
+            //         "and book_id='$book_id'";
+            $sql = "select hege from rd_user_exam_scores where user_id='$user_id' and book_id='$book_id'";
             $item->status = $db->get_var($sql);
           }
           else

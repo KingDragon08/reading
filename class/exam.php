@@ -40,6 +40,8 @@ class Exam
     $question5 = $db->get_results($sql);
     $ret[] = $question5[$rand1];
     $ret[] = $question5[$rand2];
+    //获取书的封面
+    $ret[] = $db->get_var("select coverimg from rd_book where id='$this->book_id'");
     return $ret;
   }
 
@@ -96,11 +98,13 @@ class Exam
   {
     global $db;
     $hege = 0;
+    $total_score = 0;
     foreach($scores as $score)
     {
       if(intval($score)==1)
       {
         $hege++;
+        $total_score++;
       }
     }
     if($hege>=6)
@@ -115,8 +119,8 @@ class Exam
     $answers = implode(",",$answers);
     $question_ids = implode(",",$question_ids);
     $time_string = time();
-    $sql = "insert into rd_user_exam_scores(user_id,book_id,scores,hege,use_time,exam_time,answers,question_ids)values(".
-            "$user_id,$book_id,'$scores',$hege,$use_time,'$time_string','$answers','$question_ids')";
+    $sql = "insert into rd_user_exam_scores(user_id,book_id,scores,hege,use_time,exam_time,answers,question_ids,score)values(".
+            "$user_id,$book_id,'$scores',$hege,$use_time,'$time_string','$answers','$question_ids','$total_score')";
     $db->query($sql);
     //获取刚插入记录的id
     $sql = "select id from rd_user_exam_scores where user_id=$user_id and book_id=$book_id ".
@@ -140,13 +144,13 @@ class Exam
     else
     {
       //获取用时情况
-      $use_time = $result->use_time;
-      $hours = floor($use_time/3600);
-      if($hours<10)
-      {
-        $hours = "0".$hours;
-      }
-      $use_time = $use_time%3600;
+      $use_time = 600-$result->use_time;
+      // $hours = floor($use_time/3600);
+      // if($hours<10)
+      // {
+      //   $hours = "0".$hours;
+      // }
+      // $use_time = $use_time%3600;
       $minutes = floor($use_time/60);
       if($minutes<10)
       {
@@ -157,10 +161,12 @@ class Exam
       {
         $seconds = "0".$seconds;
       }
-      $result->use_time = $hours.":".$minutes.":".$seconds;
+      $result->use_time = $minutes.":".$seconds;
       //获取书的名字
       $result->book_name = $db->get_var("select name from rd_book where id=".$result->book_id);
-      //获取得分情况
+
+
+      //获取得分情况,添加新字段后可优化
       $scores = $result->scores;
       $scores = explode(",",$scores);
       $total_score = 0;
@@ -173,7 +179,9 @@ class Exam
       }
       $result->total_score = $total_score;
       $result->scores = $scores;
-      //将选择答案的1，2，3，4转换为A,B,C,D
+
+
+      //将选择答案的1，2，3，4,5转换为A,B,C,D,未作答
       $answers = $result->answers;
       $answers = explode(",",$answers);
       $temp = [];
@@ -194,6 +202,10 @@ class Exam
         if($answer==4)
         {
           $temp[] = "D";
+        }
+        if($answer==5)
+        {
+          $temp[] = "未做答";
         }
       }
       $result->answers = $temp;

@@ -22,6 +22,14 @@
       #list tr td{border-right:1px solid #eee; border-bottom:1px solid #eee;}
       #list tr td:last-child{border-right: 0;}
       #list tr:last-child td{border-bottom: 0;}
+      #flag{
+              width:150px; height:100px; position:absolute; right:30px; top:190px; z-index:999;
+              transform:rotate(45deg);
+              -ms-transform:rotate(45deg); /* Internet Explorer */
+              -moz-transform:rotate(45deg); /* Firefox */
+              -webkit-transform:rotate(45deg); /* Safari 和 Chrome */
+              -o-transform:rotate(45deg); /* Opera */
+            }
     </style>
   </head>
   <body>
@@ -92,6 +100,9 @@
         if($exam_report)
         {
       ?>
+      <div id="flag">
+        <img src="img/<?php if($exam_report->total_score<6){echo 'bu';} ?>hege.png" style="width:150px;"/>
+      </div>
       <div class="w100 forget">
         <div class="forget_cover">
           测评结果
@@ -102,7 +113,7 @@
       </div>
       <div style="margin:0 auto; padding:10px; margin-top:10px; box-shadow:0 0 5px #ccc; width:790px;">
         <div style="text-align:center; font-size:16px; height:50px; line-height:50px; width:100%;">
-          测评结果
+          测评结果[<?php if($exam_report->total_score<6){echo '不';} echo '合格';?>]
         </div>
         <table width="100%" height="50">
           <tr>

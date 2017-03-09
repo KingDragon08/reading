@@ -123,7 +123,7 @@
     </div>
   </div>
   <br>
-  <div class="container">
+  <!-- <div class="container">
     <div class="col-lg-8">
       测评状态:&nbsp;&nbsp;&nbsp;&nbsp;
       <span class="radio btn-group">
@@ -141,7 +141,7 @@
       </span>
     </div>
     <div class="col-lg-4">&nbsp;</div>
-</div>
+</div> -->
 <!-- filter panel end -->
 <!-- booklist panel start -->
 <div class="container mt20">

@@ -19,6 +19,7 @@
         include_once("../class/user.php");
         $user = new User($_SESSION['username'],$_SESSION['password']);
         $user_info = $user->get_user_info();
+        $school_students_count = $user->get_school_students_count();
       }
       else
       {
@@ -30,7 +31,7 @@
       <h4 style="line-height:50px;">
         <div style="float:left; margin-left:1em;"><?php echo $user_info->name?>个人测评动态结果展示台-[全校]</div>
         <div class="float_right" style="margin-right:1em;">
-          <button class="btn btn-success active" onclick="location.href='student_eval_school.php'">全校</button>
+          <button class="btn btn-success active" onclick="">全校</button>
           <button class="btn btn-success" onclick="location.href='student_eval_class.php'">全班</button>
         </div>
       </h4>
@@ -76,13 +77,30 @@
     yAxis : [
         {
             type : 'category',
-            data : ['联想概括','组织概括','字词认识','书评积分','难度指数']
+            data : ['细节认知','信息提取','意义建构','直接推论','组织概括']
         }
     ],
     series : [
         {
             type:'bar',
-            data:[80, 73, 95, 99, 60]
+            data:[<?php
+                if($school_students_count)
+                {
+                  $score_percent_by_item = $user->get_score_percent_by_item_school();
+                  $out_string = "";
+                  foreach($score_percent_by_item as $score)
+                  {
+                      $out_string .= $score;
+                      $out_string .= ',';
+                  }
+                  $out_string = substr($out_string,0,-1);
+                  echo $out_string;
+                }
+                else
+                {
+                  echo "0,0,0,0,0";
+                }
+            ?>]
         }
     ]
   };
@@ -193,7 +211,7 @@
               },
               title : {
                   show : true,
-                  offsetCenter: [0, '-60%'],       // x, y，单位px
+                  offsetCenter: [0, '-45%'],       // x, y，单位px
                   textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
                       color: '#fff',
                       fontSize: 30
@@ -209,10 +227,21 @@
                   offsetCenter: [0, -40],       // x, y，单位px
                   formatter:'{value}%',
                   textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-                      fontSize : 50
+                      fontSize : 40
                   }
               },
-              data:[{value: 80, name: '优于全校'}]
+              data:[{value: <?php if($school_students_count){echo round(($school_students_count-$user->get_user_school_rank())/$school_students_count,2)*100;}else{echo 0;}?>,
+                              name: '<?php
+                                        if($school_students_count)
+                                        {
+                                          echo '优于全校';
+                                        }
+                                        else
+                                        {
+                                          echo '还没加入学校哟';
+                                        }
+                                      ?>'
+                   }]
           }
       ]
   };

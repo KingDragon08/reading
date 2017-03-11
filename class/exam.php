@@ -115,13 +115,26 @@ class Exam
     {
       $hege=0;
     }
-    $scores = implode(",",$scores);
+    $temp_scores = implode(",",$scores);
     $answers = implode(",",$answers);
     $question_ids = implode(",",$question_ids);
     $time_string = time();
+    //向测试结果表中写入数据
     $sql = "insert into rd_user_exam_scores(user_id,book_id,scores,hege,use_time,exam_time,answers,question_ids,score)values(".
-            "$user_id,$book_id,'$scores',$hege,$use_time,'$time_string','$answers','$question_ids','$total_score')";
+            "$user_id,$book_id,'$temp_scores',$hege,$use_time,'$time_string','$answers','$question_ids','$total_score')";
     $db->query($sql);
+    //如果合格则更新用户表的score,item1_socre,item2_socre,item3_socre,item4_socre,item5_socre字段，方便排名
+    if($hege==1)
+    {
+        $sql = "update rd_user set score=score+$total_score,".
+                "item1_score=item1_score+$scores[0]+$scores[1],".
+                "item2_score=item2_score+$scores[2]+$scores[3],".
+                "item3_score=item3_score+$scores[4]+$scores[5],".
+                "item4_score=item4_score+$scores[6]+$scores[7],".
+                "item5_score=item5_score+$scores[8]+$scores[9]".
+                " where id=$user_id";
+        $db->query($sql);
+    }
     //获取刚插入记录的id
     $sql = "select id from rd_user_exam_scores where user_id=$user_id and book_id=$book_id ".
             "and exam_time='$time_string'";

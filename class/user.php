@@ -581,6 +581,186 @@
         }
       }
 
+      /**
+      *获取用户所在学校的id
+      **/
+      function get_school_id()
+      {
+        return $this->user_info->school;
+      }
+
+      /**
+      *获取用户所在班级的id
+      **/
+      function get_class_id()
+      {
+        return $this->user_info->class;
+      }
+
+      /**
+      *获取用户所在学校的学生总人数
+      **/
+      function get_school_students_count()
+      {
+        global $db;
+        $user_id = $this->get_user_id();
+        if($this->get_school_id())
+        {
+          $school = $this->get_school_id();
+          $sql = "select count(*) from rd_user where school='$school' and role=1";
+          return $db->get_var($sql);
+        }
+        else
+        {
+          return 0;
+        }
+      }
+
+      /**
+      *获取用户所在班级的学生总人数
+      **/
+      function get_class_students_count()
+      {
+        global $db;
+        $user_id = $this->get_user_id();
+        if($this->get_class_id())
+        {
+          // $school = $this->get_school_id();
+          $class = $this->get_class_id();
+          $sql = "select count(*) from rd_user where class='$class' and role=1";
+          return $db->get_var($sql);
+        }
+        else
+        {
+          return 0;
+        }
+      }
+
+
+      /**
+      *获取当前用户的学校排名
+      **/
+      function get_user_school_rank()
+      {
+        global $db;
+        $user_id = $this->get_user_id();
+        if($this->get_school_id())//如果已经加入学校的话
+        {
+          $school = $this->get_school_id();
+          $sql = "select count(id) from rd_user where score>".
+                  "(select score from rd_user where id=$user_id) and school='$school'";
+          return $db->get_var($sql);
+        }
+        else
+        {
+          return -1;
+        }
+      }
+
+      /**
+      *获取当前用户的班级排名
+      **/
+      function get_user_class_rank()
+      {
+        global $db;
+        $user_id = $this->get_user_id();
+        if($this->get_class_id())//如果已经加入学校的话
+        {
+          $class = $this->get_class_id();
+          $sql = "select count(id) from rd_user where score>".
+                  "(select score from rd_user where id=$user_id) and class='$class'";
+          return $db->get_var($sql);
+        }
+        else
+        {
+          return -1;
+        }
+      }
+
+      /**
+      *学校级别
+      *获取5类题型的得分比例
+      *0:细节认知,1:信息提取,2:意义建构,3:直接推论,4:组织概括
+      **/
+      function get_score_percent_by_item_school()
+      {
+        global $db;
+        $user_id = $this->get_user_id();
+        $item1_socre = $this->user_info->item1_score;
+        $item2_socre = $this->user_info->item2_score;
+        $item3_socre = $this->user_info->item3_score;
+        $item4_socre = $this->user_info->item4_score;
+        $item5_socre = $this->user_info->item5_score;
+        $ret = [];
+        if($this->get_school_id())
+        {
+          $school = $this->get_school_id();
+          $school_students_count = $this->get_school_students_count();
+          $sql = "select count(id) from rd_user where item1_score>".
+                  "(select item1_score from rd_user where id=$user_id) and school='$school'";
+          $ret[] = round(($school_students_count-$db->get_var($sql))/$school_students_count,2)*100;
+          $sql = "select count(id) from rd_user where item2_score>".
+                  "(select item2_score from rd_user where id=$user_id) and school='$school'";
+          $ret[] = round(($school_students_count-$db->get_var($sql))/$school_students_count,2)*100;
+          $sql = "select count(id) from rd_user where item3_score>".
+                  "(select item3_score from rd_user where id=$user_id) and school='$school'";
+          $ret[] = round(($school_students_count-$db->get_var($sql))/$school_students_count,2)*100;
+          $sql = "select count(id) from rd_user where item4_score>".
+                  "(select item4_score from rd_user where id=$user_id) and school='$school'";
+          $ret[] = round(($school_students_count-$db->get_var($sql))/$school_students_count,2)*100;
+          $sql = "select count(id) from rd_user where item5_score>".
+                  "(select item5_score from rd_user where id=$user_id) and school='$school'";
+          $ret[] = round(($school_students_count-$db->get_var($sql))/$school_students_count,2)*100;
+          return $ret;
+        }
+        else
+        {
+          return [-1,-1,-1,-1,-1];
+        }
+      }
+
+      /**
+      *班级级别
+      *获取5类题型的得分比例
+      *0:细节认知,1:信息提取,2:意义建构,3:直接推论,4:组织概括
+      **/
+      function get_score_percent_by_item_class()
+      {
+        global $db;
+        $user_id = $this->get_user_id();
+        $item1_socre = $this->user_info->item1_score;
+        $item2_socre = $this->user_info->item2_score;
+        $item3_socre = $this->user_info->item3_score;
+        $item4_socre = $this->user_info->item4_score;
+        $item5_socre = $this->user_info->item5_score;
+        $ret = [];
+        if($this->get_class_id())
+        {
+          $class = $this->get_class_id();
+          $class_students_count = $this->get_class_students_count();
+          $sql = "select count(id) from rd_user where item1_score>".
+                  "(select item1_score from rd_user where id=$user_id) and class='$class'";
+          $ret[] = round(($class_students_count-$db->get_var($sql))/$class_students_count,2)*100;
+          $sql = "select count(id) from rd_user where item2_score>".
+                  "(select item2_score from rd_user where id=$user_id) and class='$class'";
+          $ret[] = round(($class_students_count-$db->get_var($sql))/$class_students_count,2)*100;
+          $sql = "select count(id) from rd_user where item3_score>".
+                  "(select item3_score from rd_user where id=$user_id) and class='$class'";
+          $ret[] = round(($class_students_count-$db->get_var($sql))/$class_students_count,2)*100;
+          $sql = "select count(id) from rd_user where item4_score>".
+                  "(select item4_score from rd_user where id=$user_id) and class='$class'";
+          $ret[] = round(($class_students_count-$db->get_var($sql))/$class_students_count,2)*100;
+          $sql = "select count(id) from rd_user where item5_score>".
+                  "(select item5_score from rd_user where id=$user_id) and class='$class'";
+          $ret[] = round(($class_students_count-$db->get_var($sql))/$class_students_count,2)*100;
+          return $ret;
+        }
+        else
+        {
+          return [-1,-1,-1,-1,-1];
+        }
+      }
+
 
   }
 ?>

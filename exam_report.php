@@ -101,7 +101,7 @@
         {
       ?>
       <div id="flag">
-        <img src="img/<?php if($exam_report->total_score<6){echo 'bu';} ?>hege.png" style="width:150px;"/>
+        <img src="img/<?php if($exam_report->total_score<count($exam_report->scores)*0.6){echo 'bu';} ?>hege.png" style="width:150px;"/>
       </div>
       <div class="w100 forget">
         <div class="forget_cover">
@@ -113,23 +113,40 @@
       </div>
       <div style="margin:0 auto; padding:10px; margin-top:10px; box-shadow:0 0 5px #ccc; width:790px;">
         <div style="text-align:center; font-size:16px; height:50px; line-height:50px; width:100%;">
-          测评结果[<?php if($exam_report->total_score<6){echo '不';} echo '合格';?>]
+          测评结果[<?php if($exam_report->total_score<count($exam_report->scores)*0.6){echo '不';} echo '合格';?>]
         </div>
         <table width="100%" height="50">
           <tr>
             <td height="50" align="center" valign="middle" width="25%">阅读材料：<?php echo $exam_report->book_name;?></td>
-            <td height="50" align="center" valign="middle" width="25%">试题数量：10题</td>
+            <td height="50" align="center" valign="middle" width="25%">试题数量：<?php echo count($exam_report->scores);?>题</td>
             <td height="50" align="center" valign="middle" width="25%">用时：<?php echo $exam_report->use_time;?></td>
-            <td height="50" align="center" valign="middle" width="25%">得分：<?php echo $exam_report->total_score;?>/10分</td>
+            <td height="50" align="center" valign="middle" width="25%">得分：<?php echo $exam_report->total_score;?>/<?php echo count($exam_report->scores);?>分</td>
           </tr>
         </table>
         <table width="100%" height="30" style="background:#f2f2f2;">
           <tr>
-            <td height="30" align="center" valign="middle" width="20%">细节认知：<?php echo intval($exam_report->scores[0])+intval($exam_report->scores[1])?>/2分</td>
-            <td height="30" align="center" valign="middle" width="20%">信息提取：<?php echo intval($exam_report->scores[2])+intval($exam_report->scores[3])?>/2分</td>
-            <td height="30" align="center" valign="middle" width="20%">意义建构：<?php echo intval($exam_report->scores[4])+intval($exam_report->scores[5])?>/2分</td>
-            <td height="30" align="center" valign="middle" width="20%">直接推论：<?php echo intval($exam_report->scores[6])+intval($exam_report->scores[7])?>/2分</td>
-            <td height="30" align="center" valign="middle" width="20%">组织概括：<?php echo intval($exam_report->scores[8])+intval($exam_report->scores[9])?>/2分</td>
+            <?php
+              if(count($exam_report->scores)==10)
+              {
+            ?>
+                <td height="30" align="center" valign="middle" width="20%">细节认知：<?php echo intval($exam_report->scores[0])+intval($exam_report->scores[1])?>/2分</td>
+                <td height="30" align="center" valign="middle" width="20%">信息提取：<?php echo intval($exam_report->scores[2])+intval($exam_report->scores[3])?>/2分</td>
+                <td height="30" align="center" valign="middle" width="20%">意义建构：<?php echo intval($exam_report->scores[4])+intval($exam_report->scores[5])?>/2分</td>
+                <td height="30" align="center" valign="middle" width="20%">直接推论：<?php echo intval($exam_report->scores[6])+intval($exam_report->scores[7])?>/2分</td>
+                <td height="30" align="center" valign="middle" width="20%">组织概括：<?php echo intval($exam_report->scores[8])+intval($exam_report->scores[9])?>/2分</td>
+            <?php
+              }
+              else
+              {
+            ?>
+                <td height="30" align="center" valign="middle" width="20%">细节认知：<?php echo intval($exam_report->scores[0])+intval($exam_report->scores[1])+intval($exam_report->scores[2])?>/3分</td>
+                <td height="30" align="center" valign="middle" width="20%">信息提取：<?php echo intval($exam_report->scores[3])+intval($exam_report->scores[4])+intval($exam_report->scores[5])?>/3分</td>
+                <td height="30" align="center" valign="middle" width="20%">意义建构：<?php echo intval($exam_report->scores[6])+intval($exam_report->scores[7])+intval($exam_report->scores[8])?>/3分</td>
+                <td height="30" align="center" valign="middle" width="20%">直接推论：<?php echo intval($exam_report->scores[9])+intval($exam_report->scores[10])+intval($exam_report->scores[11])?>/3分</td>
+                <td height="30" align="center" valign="middle" width="20%">组织概括：<?php echo intval($exam_report->scores[12])+intval($exam_report->scores[13])+intval($exam_report->scores[14])?>/3分</td>
+            <?php
+              }
+            ?>
           </tr>
         </table>
         <table width="100%" height="auto" id="list">
@@ -160,25 +177,25 @@
                 </td>
                 <td height="40" align="center" valign="middle" width="25%">
                   <?php
-                    if($counter<2)
+                    if($counter<count($exam_report->scores)/5)
                     {
                       echo "细节认知";
                     }
                     else
                     {
-                      if($counter<4)
+                      if($counter<2*count($exam_report->scores)/5)
                       {
                         echo "信息提取";
                       }
                       else
                       {
-                        if($counter<6)
+                        if($counter<3*count($exam_report->scores)/5)
                         {
                           echo "意义建构";
                         }
                         else
                         {
-                          if($counter<8)
+                          if($counter<4*count($exam_report->scores)/5)
                           {
                             echo "直接推论";
                           }

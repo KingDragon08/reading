@@ -11,6 +11,7 @@ class Exam
   }
 
   /**
+  *1,2年级
   *获取测试的10个题目
   **/
   function get_questions()
@@ -40,6 +41,55 @@ class Exam
     $question5 = $db->get_results($sql);
     $ret[] = $question5[$rand1];
     $ret[] = $question5[$rand2];
+    //获取书的封面
+    $ret[] = $db->get_var("select coverimg from rd_book where id='$this->book_id'");
+    return $ret;
+  }
+  /**
+  *3,4,5,6年级
+  *获取测试的15个题目
+  **/
+  function get_questions_2()
+  {
+    global $db;
+    $ret = [];
+    $rand1 = rand(0,8);
+    $rand2 = $rand1;
+    while($rand2==$rand1)
+    {
+      $rand2 = rand(0,8);
+    }
+    $rand3 = $rand2;
+    while($rand3==$rand2 || $rand3==$rand1)
+    {
+      $rand3 = rand(0,8);
+    }
+    //获取第一类题
+    $sql = "select * from rd_book_question_obj where book_id='$this->book_id' and view='1'";
+    $question1 = $db->get_results($sql);
+    $ret[] = $question1[$rand1];
+    $ret[] = $question1[$rand2];
+    $ret[] = $question1[$rand3];
+    $sql = "select * from rd_book_question_obj where book_id='$this->book_id' and view='2'";
+    $question2 = $db->get_results($sql);
+    $ret[] = $question2[$rand1];
+    $ret[] = $question2[$rand2];
+    $ret[] = $question2[$rand3];
+    $sql = "select * from rd_book_question_obj where book_id='$this->book_id' and view='3'";
+    $question3 = $db->get_results($sql);
+    $ret[] = $question3[$rand1];
+    $ret[] = $question3[$rand2];
+    $ret[] = $question3[$rand3];
+    $sql = "select * from rd_book_question_obj where book_id='$this->book_id' and view='4'";
+    $question4 = $db->get_results($sql);
+    $ret[] = $question4[$rand1];
+    $ret[] = $question4[$rand2];
+    $ret[] = $question4[$rand3];
+    $sql = "select * from rd_book_question_obj where book_id='$this->book_id' and view='5'";
+    $question5 = $db->get_results($sql);
+    $ret[] = $question5[$rand1];
+    $ret[] = $question5[$rand2];
+    $ret[] = $question5[$rand3];
     //获取书的封面
     $ret[] = $db->get_var("select coverimg from rd_book where id='$this->book_id'");
     return $ret;
@@ -156,28 +206,8 @@ class Exam
     }
     else
     {
-      //获取用时情况
-      $use_time = 600-$result->use_time;
-      // $hours = floor($use_time/3600);
-      // if($hours<10)
-      // {
-      //   $hours = "0".$hours;
-      // }
-      // $use_time = $use_time%3600;
-      $minutes = floor($use_time/60);
-      if($minutes<10)
-      {
-        $minutes = "0".$minutes;
-      }
-      $seconds = $use_time%60;
-      if($seconds<10)
-      {
-        $seconds = "0".$seconds;
-      }
-      $result->use_time = $minutes.":".$seconds;
       //获取书的名字
       $result->book_name = $db->get_var("select name from rd_book where id=".$result->book_id);
-
 
       //获取得分情况,添加新字段后可优化
       $scores = $result->scores;
@@ -193,6 +223,19 @@ class Exam
       $result->total_score = $total_score;
       $result->scores = $scores;
 
+      //获取用时情况
+      $use_time = 40*count($scores)-$result->use_time;
+      $minutes = floor($use_time/60);
+      if($minutes<10)
+      {
+        $minutes = "0".$minutes;
+      }
+      $seconds = $use_time%60;
+      if($seconds<10)
+      {
+        $seconds = "0".$seconds;
+      }
+      $result->use_time = $minutes.":".$seconds;
 
       //将选择答案的1，2，3，4,5转换为A,B,C,D,未作答
       $answers = $result->answers;
@@ -225,5 +268,15 @@ class Exam
       return $result;
     }
   }
+
+  /**
+  *获取书的名称
+  **/
+  function get_book_name($book)
+  {
+    global $db;
+    return $db->get_var("select name from rd_book where id='$book'");
+  }
+
 }
 ?>

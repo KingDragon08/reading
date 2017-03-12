@@ -157,7 +157,17 @@
                   if($book->status==2)
                   {
                 ?>
-                    <a href="javascript:void(0);" class="btn btn-success ml20" onclick="exam(<?php echo $book->id;?>)">
+                    <a href="javascript:void(0);" class="btn btn-success ml20" onclick="
+                                                                                <?php
+                                                                                  if($book->grade<=2)
+                                                                                  {
+                                                                                    echo "exam($book->id)";
+                                                                                  }
+                                                                                  else
+                                                                                  {
+                                                                                    echo "exam2($book->id)";
+                                                                                  }
+                                                                                ?>">
                       <i class="glyphicon glyphicon-tags"></i>
                         我要测评
                     </a>
@@ -183,7 +193,14 @@
       //测评
       function exam(book)
       {
-        openwin("exam.php?book="+book);
+        // openwin("exam.php?book="+book);
+        location.href = "exam.php?book="+book;
+      }
+      //测评2(高年及)
+      function exam2(book)
+      {
+        // openwin("exam.php?book="+book);
+        location.href = "exam2.php?book="+book;
       }
     </script>
   </body>

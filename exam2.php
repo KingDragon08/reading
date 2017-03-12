@@ -12,7 +12,7 @@
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <title>乐智悦读-测验</title>
     <style media="screen">
-      .item{height:515px; width: 600px;}
+      .item{height:715px; width: 600px;}
       .question_title{margin-left:30px; margin-top:40px; font-size: 16px; font-weight: bold;}
       .answers{margin-left: 30px; margin-top:20px;}
       .question_ctr{margin-top:50px; text-align: center; clear: both;}
@@ -98,7 +98,7 @@
           全本阅读（测试习题）
           <div class="float_right" style="margin-right:5.8em;">
             <p id="time">
-              10:00
+
             </p>
           </div>
         </div>
@@ -106,7 +106,7 @@
     <!-- division panel end -->
     <!-- list start -->
     <div class="container mt20 mb20">
-      <div style="width:800px; height:515px; margin:0 auto; box-shadow:0 0 5px #999; border-radius:5px;">
+      <div style="width:800px; height:715px; margin:0 auto; box-shadow:0 0 5px #999; border-radius:5px;">
         <?php
           if(!isset($_GET['book']))
           {
@@ -137,10 +137,10 @@
           }
         ?>
         <?php
-          //判断书是不是高年级的书
+          //判断是不是低年级的书
           global $db;
           $grade = $db->get_var("select grade from rd_book where id='$book'");
-          if($grade>2)
+          if($grade<=2)
           {
             exit();
           }
@@ -156,6 +156,11 @@
               isset($_POST['question_id_8']) &&
               isset($_POST['question_id_9']) &&
               isset($_POST['question_id_10']) &&
+              isset($_POST['question_id_11']) &&
+              isset($_POST['question_id_12']) &&
+              isset($_POST['question_id_13']) &&
+              isset($_POST['question_id_14']) &&
+              isset($_POST['question_id_15']) &&
               isset($_POST['question_1']) &&
               isset($_POST['question_2']) &&
               isset($_POST['question_3']) &&
@@ -165,7 +170,12 @@
               isset($_POST['question_7']) &&
               isset($_POST['question_8']) &&
               isset($_POST['question_9']) &&
-              isset($_POST['question_10'])
+              isset($_POST['question_10'])&&
+              isset($_POST['question_11'])&&
+              isset($_POST['question_12'])&&
+              isset($_POST['question_13'])&&
+              isset($_POST['question_14'])&&
+              isset($_POST['question_15'])
           )
           {
               $question_ids = [];
@@ -179,6 +189,11 @@
               $question_ids[] = $_POST['question_id_8'];
               $question_ids[] = $_POST['question_id_9'];
               $question_ids[] = $_POST['question_id_10'];
+              $question_ids[] = $_POST['question_id_11'];
+              $question_ids[] = $_POST['question_id_12'];
+              $question_ids[] = $_POST['question_id_13'];
+              $question_ids[] = $_POST['question_id_14'];
+              $question_ids[] = $_POST['question_id_15'];
               $answers = [];
               $answers[] = $_POST['question_1'];
               $answers[] = $_POST['question_2'];
@@ -190,6 +205,11 @@
               $answers[] = $_POST['question_8'];
               $answers[] = $_POST['question_9'];
               $answers[] = $_POST['question_10'];
+              $answers[] = $_POST['question_11'];
+              $answers[] = $_POST['question_12'];
+              $answers[] = $_POST['question_13'];
+              $answers[] = $_POST['question_14'];
+              $answers[] = $_POST['question_15'];
               $answer_time = $_COOKIE["answer_time"];
               // setCookie("answer_time",600);
               // $_COOKIE["answer_time"] = 600;
@@ -239,9 +259,9 @@
           {
         ?>
         <form action="" id="kd_exam" method="post" onsubmit="return check();">
-        <div id="myCarousel" class="carousel slide" style="width:599px; float:left; height:515px; border-right:1px solid #ccc;">
+        <div id="myCarousel" class="carousel slide" style="width:599px; float:left; height:715px; border-right:1px solid #ccc;">
           <!-- 轮播（Carousel）项目 -->
-          <div class="carousel-inner" style="height:515px;">
+          <div class="carousel-inner" style="height:715px;">
             <?php
               $exam = new Exam($book);
               //检查当前用户是否可以在当天进行测试
@@ -271,9 +291,9 @@
             <?php
                 exit();
               }
-              $questions = $exam->get_questions();
+              $questions = $exam->get_questions_2();
               $counter = 1;
-              if(!$questions[9])
+              if(!$questions[14])
               {
             ?>
               <center>
@@ -286,7 +306,7 @@
             <?php
                 exit();
               }
-              $coverimg = $questions[10];
+              $coverimg = $questions[15];
               array_pop($questions);
               foreach($questions as $question)
               {
@@ -349,7 +369,7 @@
                       {
                         echo '<input type="button" class="btn btn-default" value="上一题" onclick="prev_page()">&nbsp;';
                       }
-                      if($counter!=10)
+                      if($counter!=15)
                       {
                         echo '<input type="button" class="btn btn-default" value="下一题" onclick="next_page()">';
                       }
@@ -364,7 +384,7 @@
             ?>
           </div>
       </div>
-      <div class="" id="answer_panel" style="float:left; width:200px; height:515px; text-align:center; padding:10px;">
+      <div class="" id="answer_panel" style="float:left; width:200px; height:715px; text-align:center; padding:10px;">
           <input type="button" class="btn btn-default form-control" value="第1题" onclick="slide2page(0)">
           <input type="button" class="btn btn-default form-control" value="第2题" onclick="slide2page(1)">
           <input type="button" class="btn btn-default form-control" value="第3题" onclick="slide2page(2)">
@@ -375,13 +395,18 @@
           <input type="button" class="btn btn-default form-control" value="第8题" onclick="slide2page(7)">
           <input type="button" class="btn btn-default form-control" value="第9题" onclick="slide2page(8)">
           <input type="button" class="btn btn-default form-control" value="第10题" onclick="slide2page(9)">
+          <input type="button" class="btn btn-default form-control" value="第11题" onclick="slide2page(10)">
+          <input type="button" class="btn btn-default form-control" value="第12题" onclick="slide2page(11)">
+          <input type="button" class="btn btn-default form-control" value="第13题" onclick="slide2page(12)">
+          <input type="button" class="btn btn-default form-control" value="第14题" onclick="slide2page(13)">
+          <input type="button" class="btn btn-default form-control" value="第15题" onclick="slide2page(14)">
           <input type="submit" class="btn btn-danger form-control" value="交卷">
           <!-- <span id="time" style="display:inline-block; margin-top:20px;"></span> -->
       </div>
       </form>
       <script type="text/javascript" src="js/cookie.js"></script>
       <script>
-          answer_time = 10*40;
+          answer_time = 10*60;
           answer_interval = "";
           $().ready(function(){
             $('#myCarousel').carousel('pause');

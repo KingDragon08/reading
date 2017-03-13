@@ -761,6 +761,126 @@
         }
       }
 
+      /**
+      *教师用
+      *获取教师所管理的班级信息
+      **/
+      function get_classes()
+      {
+        global $db;
+        $user_id = $this->get_user_id();
+        $role = $this->get_user_info()->role;
+        if($role!="教师")
+        {
+          return NULL;
+        }
+        $sql = "select id,classname from rd_class where teacher_id='$user_id'";
+        return $db->get_results($sql);
+      }
+
+      /**
+      *教师用
+      *获取班级下的所有学生
+      **/
+      function get_students_by_class($class_id)
+      {
+        global $db;
+        $students = $db->get_results("select id,name from rd_user where role=1 and class='$class_id'");
+        foreach($students as $student)
+        {
+          if(strlen($student->name)<1)
+          {
+            $student->name = '暂无姓名';
+          }
+        }
+        return $students;
+      }
+
+      /**
+      *教师用
+      *获取班级内学生的总人数
+      **/
+      function get_class_student_number($class_id)
+      {
+        global $db;
+        return $db->get_var("select count(id) from rd_user where role=1 and class='$class_id'");
+      }
+
+      /**
+      *教师用
+      *检查班级和教师的对应关系
+      **/
+      function check_class($class_id)
+      {
+        global $db;
+        $user_id = $this->get_user_id();
+        return $db->get_var("select count(id) from rd_class where id='$class_id' and teacher_id='$user_id'");
+      }
+
+      /**
+      *教师用
+      *获取教师测评中心第一个图的六项数据
+      **/
+      function get_class_report_score_1($class_id)
+      {
+        global $db;
+        $sql = "select round(avg(score),2) as avg_score,round(avg(item1_score),2) as item1,".
+                "round(avg(item2_score),2) as item2,round(avg(item3_score),2) as item3,".
+                "round(avg(item4_score),2) as item4,round(avg(item5_score),2) as item5 ".
+                "from rd_user where role=1 and class='$class_id'";
+        return $db->get_row($sql);
+      }
+
+      /**
+      *教师用
+      *获取教师测评中心第二个饼图的数据
+      **/
+      function get_class_report_score_2($class_id)
+      {
+        global $db;
+        //取出当前班级所有学生测试合格的书的id
+        $sql = "select count(id) as total,type from rd_book where id in(".
+                "select book_id from rd_user_exam_scores where user_id in(".
+                "select id from rd_user where role=1 and class='$class_id') and hege=1) group by type";
+        $datas = $db->get_results($sql);
+        //取出所有的书的类型
+        $sql = "select id,name from rd_book_type";
+        $book_types = $db->get_results($sql);
+        foreach($book_types as $type)
+        {
+          $type->num = 0;
+          foreach($datas as $data)
+          {
+            if($data->type == $type->id)
+            {
+              $type->num = $data->total;
+            }
+          }
+        }
+        return $book_types;
+      }
+
+      /**
+      *教师用
+      *获取教师测评中心的第三个图数据
+      **/
+      function get_class_report_score_3($class_id)
+      {
+        global $db;
+        $sql = "select count(id) as total,level from rd_book where id in(".
+                "select book_id from rd_user_exam_scores where user_id in(".
+                "select id from rd_user where role=1 and class='$class_id') and hege=1)group by level";
+        $datas = $db->get_results($sql);
+        $ret = [0,0,0,0,0,0,0,0,0,0];
+        if(count($datas)>0)
+        {
+          foreach($datas as $data)
+          {
+            $ret[$data->level-1] = $data->total;
+          }
+        }
+        return $ret;
+      }
 
   }
 ?>

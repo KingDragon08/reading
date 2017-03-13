@@ -550,6 +550,15 @@ class Common
       return $ret;
     }
 
+    /**
+    *输出报错信息
+    **/
+    function tips($tips)
+    {
+      echo '<center><img src="img/gongchengshi.jpeg" style="margin-top:20px;"/><br>'.
+            '<p class="gray" id="tips">'.$tips.'...</p></center>';
+    }
+
 
 }
 ?>

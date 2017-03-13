@@ -71,7 +71,7 @@
               <img src="img/luobo.png" alt="" style="margin-left:<?php
                   if($class_students_count)
                   {
-                      echo 829*round(($class_students_count-$user->get_user_class_rank())/$class_students_count,2)-4;
+                      echo 829*round(($class_students_count-$user->get_user_class_rank()-1)/($class_students_count-1),2)-4;
                       echo "px;";
                   }
                   else
@@ -109,7 +109,7 @@
             xAxis : [
                 {
                     type : 'category',
-                    data : ['细节认知','信息提取','意义建构','直接推论','组织概括']
+                    data : ['细节认知','信息提取','意义建构','直接推论','批判思考']
                 }
             ],
             yAxis : [

@@ -658,12 +658,54 @@
       }
 
       /**
+      *获取当前用户的学校排名
+      *教师第三视角
+      **/
+      function get_user_school_rank2($id)
+      {
+        global $db;
+        $user_id = $id;
+        if($this->get_school_id())//如果已经加入学校的话
+        {
+          $school = $this->get_school_id();
+          $sql = "select count(id) from rd_user where score>".
+                  "(select score from rd_user where id=$user_id) and school='$school'";
+          return $db->get_var($sql);
+        }
+        else
+        {
+          return -1;
+        }
+      }
+
+      /**
       *获取当前用户的班级排名
       **/
       function get_user_class_rank()
       {
         global $db;
         $user_id = $this->get_user_id();
+        if($this->get_class_id())//如果已经加入学校的话
+        {
+          $class = $this->get_class_id();
+          $sql = "select count(id) from rd_user where score>".
+                  "(select score from rd_user where id=$user_id) and class='$class'";
+          return $db->get_var($sql);
+        }
+        else
+        {
+          return -1;
+        }
+      }
+
+      /**
+      *获取当前用户的班级排名
+      *教师第三视角
+      **/
+      function get_user_class_rank2($id)
+      {
+        global $db;
+        $user_id = $id;
         if($this->get_class_id())//如果已经加入学校的话
         {
           $class = $this->get_class_id();
@@ -686,6 +728,49 @@
       {
         global $db;
         $user_id = $this->get_user_id();
+        $item1_socre = $this->user_info->item1_score;
+        $item2_socre = $this->user_info->item2_score;
+        $item3_socre = $this->user_info->item3_score;
+        $item4_socre = $this->user_info->item4_score;
+        $item5_socre = $this->user_info->item5_score;
+        $ret = [];
+        if($this->get_school_id())
+        {
+          $school = $this->get_school_id();
+          $school_students_count = $this->get_school_students_count();
+          $sql = "select count(id) from rd_user where item1_score>".
+                  "(select item1_score from rd_user where id=$user_id) and school='$school'";
+          $ret[] = round(($school_students_count-$db->get_var($sql))/$school_students_count,2)*100;
+          $sql = "select count(id) from rd_user where item2_score>".
+                  "(select item2_score from rd_user where id=$user_id) and school='$school'";
+          $ret[] = round(($school_students_count-$db->get_var($sql))/$school_students_count,2)*100;
+          $sql = "select count(id) from rd_user where item3_score>".
+                  "(select item3_score from rd_user where id=$user_id) and school='$school'";
+          $ret[] = round(($school_students_count-$db->get_var($sql))/$school_students_count,2)*100;
+          $sql = "select count(id) from rd_user where item4_score>".
+                  "(select item4_score from rd_user where id=$user_id) and school='$school'";
+          $ret[] = round(($school_students_count-$db->get_var($sql))/$school_students_count,2)*100;
+          $sql = "select count(id) from rd_user where item5_score>".
+                  "(select item5_score from rd_user where id=$user_id) and school='$school'";
+          $ret[] = round(($school_students_count-$db->get_var($sql))/$school_students_count,2)*100;
+          return $ret;
+        }
+        else
+        {
+          return [-1,-1,-1,-1,-1];
+        }
+      }
+
+      /**
+      *学校级别
+      *获取5类题型的得分比例
+      *0:细节认知,1:信息提取,2:意义建构,3:直接推论,4:组织概括
+      *教师第三视角
+      **/
+      function get_score_percent_by_item_school2($id)
+      {
+        global $db;
+        $user_id = $id;
         $item1_socre = $this->user_info->item1_score;
         $item2_socre = $this->user_info->item2_score;
         $item3_socre = $this->user_info->item3_score;
@@ -762,6 +847,49 @@
       }
 
       /**
+      *班级级别
+      *获取5类题型的得分比例
+      *0:细节认知,1:信息提取,2:意义建构,3:直接推论,4:组织概括
+      *教师用第三视角
+      **/
+      function get_score_percent_by_item_class2($id)
+      {
+        global $db;
+        $user_id = $id;
+        $item1_socre = $this->user_info->item1_score;
+        $item2_socre = $this->user_info->item2_score;
+        $item3_socre = $this->user_info->item3_score;
+        $item4_socre = $this->user_info->item4_score;
+        $item5_socre = $this->user_info->item5_score;
+        $ret = [];
+        if($this->get_class_id())
+        {
+          $class = $this->get_class_id();
+          $class_students_count = $this->get_class_students_count();
+          $sql = "select count(id) from rd_user where item1_score>".
+                  "(select item1_score from rd_user where id=$user_id) and class='$class'";
+          $ret[] = round(($class_students_count-$db->get_var($sql))/$class_students_count,2)*100;
+          $sql = "select count(id) from rd_user where item2_score>".
+                  "(select item2_score from rd_user where id=$user_id) and class='$class'";
+          $ret[] = round(($class_students_count-$db->get_var($sql))/$class_students_count,2)*100;
+          $sql = "select count(id) from rd_user where item3_score>".
+                  "(select item3_score from rd_user where id=$user_id) and class='$class'";
+          $ret[] = round(($class_students_count-$db->get_var($sql))/$class_students_count,2)*100;
+          $sql = "select count(id) from rd_user where item4_score>".
+                  "(select item4_score from rd_user where id=$user_id) and class='$class'";
+          $ret[] = round(($class_students_count-$db->get_var($sql))/$class_students_count,2)*100;
+          $sql = "select count(id) from rd_user where item5_score>".
+                  "(select item5_score from rd_user where id=$user_id) and class='$class'";
+          $ret[] = round(($class_students_count-$db->get_var($sql))/$class_students_count,2)*100;
+          return $ret;
+        }
+        else
+        {
+          return [-1,-1,-1,-1,-1];
+        }
+      }
+
+      /**
       *教师用
       *获取教师所管理的班级信息
       **/
@@ -785,15 +913,22 @@
       function get_students_by_class($class_id)
       {
         global $db;
-        $students = $db->get_results("select id,name from rd_user where role=1 and class='$class_id'");
-        foreach($students as $student)
+        $students = $db->get_results("select id,name,score,chinese_score from rd_user where role=1 and class='$class_id'");
+        if($students)
         {
-          if(strlen($student->name)<1)
+          foreach($students as $student)
           {
-            $student->name = '暂无姓名';
+            if(strlen($student->name)<1)
+            {
+              $student->name = '暂无姓名';
+            }
           }
+          return $students;
         }
-        return $students;
+        else
+        {
+          return 0;
+        }
       }
 
       /**
@@ -880,6 +1015,72 @@
           }
         }
         return $ret;
+      }
+
+      /**
+      *教师用
+      *获取教师测评中心的第四个图数据
+      *阅读数量
+      **/
+      function get_class_report_score_4($class_id)
+      {
+        global $db;
+        $students = $this->get_students_by_class($class_id);
+        $ret = [];
+        //分个获取学生的阅读数量
+        if($students)
+        {
+          foreach($students as $student)
+          {
+            $temp = [];
+            $temp['name'] = $student->name;
+            $sql = "select count(id) from rd_user_exam_scores where user_id='$student->id' and hege=1";
+            $temp['num'] = $db->get_var($sql);
+            $ret[] = $temp;
+          }
+          return $ret;
+        }
+        else
+        {
+          return 0;
+        }
+      }
+
+      /**
+      *教师用
+      *获取学生是否是教师的学生
+      **/
+      function check_is_student($id)
+      {
+        global $db;
+        $sql = "select class from rd_user where id=$id and role=1";
+        $class = $db->get_var($sql);
+        if($class == $this->get_user_info()->class)
+        {
+          return true;
+        }
+        else {
+          return false;
+        }
+      }
+
+      /**
+      *教师用
+      *获取学生的姓名
+      **/
+      function get_student_name($id)
+      {
+        global $db;
+        $sql = "select name from rd_user where id='$id'";
+        $name = $db->get_var($sql);
+        if($name)
+        {
+          return $name;
+        }
+        else
+        {
+          return "暂无姓名";
+        }
       }
 
   }

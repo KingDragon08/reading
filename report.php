@@ -223,7 +223,7 @@
                               foreach($students as $student)
                               {
                           ?>
-                                <li><a href="report_single.php?id=<?php echo $student->id;?>" target="_blank"><?php echo $student->name;?></a></li>
+                                <li><a href="report_single_school.php?id=<?php echo $student->id;?>" target="_blank"><?php echo $student->name;?></a></li>
                           <?php
                               }
                             }
@@ -304,6 +304,15 @@
               {
                 $class_score = $user->get_class_report_score_1($class_id);
               }
+              else
+              {
+                $class_score->avg_score = 0;
+                $class_score->item1 = 0;
+                $class_score->item2 = 0;
+                $class_score->item3 = 0;
+                $class_score->item4 = 0;
+                $class_score->item5 = 0;
+              }
             ?>
             <script type="text/javascript">
                 var myChart_1 = echarts.init(document.getElementById('graph1'),'default');
@@ -358,7 +367,7 @@
             </script>
           </div>
           <div class="col-lg-4" style="height:400px;">
-            <div class="row" id="graph2" style="height:50%; line-height:200px; text-align:center;">
+            <div class="row" id="graph2" style="height:50%; text-align:center;">
             <?php
               $pie_data = "";
               if($user->get_students_by_class($class_id))
@@ -426,7 +435,7 @@
               }
             ?>
             </div>
-            <div class="row" id="graph3" style="height:50%; line-height:200px; text-align:center; margin-top:20px;">
+            <div class="row" id="graph3" style="height:50%; text-align:center; margin-top:20px;">
               <?php
               $raddar_data = "";
               if($user->get_students_by_class($class_id))
@@ -502,6 +511,425 @@
             </div>
           </div>
         </div>
+
+
+        <div class="container mt20 mb20">
+          <div class="col-lg-6" id="yuyin_graph1" style="height:400px; padding:0;">
+            <?php
+              $students = $user->get_students_by_class($class_id);
+              if($students)
+              {
+            ?>
+            <script type="text/javascript">
+              var myChart_yuyin_1 = echarts.init(document.getElementById('yuyin_graph1'),'default');
+              var yuyin_option_1 = {
+                tooltip : {
+                    trigger: 'axis'
+                },
+                calculable : true,
+                polar : [
+                    {
+                        indicator : [
+                            {text : '双唇音', max  : 10},
+                            {text : '唇齿音', max  : 10},
+                            {text : '舌尖前音', max  : 10},
+                            {text : '舌尖中音', max  : 10},
+                            {text : '舌尖后音', max  : 10},
+                            {text : '舌面音', max  : 10},
+                            {text : '舌根音', max  : 10},
+                            {text : '舌面元音单韵母', max  : 10},
+                            {text : '舌尖元音单韵母', max  : 10},
+                            {text : '卷舌单韵母', max  : 10},
+                            {text : '前响复韵母', max  : 10},
+                            {text : '中响复韵母', max  : 10},
+                            {text : '后响复韵母', max  : 10},
+                            {text : '前鼻音韵母', max  : 10},
+                            {text : '后鼻音韵母', max  : 10},
+                            {text : '阴平第1声', max  : 10},
+                            {text : '阳平第2声', max  : 10},
+                            {text : '上声第3声', max  : 10},
+                            {text : '去声第4声', max  : 10}
+                        ],
+                        radius : 130
+                    }
+                ],
+                series : [
+                    {
+                        name: '发音得分',
+                        type: 'radar',
+                        itemStyle: {
+                            normal: {
+                                areaStyle: {
+                                    type: 'default'
+                                }
+                            }
+                        },
+                        data : [
+                            {
+                                value : [10,8,5,7,4,8,9,2,5,7,3,8,5,9,3,6,8,7,9],
+                                name : '发音得分'
+                            }
+                        ]
+                    }
+                ]
+            };
+            myChart_yuyin_1.setOption(yuyin_option_1);
+            </script>
+            <?php
+              }
+              else
+              {
+                echo "班内没有学生";
+              }
+            ?>
+          </div>
+          <div class="col-lg-6" style="height:400px;">
+            <div class="row" id="yuyin_graph2" style="height:50%; text-align:center;">
+              <script type="text/javascript">
+              var myChart_yuyin_2 = echarts.init(document.getElementById('yuyin_graph2'),'default');
+              var option_yuyin_2 = {
+                tooltip : {
+                    trigger: 'axis'
+                },
+                calculable : true,
+                xAxis : [
+                    {
+                      type : 'category',
+                      data : ['声母发音报告','韵母发音报告','调型发音报告']
+                    }
+                ],
+                yAxis : [
+                    {
+                      type : 'value',
+                      min:0,
+                      max:100
+                    }
+                ],
+                series : [
+                    {
+                        type:'bar',
+                        barCategoryGap:'80%',
+                        data:[79, 73,75]
+                    }
+                ]
+              };
+              myChart_yuyin_2.setOption(option_yuyin_2);
+              </script>
+            </div>
+            <div class="row" id="yuyin_graph3" style="height:50%; text-align:center;">
+              <script type="text/javascript">
+                var myChart_yuyin_3 = echarts.init(document.getElementById('yuyin_graph3'),'default');
+                var option_yuyin_3 = {
+                      tooltip : {
+                          trigger: 'axis'
+                      },
+                      polar : [
+                         {
+                             radius:80,
+                             indicator : [
+                                 { text: '声母发音报告',max:100},
+                                 { text: '韵母发音报告',max:100},
+                                 { text: '调型发音报告',max:100}
+                              ]
+                          }
+                      ],
+                      calculable : true,
+                      series : [
+                          {
+                              name: '发音报告',
+                              type: 'radar',
+                              data : [
+                                  {
+                                      value : [98,68,79],
+                                      name : '发音报告'
+                                  }
+                              ]
+                          }
+                      ]
+                  };
+
+                myChart_yuyin_3.setOption(option_yuyin_3);
+              </script>
+            </div>
+          </div>
+        </div>
+
+
+
+
+
+
+        <div class="container mt20 mb20" style="height:300px;" id="graph4">
+        <?php
+          $yuedu_data = "";
+          if($user->get_students_by_class($class_id))
+          {
+              $yuedu_data = $user->get_class_report_score_4($class_id);
+              if($yuedu_data)
+              {
+                $x = "";
+                $y = "";
+                foreach($yuedu_data as $item)
+                {
+                  $x .= "'".$item['name']."',";
+                  $y .= "'". (intval($item['num'])) ."',";
+                }
+                $x = substr($x,0,-1);
+                $y = substr($y,0,-1);
+        ?>
+              <script type="text/javascript">
+              var myChart_4 = echarts.init(document.getElementById('graph4'),'default');
+              var option_4 = {
+                title: {
+                    text: '阅读数量',
+                    x:'center'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: [<?php echo $x;?>],
+                    axisLabel:{
+                      rotate:-90
+                    }
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [
+                    {
+                        name:'阅读数量',
+                        type:'line',
+                        data:[<?php echo $y;?>]
+                    }
+                ]
+              };
+              myChart_4.setOption(option_4);
+              </script>
+        <?php
+            }
+            else
+            {
+              echo "暂无数据";
+            }
+          }
+          else
+          {
+            echo "班内没有学生";
+          }
+        ?>
+          </div>
+
+
+
+
+
+
+          <div class="container mt20 mb20" style="height:300px;" id="graph5">
+          <script type="text/javascript">
+            var myChart_5 = echarts.init(document.getElementById('graph5'),'default');
+            var option_5 = {
+            title:{
+              text:"语音评分",
+              x:'center'
+            },
+            tooltip : {
+                trigger: 'axis'
+            },
+            toolbox: {
+                show : false
+            },
+            calculable : true,
+            xAxis : [
+                {
+                    type : 'category',
+                    axisLabel:{
+                      rotate:-90
+                    },
+                    data:['张三','李四','王五','张三','李四','王五','张三','李四','王五',
+                          '张三','李四','王五','张三','李四','王五','张三','李四','王五',
+                          '张三','李四','王五','张三','李四','王五','张三','李四','王五']
+                }
+            ],
+            yAxis : [
+                {
+                  type : 'value'
+                }
+            ],
+            series : [
+                {
+                    type:'bar',
+                    barCategoryGap:'50%',
+                    data:[<?php
+                        $i=0; $out_string = "";
+                        while($i<27)
+                        {
+                          $out_string .= strval(rand(0,100));
+                          $out_string .= ",";
+                          $i++;
+                        }
+                        echo substr($out_string,0,-1);
+                    ?>]
+                }
+            ]
+          };
+          myChart_5.setOption(option_5);
+          </script>
+        </div>
+
+
+
+
+
+        <div class="container mt20 mb20" id="graph6" style="height:300px;">
+          <?php
+            $students = $user->get_students_by_class($class_id);
+            if($students)
+            {
+              $name_string = "";
+              $data_string = "";
+              foreach ($students as $student)
+              {
+                $name_string .= "'".$student->name."'";
+                $name_string .= ",";
+                $data_string .= $student->score;
+                $data_string .= ",";
+              }
+              $name_string = substr($name_string,0,-1);
+              $data_string = substr($data_string,0,-1);
+            ?>
+            <script type="text/javascript">
+            var myChart_6 = echarts.init(document.getElementById('graph6'),'default');
+            var option_6 = {
+              title:{
+                text:"阅读评分",
+                x:'center'
+              },
+              tooltip : {
+                  trigger: 'axis'
+              },
+              toolbox: {
+                  show : false
+              },
+              calculable : true,
+              xAxis : [
+                  {
+                      type : 'category',
+                      axisLabel:{
+                        rotate:-90
+                      },
+                      data:[<?php echo $name_string;?>]
+                  }
+              ],
+              yAxis : [
+                  {
+                    type : 'value'
+                  }
+              ],
+              series : [
+                  {
+                      type:'bar',
+                      barCategoryGap:'50%',
+                      data:[<?php echo $data_string;?>]
+                  }
+              ]
+            };
+            myChart_6.setOption(option_6);
+            </script>
+            <?php
+            }
+            else
+            {
+              echo "班内没有学生";
+            }
+          ?>
+        </div>
+
+
+
+
+
+
+        <div class="container mt20 mb20" id="graph7" style="height:300px;">
+          <?php
+          if($students)
+          {
+            $name_string = "";
+            $data_string = "";
+            $chinese_score = array();
+            foreach ($students as $student)
+            {
+              $chinese_score[] = $student->chinese_score;
+            }
+            array_multisort($chinese_score,SORT_ASC,$students);
+            foreach($students as $student)
+            {
+              $name_string .= "'".$student->name."'";
+              $name_string .= ",";
+              $data_string .= $student->chinese_score;
+              $data_string .= ",";
+            }
+            $name_string = substr($name_string,0,-1);
+            $data_string = substr($data_string,0,-1);
+          ?>
+          <script type="text/javascript">
+            var myChart_7 = echarts.init(document.getElementById('graph7'),'default');
+            var option_7 = {
+              title: {
+                  text: '语文成绩',
+                  x:'center'
+              },
+              tooltip: {
+                  trigger: 'axis'
+              },
+              grid: {
+                  left: '3%',
+                  right: '4%',
+                  bottom: '3%',
+                  containLabel: true
+              },
+              xAxis: {
+                  type: 'category',
+                  boundaryGap: false,
+                  data: [<?php echo $name_string;?>],
+                  axisLabel:{
+                    rotate:-90
+                  }
+              },
+              yAxis: {
+                  type: 'value'
+              },
+              series: [
+                  {
+                      name:'语文成绩',
+                      type:'line',
+                      data:[<?php echo $data_string;?>]
+                  }
+              ]
+            };
+            myChart_7.setOption(option_7);
+            </script>
+          <?php
+          }
+          else
+          {
+            echo "班内没有学生";
+          }
+          ?>
+        </div>
+
+
+
+
+
 
         <!-- 教师结束 -->
         <?php

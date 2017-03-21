@@ -527,19 +527,6 @@
     <script type="text/javascript">
       var grade = <?php echo isset($_GET['grade'])?intval($_GET['grade']):0 ?>;
       var type = <?php echo isset($_GET['type'])?intval($_GET['type']):0 ?>;
-      // $().ready(function(){
-      //   //初始化已经加入当前书单的书的按钮
-      //   var b = get_cookie('books');
-      //   if(b)
-      //   {
-      //     $(b.split(',')).each(function(index,val){
-      //       $("#book"+val).removeClass("btn-primary");
-      //       $("#book"+val).addClass("btn-default");
-      //       $('#book'+val).attr("onclick","");
-      //     });
-      //   }
-      // });
-
       function grade_change(id)
       {
         if(type == 0)
@@ -579,10 +566,43 @@
 
 
     </script>
-
-
-    <!-- booklist panel end -->
-
+    <script type="text/javascript" src="js/cookie.js"></script>
+    <script type="text/javascript">
+      $().ready(function(){
+        //初始化已经加入当前书单的书的按钮
+        var b = get_cookie('books');
+        if(b)
+        {
+          $(b.split(',')).each(function(index,val){
+            $("#book"+val).removeClass("btn-info");
+            $("#book"+val).addClass("btn-default");
+            $('#book'+val).attr("onclick","");
+            $('#book'+val).html("加入成功");
+          });
+        }
+      });
+      function add2_book_list(book)
+      {
+        books = "";
+        if(get_cookie('books'))
+        {
+          books = get_cookie('books');
+        }
+        if(books)
+        {
+          books += "," + book;
+        }
+        else
+        {
+          books = book;
+        }
+        set_cookie("books",books);
+        $("#book"+book).html("加入成功");
+        $("#book"+book).removeClass("btn-info");
+        $("#book"+book).addClass("btn-default");
+        $("#book"+book).attr("onclick","")
+      }
+    </script>
     <?php
       }
     ?>
@@ -591,50 +611,6 @@
   教师结束
 
 -->
-<?php
-  if($role == "教师")
-  {
-?>
-<script type="text/javascript" src="js/cookie.js"></script>
-<script type="text/javascript">
-  $().ready(function(){
-    //初始化已经加入当前书单的书的按钮
-    var b = get_cookie('books');
-    if(b)
-    {
-      $(b.split(',')).each(function(index,val){
-        $("#book"+val).removeClass("btn-info");
-        $("#book"+val).addClass("btn-default");
-        $('#book'+val).attr("onclick","");
-        $('#book'+val).html("加入成功");
-      });
-    }
-  });
-  function add2_book_list(book)
-  {
-    books = "";
-    if(get_cookie('books'))
-    {
-      books = get_cookie('books');
-    }
-    if(books)
-    {
-      books += "," + book;
-    }
-    else
-    {
-      books = book;
-    }
-    set_cookie("books",books);
-    $("#book"+book).html("加入成功");
-    $("#book"+book).removeClass("btn-info");
-    $("#book"+book).addClass("btn-default");
-    $("#book"+book).attr("onclick","")
-  }
-</script>
-<?
-  }
-?>
 
 <?php
   include_once("footer.php");

@@ -14,6 +14,19 @@
     <style media="screen">
       .btn-small{font-size: 12px; border-radius: 20px;}
       .purple{color:#824399;}
+      .paiming{
+        background: #f2f2f2; width: 100%;
+      }
+      .paiming tr{
+        border:1px solid #fff;
+        border-top:0;
+      }
+      .paiming td{
+        border-right: 1px solid #fff;
+      }
+      .paiming tr td:last-child{
+        border:0;
+      }
     </style>
   </head>
   <body>
@@ -409,8 +422,39 @@ if($role == "教师")
   <!-- division panel end -->
   <!-- filter panel start -->
   <br>
-  <div class="row">
-    <div class="container">
+  <div class="container">
+  <div class="col-lg-3" style="max-height:750px; overflow:scroll;">
+    <div class="paiming_title" style="margin-top:50px;">
+      学生阅读完成记录板
+    </div>
+    <table class="paiming">
+      <?php
+        if(isset($_GET['id']))
+        {
+          $id = intval($_GET['id']);
+        }
+        else
+        {
+          $id = 0;
+        }
+        $num_data = $user->get_num_data($id);
+        if(count($num_data)>0)
+        {
+          foreach($num_data as $data)
+          {
+      ?>
+          <tr>
+            <td width="50%" height="40" align="center" valign="middle"><?php echo $data['name'];?></td>
+            <td width="50%" height="40" align="center" valign="middle"><?php echo $data['num'];?>本</td>
+          </tr>
+      <?php
+          }
+        }
+      ?>
+    </table>
+  </div>
+  <div class="col-lg-9">
+    <div class="col-lg-12">
       <div class="col-lg-8">
         选择书单类型:&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -495,20 +539,20 @@ if($role == "教师")
       }
     }
   ?>
-  <div class="container mt20">
+  <div class="col-lg-12 mt20">
     <?php
       if($books)
       {
         foreach($books as $book)
         {
     ?>
-          <div class="col-lg-4 mb20">
+          <div class="col-lg-6 mb20">
             <div class="col-lg-6 book_img">
               <a href="book.php?book=<?php echo $book->id;?>">
                 <img src="<?php echo $book->coverimg; ?>" width="100%"/>
               </a>
             </div>
-            <div class="col-lg-6 book_info" style="display:table; height:166px;">
+            <div class="col-lg-6 book_info" style="display:table; height:182px;">
               <div style="display:table-cell; vertical-align:middle;">
                 <p>名字：<?php echo $book->name;?></p>
                 <p class="gray f12">作者：<?php echo $book->author;?></p>
@@ -562,6 +606,7 @@ if($role == "教师")
         </ul>
       </center>
   </div>
+</div>
 <?php
   }
 }

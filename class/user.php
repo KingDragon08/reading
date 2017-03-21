@@ -1105,5 +1105,84 @@
         return $db->get_results($sql);
       }
 
+      /**
+      *获取教师名下所有的学生
+      **/
+      function get_students()
+      {
+        global $db;
+        $user_id = $this->get_user_id();
+        //获取教师所管理的班级
+        $sql = "select id from rd_class where teacher_id='$user_id'";
+        $classes = $db->get_results($sql);
+        $ret = [];
+        if(count($classes)>0)
+        {
+          foreach($classes as $class)
+          {
+            $students = $db->get_results("select id,name from rd_user where class='$class->id' and role=1");
+            if(count($students)>0)
+            {
+              foreach($students as $student)
+              {
+                if(strlen($student->name)<1)
+                {
+                  $student->name = "暂无姓名";
+                }
+                $ret[] = $student;
+              }
+            }
+          }
+        }
+        return $ret;
+      }
+
+      /**
+      *获取书单管理的阅读完成记录板
+      **/
+      function get_num_data($id)
+      {
+        global $db;
+        $user_id = $this->get_user_id();
+        $ret = [];
+        if($id!=0)//获取特定书单的阅读完成情况
+        {
+          //首先获取该书单对应的学生
+          $students = $db->get_results("select user_id from rd_user_read_list where book_list_id='$id'");
+          if(count($students)>0)
+          {
+            foreach ($students as $student)
+            {
+                $temp = [];
+                $name = $db->get_var("select name from rd_user where id='$student->user_id'");
+                if(strlen($name)<1)
+                {
+                  $name = "暂无姓名";
+                }
+                $temp['name'] = $name;
+                $sql = "select count(*) from rd_user_exam_scores where user_id='$student->user_id' ".
+                        "and hege=1 and book_id in(select book_id from rd_book_list where list_id='$id')";
+                $temp['num'] = $db->get_var($sql);
+                $ret[] = $temp;
+            }
+          }
+        }
+        else//获取总的情况
+        {
+          $students = $this->get_students();
+          if(count($students)>0)
+          {
+            foreach($students as $student)
+            {
+                $temp = [];
+                $temp['name'] = $student->name;
+                $temp['num'] = $db->get_var("select count(*) from rd_user_exam_scores where user_id='$student->id' and hege=1");
+                $ret[] = $temp;
+            }
+          }
+        }
+        return $ret;
+      }
+
   }
 ?>

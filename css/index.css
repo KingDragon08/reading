@@ -302,3 +302,11 @@ ul.what_we_do li span.info{
 .webuploader-element-invisible{
   display: none;
 }
+.paiming_title
+{
+  background: #824399;
+  border-radius: 5px 5px 0 0;
+  color:#fff; font-size: 14px;
+  height: 30px; line-height: 30px;
+  text-align: center;
+}

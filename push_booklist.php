@@ -152,8 +152,8 @@
             <div class="checkbox" style="height:40px; line-height:40px; font-size:12px;">
               <label>
                 <input type="checkbox" name="class[]" value="<?php echo $class->id?>" style="margin-top:14px;">
-                <?echo $class->school; echo "-"; echo $class->classname;?>
-                [<?echo $class->num?>人]
+                <?php echo $class->school; echo "-"; echo $class->classname;?>
+                [<?php echo $class->num?>人]
               </label>
             </div>
             <?php

@@ -549,17 +549,20 @@
         //获取创建书单的id
         $read_list_id = $db->get_var("select id from rd_read_list where addtime='$addtime'");
         //写入书单的书列表
+        //更新每本书的推荐次数
         foreach($books as $book)
         {
           $sql = "insert into rd_book_list(book_id,list_id)values(".
                   "'$book','$read_list_id')";
+          $db->query($sql);
+          $sql = "update rd_book set recommend_times=recommend_times+1 where id='$book'";
           $db->query($sql);
         }
         //推送给对应班级的学生
         foreach($classes as $class)
         {
           //获取班级里的所有学生
-          $sql = "select id from rd_user where class='$class'";
+          $sql = "select id from rd_user where class='$class' and role=1";
           $students = $db->get_results($sql);
           if($students)
           {
@@ -569,6 +572,13 @@
               $sql = "insert into rd_user_read_list(user_id,book_list_id)values(".
                       "'$student->id','$read_list_id')";
               $db->query($sql);
+              //写入rd_user_read_book
+              foreach($books as $book)
+              {
+                $sql = "insert into rd_user_read_book(user_id,book_id,removed,addtime,endtime,type)value(".
+                      "'$student->id','$book',0,'$addtime','$endtime',1)";
+                $db->query($sql);
+              }
               //给学生发邮件
               if($student->id != $user_id)
               {
@@ -1081,6 +1091,18 @@
         {
           return "暂无姓名";
         }
+      }
+
+      /**
+      *教师用
+      *获取发布的所有书单
+      **/
+      function get_history_list()
+      {
+        global $db;
+        $user_id = $this->get_user_id();
+        $sql = "select id from rd_read_list where user_id='$user_id'";
+        return $db->get_results($sql);
       }
 
   }

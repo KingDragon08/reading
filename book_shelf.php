@@ -11,6 +11,10 @@
     <script type="text/javascript" src="js/jquery.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <title>乐智悦读-全本阅读</title>
+    <style media="screen">
+      .btn-small{font-size: 12px; border-radius: 20px;}
+      .purple{color:#824399;}
+    </style>
   </head>
   <body>
     <!-- top nav start-->
@@ -71,34 +75,48 @@
     <div class="col-lg-8">
       选择书单类型:&nbsp;&nbsp;&nbsp;&nbsp;
       <div class="btn-group">
-          <button type="button" class="btn btn-default">书单类型</button>
+          <button type="button" class="btn btn-default" id="list_type">书单类型</button>
           <button type="button" class="btn btn-default dropdown-toggle"
               data-toggle="dropdown">
               <span class="caret"></span>
               <span class="sr-only">选择</span>
           </button>
           <ul class="dropdown-menu" role="menu">
+            <li><a href="javascript:void(0);" onclick="type_change(0)">全部类型</a></li>
+            <li><a href="javascript:void(0);" onclick="type_change(-1)">教师推送</a></li>
             <?php
-              $types = $common->get_list_type();
+              $types = $common->get_all_book_type();
               $status = isset($_GET['status'])?intval($_GET['status']):-1;
               foreach ($types as $type)
               {
             ?>
                 <li><a href="javascript:void(0);" onclick="type_change(<?php echo $type->id?>)"><?php echo $type->name?></a></li>
             <?php
+                if(isset($_GET['type']))
+                {
+                  if($type->id==intval($_GET['type']))
+                  {
+                      echo '<script>$("#list_type").html("'.$type->name.'");</script>';
+                  }
+                  if(intval($_GET['type'])==-1)
+                  {
+                    echo '<script>$("#list_type").html("教师推送");</script>';
+                  }
+                }
               }
             ?>
           </ul>
       </div>
       &nbsp;&nbsp;
       <div class="btn-group">
-          <button type="button" class="btn btn-default">学段</button>
+          <button type="button" class="btn btn-default" id="grade_type">学段</button>
           <button type="button" class="btn btn-default dropdown-toggle"
               data-toggle="dropdown">
               <span class="caret"></span>
               <span class="sr-only">选择</span>
           </button>
           <ul class="dropdown-menu" role="menu">
+            <li><a href="javascript:void(0);" onclick="grade_change(0)">全部年级</a></li>
             <?php
               $grades = $common->get_grade();
               foreach ($grades as $grade)
@@ -106,13 +124,20 @@
             ?>
                 <li><a href="javascript:void(0);" onclick="grade_change(<?php echo $grade->id?>)"><?php echo $grade->grade_name?></a></li>
             <?php
+                if(isset($_GET['grade']))
+                {
+                  if($grade->id==intval($_GET['grade']))
+                  {
+                      echo '<script>$("#grade_type").html("'.$grade->grade_name.'");</script>';
+                  }
+                }
               }
             ?>
           </ul>
       </div>
     </div>
     <div class="col-lg-4">
-      <form action="" method="get" name="search" id="search" onsubmit="return check_search()">
+      <form action="search.php" method="get" target="_blank" name="search" id="search" onsubmit="return check_search()">
           <div class="input-group">
             <input type="text" name="s" class="form-control" id="search_keywords">
             <span class="input-group-addon">
@@ -123,7 +148,7 @@
     </div>
   </div>
   <br>
-  <!-- <div class="container">
+  <div class="container">
     <div class="col-lg-8">
       测评状态:&nbsp;&nbsp;&nbsp;&nbsp;
       <span class="radio btn-group">
@@ -141,7 +166,7 @@
       </span>
     </div>
     <div class="col-lg-4">&nbsp;</div>
-</div> -->
+</div>
 <!-- filter panel end -->
 <!-- booklist panel start -->
 <div class="container mt20">
@@ -152,14 +177,10 @@
       $type = isset($_GET['type'])?intval($_GET['type']):0;
       $status = isset($_GET['status'])?intval($_GET['status']):-1;
       $page =isset($_GET['page'])?intval($_GET['page']):1;
-      if(isset($_GET['s']))
+      // $books = $common->get_lists_task($user_id,$grade,$type,$status,$page);
+      $books = $common->get_books_task($user_id,$grade,$type,$status,$page);
+      if($books)
       {
-        $books = $common->search_lists_task($_GET['s'],$user_id);
-      }
-      else
-      {
-        $books = $common->get_lists_task($user_id,$grade,$type,$status,$page);
-      }
       foreach($books as $book)
       {
     ?>
@@ -169,18 +190,71 @@
           <img src="<?php echo $book->coverimg; ?>" width="100%"/>
         </a>
       </div>
-      <div class="col-lg-6 book_info" style="display:table;">
+      <div class="col-lg-6 book_info" style="display:table; height:166px;">
         <div style="display:table-cell; vertical-align:middle;">
           <p>名字：<?php echo $book->name;?></p>
           <p class="gray f12">作者：<?php echo $book->author;?></p>
-          <p class="gray f12">学段：<?php echo $book->grade;?></p>
-          <p class="gray f12">类型：<?php echo $book->type;?></p>
           <p class="gray f12">剩余时间：<?php echo $book->restime;?></p>
         </div>
+      </div>
+      <div class="col-lg-12">
+        <table width="100%">
+          <tr>
+            <td align="center" width="50%">
+              <?php
+              if($book->status==2)
+              {
+              ?>
+                <a class="btn btn-small btn-success" style="padding:4px 12px;" href="exam2.php?book=<?php echo $book->id;?>">
+                  <i class="glyphicon glyphicon-file">我要测评</i>
+                </a>
+              <?php
+              }
+              if($book->status==1)
+              {
+              ?>
+                <span class="btn btn-small btn-success" style="padding:4px 12px;" onclick="openwin('exam_report_history.php?book=<?php echo $book->id;?>');">
+                  <i class="glyphicon glyphicon-file">测评结果</i>
+                </span>
+              <?php
+              }
+              if($book->status==0)
+              {
+              ?>
+                <a class="btn btn-small btn-success" style="padding:4px 12px;" href="exam2.php?book=<?php echo $book->id;?>">
+                  <i class="glyphicon glyphicon-file">再次测评</i>
+                </a>
+              <?php
+              }
+              ?>
+            </td>
+            <td align="left" width="50%">
+              <?php
+                if($book->shelf_type==0)
+                {
+              ?>
+                <a class="btn btn-small btn-success" style="padding:4px 12px;" href="controller/book_shelf.php?action=remove&book=<?php echo $book->id;?>">
+                  <i class="glyphicon glyphicon-trash"></i>移除
+                </a>
+              <?php
+                }
+                else
+                {
+              ?>
+                <a class="btn btn-small btn-info" style="padding:4px 12px;" href="javascript:;">
+                  <i class="glyphicon glyphicon-trash"></i>不可移除
+                </a>
+              <?php
+                }
+              ?>
+            </td>
+          </tr>
+        </table>
       </div>
     </div>
     <?php
         }
+      }
     ?>
 
 
@@ -309,6 +383,14 @@
 <!-- 学生结束 -->
 
 
+
+
+
+
+
+
+
+
 <!--教师开始-->
 <?php
 if($role == "教师")
@@ -333,20 +415,31 @@ if($role == "教师")
         选择书单类型:&nbsp;&nbsp;&nbsp;&nbsp;
 
         <div class="btn-group">
-            <button type="button" class="btn btn-default">学段</button>
+            <button type="button" class="btn btn-default" id="list_type">全部图书</button>
             <button type="button" class="btn btn-default dropdown-toggle"
                 data-toggle="dropdown">
                 <span class="caret"></span>
                 <span class="sr-only">选择</span>
             </button>
             <ul class="dropdown-menu" role="menu">
+              <li><a href="book_shelf.php?id=0">全部图书</a></li>
               <?php
                 $grades = $common->get_grade();
-                foreach ($grades as $grade)
+                $lists = $user->get_history_list();
+                $counter = 0;
+                while($counter<count($lists))
                 {
               ?>
-                  <li><a href="book_shelf.php?grade=<?php echo $grade->id;?>"><?php echo $grade->grade_name?></a></li>
+                  <li><a href="book_shelf.php?id=<?php echo $lists[$counter]->id;?>">教师书单<?php echo $counter+1;?></a></li>
               <?php
+                  if(isset($_GET['id']))
+                  {
+                    if(($counter+1)==$_GET['id'])
+                    {
+                      echo "<script>$('#list_type').html('教师书单".($counter+1)."')</script>";
+                    }
+                  }
+                  $counter++;
                 }
               ?>
             </ul>
@@ -377,21 +470,28 @@ if($role == "教师")
     {
       $page = 1;
     }
-    if(isset($_GET['grade']))
+    if(isset($_GET['id']))
     {
-      $grade = intval($_GET['grade']);
-      $books = $common->get_teacher_list_by_grade($user_id,$grade,$page);
+      $id = intval($_GET['id']);
+      if($id!=0)
+      {
+        $books = $common->get_teacher_list_by_id($user_id,$id,$page);
+      }
+      else
+      {
+        $books = $common->get_teacher_book_list($user_id,$page);
+      }
     }
     else
     {
       if(isset($_GET['s']))
       {
         $keywords = $_GET['s'];
-        $books = $common->get_teacher_list_by_keywords($user_id,$keywords);
+        $books = $common->get_teacher_books_by_keywords($user_id,$keywords);
       }
       else
       {
-        $books = $common->get_teacher_read_list($user_id,$page);
+        $books = $common->get_teacher_book_list($user_id,$page);
       }
     }
   ?>
@@ -404,16 +504,15 @@ if($role == "教师")
     ?>
           <div class="col-lg-4 mb20">
             <div class="col-lg-6 book_img">
-              <a href="list.php?list=<?php echo $book->id;?>">
+              <a href="book.php?book=<?php echo $book->id;?>">
                 <img src="<?php echo $book->coverimg; ?>" width="100%"/>
               </a>
             </div>
-            <div class="col-lg-6 book_info" style="display:table;">
+            <div class="col-lg-6 book_info" style="display:table; height:166px;">
               <div style="display:table-cell; vertical-align:middle;">
                 <p>名字：<?php echo $book->name;?></p>
                 <p class="gray f12">作者：<?php echo $book->author;?></p>
-                <p class="gray f12">学段：<?php echo $book->grade;?></p>
-                <p class="gray f12">剩余时间：<?php echo $book->restime;?></p>
+                <p class="purple">已读学生：<?php echo $book->num;?>人</p>
               </div>
             </div>
           </div>
@@ -471,31 +570,4 @@ if($role == "教师")
       include_once("footer.php")
     ?>
   </body>
-  <script type="text/javascript">
-
-    //设置等高
-    $().ready(function(){
-      $(".book_info").each(function(){
-        $(this).height($(this).parent().find(".book_img").height());
-      });
-    });
-
-    //测评
-    function exam(book)
-    {
-      openwin("temp.php");
-    }
-
-    //弹出窗口
-    function openwin(url)
-    {
-      var width = 800;
-      var height = 600;
-      var left = parseInt((screen.availWidth/2) - (width/2));//屏幕居中
-      var top = parseInt((screen.availHeight/2) - (height/2));
-      var windowFeatures = "width=" + width + ",height=" + height + ",status,resizable,left=" + left + ",top=" + top + "screenX=" + left + ",screenY=" + top;
-      windowFeatures += ",location='no',menubar='no',resizable='no',status='no',titlebar='no',toolbar='no'";
-      newWindow = window.open(url, "subWind", windowFeatures);
-    }
-  </script>
 </html>

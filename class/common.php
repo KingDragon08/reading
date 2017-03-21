@@ -21,6 +21,16 @@ class Common
     }
 
     /**
+    *获取所有书的类型
+    **/
+    function get_all_book_type()
+    {
+      global $db;
+      $sql = "select id,name from rd_book_type";
+      return $db->get_results($sql);
+    }
+
+    /**
     *获取所有学段
     **/
     function get_grade()
@@ -38,6 +48,53 @@ class Common
       global $db;
       $sql = "select id,name from rd_book_type";
       return $db->get_results($sql);
+    }
+
+    /**
+    *获取所有的书
+    **/
+    function get_books($page,$user_id,$type,$grade)
+    {
+      global $db;
+      $page_num = 6;
+      $sql = "select count(*) from rd_book where ";
+      $sql_1 = "select * from rd_book where ";
+      if($type==0 && $grade==0)
+      {
+        $sql .= "1";
+        $sql_1 .= "1";
+      }
+      else
+      {
+        if($type!=0 && $grade!=0)
+        {
+          $sql .= "grade='$grade' and type='$type'";
+          $sql_1 .= "grade='$grade' and type='$type'";
+        }
+        else
+        {
+          if($type!=0 && $grade==0)
+          {
+            $sql .= "type='$type'";
+            $sql_1 .= "type='$type'";
+          }
+          else
+          {
+            $sql .= "grade='$grade'";
+            $sql_1 .= "grade='$grade'";
+          }
+        }
+      }
+      $total = $db->get_var($sql);
+      $this->read_list_pages = ceil($total/$page_num);
+      $start = ($page-1)*$page_num;
+      if($start < 1)
+      {
+        $start = 0;
+      }
+      $sql_1 .= " order by id desc limit $start,$page_num";
+      $book_list = $db->get_results($sql_1);
+      return $book_list;
     }
 
     /**
@@ -80,6 +137,7 @@ class Common
       $sql .= " and endtime>'$now'";
       $total = $db->get_var($sql);
       $this->read_list_pages = ceil($total/$page_num);
+
       $start = ($page-1)*$page_num;
       if($start < 1)
       {
@@ -125,6 +183,84 @@ class Common
           }
           //获取书单类型名称
           $sql = "select name from rd_list_type where id='$item->type'";
+          $item->type = $db->get_var($sql);
+          $ret[] = $item;
+        }
+      }
+      return $ret;
+    }
+
+
+    /**
+    *更改逻辑后
+    *获取所有的书
+    **/
+    function get_read_list_2($page,$user_id,$type,$grade)
+    {
+      global $db;
+      $page_num = 6;
+      //获取所有书单的总数
+      $sql = "select count(*) from rd_book where ";
+      $sql_1 = "select * from rd_book where ";
+      if($type==0 && $grade==0)
+      {
+        $sql .= "1";
+        $sql_1 .= "1";
+      }
+      else
+      {
+        if($type!=0 && $grade!=0)
+        {
+          $sql .= "grade='$grade' and type='$type'";
+          $sql_1 .= "grade='$grade' and type='$type'";
+        }
+        else
+        {
+          if($type!=0 && $grade==0)
+          {
+            $sql .= "type='$type'";
+            $sql_1 .= "type='$type'";
+          }
+          else
+          {
+            $sql .= "grade='$grade'";
+            $sql_1 .= "grade='$grade'";
+          }
+        }
+      }
+      // $now = time();
+      // $sql .= " and endtime>'$now'";
+      $total = $db->get_var($sql);
+      $this->read_list_pages = ceil($total/$page_num);
+      $start = ($page-1)*$page_num;
+      if($start < 1)
+      {
+        $start = 0;
+      }
+      $sql_1 .= " order by id desc limit $start,$page_num";
+      $read_list = $db->get_results($sql_1);
+      $ret = array();
+      if($read_list)
+      {
+        foreach($read_list as $item)
+        {
+          //获取学段名称
+          $sql = "select grade_name from rd_grade where id='$item->grade'";
+          $item->grade = $db->get_var($sql);
+          //获取是否在书架上的状态
+          // $sql = "select count(id) from rd_user_read_book where book_id='$item->id' and user_id='$user_id' and removed=0";
+          //查看是否在书单库里
+          $sql = "select count(id) from rd_user_read_book where book_id='$item->id' and user_id='$user_id' and removed=0";
+          if($db->get_var($sql)>0)
+          {
+            $item->status = 1;
+          }
+          else
+          {
+            $item->status = 0;
+          }
+          //获取书单类型名称
+          $sql = "select name from rd_book_type where id='$item->type'";
           $item->type = $db->get_var($sql);
           $ret[] = $item;
         }
@@ -237,6 +373,66 @@ class Common
       return $temp;
     }
 
+
+    /**
+    *搜索我的任务
+    *新改逻辑
+    **/
+    function search_books_task($key,$user_id)
+    {
+      global $db;
+      // $sql = "select a.* from rd_read_list as a left join rd_user_read_list as b on ".
+      //         "a.id=b.book_list_id where b.user_id='$user_id' and a.name like '%".$db->escape($key)."%' ".
+      //         "order by b.id desc";
+      $ret = [];
+      $sql = "select a.* from rd_book a left join rd_user_read_book b on a.id=b.book_id where a.name like '%".$db->escape($key)."%' ".
+              "order by b.id desc";
+      $list_1 = $db->get_results($sql);
+      if(count($list_1)>0)
+      {
+        foreach($list_1 as $book)
+        {
+          $book->resttime = "自选书单";
+          $ret[] = $book;
+        }
+      }
+      // $sql = "select * from rd_book where name like '%".$db->escape($key)."%' ".
+      //         " and id in(select book_id from rd_book_list where list_id in (select book_list_id from rd_user_read_list where user_id='$user_id'))";
+      $sql = "select a.id from rd_read_list a left join rd_user_read_list b on a.id=b.book_list_id and b.user_id='$user_id'";
+      //取出用户所有的书单
+      $temp_list = $db->get_results($sql);
+      if(count($temp_list)>0)
+      {
+        foreach($temp_list as $v)
+        {
+          //取出书单下边所有的书
+          $temp_books = $db->get_results("select book_id from rd_book_list where list_id='$v->id'");
+          //判断是否相似
+          foreach($temp_books as $book)
+          {
+            $book_name = $db->get_var("select * from rd_book where id='$book'");
+            if(strpos($book_name->name,$key)!==false)
+            {
+              // $book_name->resttime =
+            }
+          }
+        }
+      }
+      $list_2 = $db->get_results($sql);
+      $temp = [];
+      $now = time();
+      foreach($lists as $list)
+      {
+        $list->author = $this->get_list_author($list->user_id);
+        $list->coverimg = $this->get_book_list_coverimg($list->id);
+        $list->grade = $this->get_book_list_grade($list->grade);
+        $list->type = $this->get_book_list_type($list->type);
+        $list->restime = $this->get_restime($list->endtime-$now);
+        $temp[] = $list;
+      }
+      return $temp;
+    }
+
     /**
     *获取分页数
     **/
@@ -305,25 +501,146 @@ class Common
       //获取书单下边第一本书的封面图片、积分等信息
       $temp = [];
       $now = time();
-      foreach($lists as $list)
+      if(count($lists))
       {
-        $list->author = $this->get_list_author($list->user_id);
-        $list->coverimg = $this->get_book_list_coverimg($list->id);
-        $list->grade = $this->get_book_list_grade($list->grade);
-        $list->type = $this->get_book_list_type($list->type);
-        $list->restime = $this->get_restime($list->endtime-$now);
-        $temp[] = $list;
+        foreach($lists as $list)
+        {
+          $list->author = $this->get_list_author($list->user_id);
+          $list->coverimg = $this->get_book_list_coverimg($list->id);
+          $list->grade = $this->get_book_list_grade($list->grade);
+          $list->type = $this->get_book_list_type($list->type);
+          $list->restime = $this->get_restime($list->endtime-$now);
+          $temp[] = $list;
+        }
+        $lists = $temp;
+        $page_num = 6;
+        $this->pages = ceil(count($lists)/$page_num);
+        $start = ($page-1)*$page_num;
+        if($start < 0)
+        {
+          $start = 0;
+        }
+        return array_slice($lists,$start,$page_num);
       }
-      $lists = $temp;
-      $page_num = 6;
-      $this->pages = ceil(count($lists)/$page_num);
-      $start = ($page-1)*$page_num;
-      if($start < 0)
+      else
       {
-        $start = 0;
+        return 0;
       }
-      return array_slice($lists,$start,$page_num);
     }
+
+    /**
+    *分页获取我的任务中的所有书单列表
+    *grade:0 type:0 status:-1 page:1
+    *status 0:测试未通过 1:测试通过 2:未测试
+    **/
+    function get_books_task($user_id,$grade,$type,$status,$page)
+    {
+      global $db;
+      // $sql = "select a.* from rd_read_list as a left join rd_user_read_list as b on ".
+      //         "a.id=b.book_list_id where b.user_id='$user_id' ";
+      $sql = "select a.*,b.addtime,b.endtime,b.type as shelf_type from rd_book a left join rd_user_read_book b on ".
+              "a.id=b.book_id where b.removed=0 and b.user_id='$user_id' ";
+      if($grade != 0)
+      {
+        $sql .= "and a.grade='$grade' ";
+      }
+      if($type!=0 && $type!=-1)
+      {
+        $sql .= "and a.type='$type' ";
+      }
+      if($type == -1)
+      {
+        $sql .= "and b.type=1";
+      }
+      $sql .= " order by b.id desc";
+      $lists = $db->get_results($sql);
+      if($status != -1)
+      {
+        $temp = [];
+        foreach ($lists as $list) {
+          $book_id = $list->id;
+          $list->status = $status;
+          if($status == 0)
+          {
+            $sql = "select count(id) from rd_user_exam_scores where book_id='$book_id' and hege=0 and user_id='$user_id'";
+            if($db->get_var($sql)>0)
+            {
+              $temp[] = $list;
+            }
+          }
+          if($status == 1)
+          {
+            $sql = "select count(id) from rd_user_exam_scores where book_id='$book_id' and hege=1 and user_id='$user_id'";
+            if($db->get_var($sql)>0)
+            {
+              $temp[] = $list;
+            }
+          }
+          if($status == 2)
+          {
+            $sql = "select count(id) from rd_user_exam_scores where book_id='$book_id' and user_id='$user_id'";
+            if($db->get_var($sql)<1)
+            {
+              $temp[] = $list;
+            }
+          }
+        }
+        $lists = $temp;
+      }
+      else
+      {
+        $temp = [];
+        if(count($lists)>0)
+        {
+          foreach ($lists as $list)
+          {
+            $book_id = $list->id;
+            $sql = "select count(id) from rd_user_exam_scores where book_id='$book_id' and user_id='$user_id'";
+            if($db->get_var($sql)<1)
+            {
+              $list->status = 2;
+            }
+            else
+            {
+              $list->status = $db->get_var("select hege from rd_user_exam_scores where book_id='$book_id' and user_id='$user_id'");
+            }
+            $temp[] = $list;
+          }
+        }
+      }
+      //获取书单下边第一本书的封面图片、积分等信息
+      $temp = [];
+      $now = time();
+      if(count($lists))
+      {
+        foreach($lists as $list)
+        {
+          if($list->shelf_type!=0)
+          {
+              $list->restime = $this->get_restime($list->endtime-$now);
+          }
+          else
+          {
+            $list->restime = "自选不过期";
+          }
+          $temp[] = $list;
+        }
+        $lists = $temp;
+        $page_num = 6;
+        $this->pages = ceil(count($lists)/$page_num);
+        $start = ($page-1)*$page_num;
+        if($start < 0)
+        {
+          $start = 0;
+        }
+        return array_slice($lists,$start,$page_num);
+      }
+      else
+      {
+        return 0;
+      }
+    }
+
 
     /**
     *获取书单的剩余时间
@@ -522,6 +839,118 @@ class Common
       //获取最大页数
       $sql = "select count(*) from rd_read_list where user_id='$user_id' and grade='$grade'";
       $this->pages = ceil($db->get_var($sql)/$page_num);
+      return $ret;
+    }
+
+    /**
+    *按书单id获取教师书单管理的书
+    **/
+    function get_teacher_list_by_id($user_id,$id,$page)
+    {
+      global $db;
+      $page_num = 6;
+      $start = ($page-1)*$page_num;
+      $end = $start + $page_num;
+      if($db->get_var("select count(id) from rd_read_list where id='$id' and user_id='$user_id'")>0)
+      {
+        $sql = "select a.* from rd_book a left join rd_book_list b on a.id=b.book_id where b.list_id='$id' limit $start,$end";
+        $sql_1 = "select count(*) from rd_book a left join rd_book_list b on a.id=b.book_id where b.list_id='$id'";
+        $this->pages = ceil($db->get_var($sql_1)/$page_num);
+        $ret = $db->get_results($sql);
+        foreach ($ret as $r)
+        {
+          $book_id = $r->id;
+          $classes = $db->get_results("select id from rd_class where teacher_id='$user_id'");
+          $r->num = 0;
+          if(count($classes)>0)
+          {
+            foreach ($classes as $class) {
+              $class_id = $class->id;
+              $sql = "select count(*) from rd_user_exam_scores where book_id='$book_id' and user_id ".
+                      "in(select id from rd_user where class='$class_id')";
+              $r->num += $db->get_var($sql);
+            }
+          }
+          else
+          {
+            $r->num = 0;
+          }
+        }
+        return $ret;
+      }
+      else
+      {
+        $this->pages = 1;
+        return 0;
+      }
+    }
+
+    /**
+    *获取教师书单管理里的所有的书
+    **/
+    function get_teacher_book_list($user_id,$page)
+    {
+      global $db;
+      $page_num = 6;
+      $start = ($page-1)*$page_num;
+      $end = $start + $page_num;
+      $sql = "select a.* from rd_book a left join rd_book_list b on a.id=b.book_id where b.list_id in ".
+              "(select id from rd_read_list where user_id='$user_id') order by b.id desc";
+      $sql_1 = "select count(*) from rd_book a left join rd_book_list b on a.id=b.book_id where b.list_id in ".
+              "(select id from rd_read_list where user_id='$user_id')";
+      $this->pages = ceil($db->get_var($sql_1)/$page_num);
+      $ret = array_slice($db->get_results($sql),$start,$page_num);
+      foreach($ret as $r)
+      {
+        $book_id = $r->id;
+        $classes = $db->get_results("select id from rd_class where teacher_id='$user_id'");
+        $r->num = 0;
+        if(count($classes)>0)
+        {
+          foreach ($classes as $class) {
+            $class_id = $class->id;
+            $sql = "select count(*) from rd_user_exam_scores where book_id='$book_id' and user_id ".
+                    "in(select id from rd_user where class='$class_id')";
+            $r->num += $db->get_var($sql);
+          }
+        }
+        else
+        {
+          $r->num = 0;
+        }
+      }
+      return $ret;
+    }
+
+
+    /**
+    *按关键字搜索教师书单中的书
+    **/
+    function get_teacher_books_by_keywords($user_id,$keywords)
+    {
+      global $db;
+      $sql = "select a.* from rd_book a left join rd_book_list b on a.id=b.book_id where b.list_id in ".
+              "(select id from rd_read_list where user_id='$user_id') and a.name like '%".$db->escape($keywords)."%'";
+      $ret = $db->get_results($sql);
+      foreach($ret as $r)
+      {
+        $book_id = $r->id;
+        $classes = $db->get_results("select id from rd_class where teacher_id='$user_id'");
+        $r->num = 0;
+        if(count($classes)>0)
+        {
+          foreach ($classes as $class) {
+            $class_id = $class->id;
+            $sql = "select count(*) from rd_user_exam_scores where book_id='$book_id' and user_id ".
+                    "in(select id from rd_user where class='$class_id')";
+            $r->num += $db->get_var($sql);
+          }
+        }
+        else
+        {
+          $r->num = 0;
+        }
+      }
       return $ret;
     }
 

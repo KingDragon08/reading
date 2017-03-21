@@ -3067,7 +3067,7 @@ fieldset[disabled] .btn-success:hover
     color: #71cba4;background-color: #fff;
 }.btn-info
 {
-    color: #fff;border-color: #46b8da;background-color: #5bc0de;
+    color: #fff;border-color: #46b8da;background-color: #824399;
 }.btn-info.focus,
 .btn-info:focus
 {
@@ -4454,7 +4454,7 @@ a.label:hover
     background-color: #449d44;
 }.label-info
 {
-    background-color: #5bc0de;
+    background-color: #824399;
 }.label-info[href]:focus,
 .label-info[href]:hover
 {

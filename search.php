@@ -11,6 +11,9 @@
     <script type="text/javascript" src="js/jquery.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <title>乐智悦读-搜索</title>
+    <style media="screen">
+      .label{border-radius: 20px;}
+    </style>
   </head>
   <body>
     <!-- top nav start-->
@@ -76,7 +79,7 @@
           $keywords = isset($_GET['s'])?$_GET['s']:-1;
           if($keywords != -1)
           {
-            $books = $common->search_book_list($keywords,$user_id);
+            $books = $common->search_books($keywords,$user_id);
             if($books)
             {
               foreach($books as $book)
@@ -98,7 +101,7 @@
                     }
                     else
                     {
-                      echo "<label class=\"label label-success\" style='cursor:pointer;' onclick='alert(1)'>加入书架</label>";
+                      echo "<label class=\"label label-success\" style='cursor:pointer;' onclick='add2_book_shelf($book->id)'>加入书架</label>";
                     }
                   ?>
 
@@ -146,4 +149,10 @@
 
   </body>
   <script type="text/javascript" src="js/full_reading.js"></script>
+  <script type="text/javascript">
+    function add2_book_shelf(book)
+    {
+      location.href = "controller/book_shelf.php?action=add2shelf&book="+book;
+    }
+  </script>
 </html>

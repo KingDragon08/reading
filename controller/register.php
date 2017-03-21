@@ -38,6 +38,10 @@
     $db->query("update rd_sms set status=1 where phone='". $db->escape($username) ."'");
     //写入用户信息到用户表
     $db->query("insert into rd_user(username,password,role,addtime)values('".$db->escape($username)."','$password',1,time())");
+    // //获取刚注册用户的id
+    // $user_id = $db->get_var("select id from rd_user where username='$username'");
+    // //为改用户创建一个大书单
+    //
     $error = json_encode("注册成功,立即登录完善资料吧");
     header("Location:../tips.php?error=$error&from=login.php&type=0");
   }

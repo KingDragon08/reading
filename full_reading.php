@@ -18,21 +18,7 @@
   </head>
   <body>
     <!-- top nav start-->
-      <?php
-        include_once("top.php");
-        include_once("class/common.php");
-        if(!isLogin())//如果没有登录则跳转到首页
-        {
-          header("Location:login.php");
-        }
-        else
-        {
-          $user = $GLOBALS['user'];
-          $common = new Common();
-          $role = $user->get_user_info()->role;
-          $user_id = $user->get_user_id();
-        }
-      ?>
+
     <!-- top nav end -->
     <!-- main nav start -->
       <div class="container main-nav">
@@ -50,50 +36,7 @@
 
 
 
-<?php
-  if($role == "教师")
-  {
-?>
-<script type="text/javascript" src="js/cookie.js"></script>
-<script type="text/javascript">
-  $().ready(function(){
-    //初始化已经加入当前书单的书的按钮
-    var b = get_cookie('books');
-    if(b)
-    {
-      $(b.split(',')).each(function(index,val){
-        $("#book"+val).removeClass("btn-info");
-        $("#book"+val).addClass("btn-default");
-        $('#book'+val).attr("onclick","");
-        $('#book'+val).html("加入成功");
-      });
-    }
-  });
-  function add2_book_list(book)
-  {
-    books = "";
-    if(get_cookie('books'))
-    {
-      books = get_cookie('books');
-    }
-    if(books)
-    {
-      books += "," + book;
-    }
-    else
-    {
-      books = book;
-    }
-    set_cookie("books",books);
-    $("#book"+book).html("加入成功");
-    $("#book"+book).removeClass("btn-info");
-    $("#book"+book).addClass("btn-default");
-    $("#book"+book).attr("onclick","")
-  }
-</script>
-<?
-  }
-?>
+
 
 <?php
   include_once("footer.php");

@@ -447,26 +447,19 @@
       /**
       *更改学籍信息
       **/
-      function change_learn_info($grade)
+      function change_learn_info($class,$school)
       {
         global $db;
-        //检查班级是否存在
-        // $sql = "select count(*) from rd_class where id='". $db->escape($class) ."'";
-        // $c_result = $db->get_var($sql);
-        // if($c_result != 1)
-        // {
-        //   return 2;
-        // }
-        // //检查学校是否存在
-        // $sql = "select count(*) from rd_school where id='". $db->escape($school) ."'";
-        // $s_result = $db->get_var($sql);
-        // if($s_result != 1)
-        // {
-        //   return 3;
-        // }
+        // 检查班级和学校是否匹配
+        $sql = "select count(*) from rd_class where id='". $db->escape($class) ."' and school='". $db->escape($school) ."'";
+        $c_result = $db->get_var($sql);
+        if($c_result != 1)
+        {
+          return 2;
+        }
         //更改user数据表
         $user_id = $this->get_user_id();
-        $sql = "update rd_user set grade='". $db->escape($grade) ."' where id='$user_id'";
+        $sql = "update rd_user set class='". $db->escape($class) ."',school='". $db->escape($school) ."' where id='$user_id'";
         $db->query($sql);
         return 1;
       }
@@ -912,7 +905,7 @@
         {
           return NULL;
         }
-        $sql = "select id,classname from rd_class where teacher_id='$user_id'";
+        $sql = "select * from rd_class where teacher_id='$user_id'";
         return $db->get_results($sql);
       }
 
@@ -923,7 +916,7 @@
       function get_students_by_class($class_id)
       {
         global $db;
-        $students = $db->get_results("select id,name,score,chinese_score from rd_user where role=1 and class='$class_id'");
+        $students = $db->get_results("select id,name,score,chinese_score,headimg from rd_user where role=1 and class='$class_id'");
         if($students)
         {
           foreach($students as $student)
@@ -931,6 +924,10 @@
             if(strlen($student->name)<1)
             {
               $student->name = '暂无姓名';
+            }
+            if(strlen($student->headimg)<1)
+            {
+              $student->headimg = "https://placeholdit.imgix.net/~text?txtsize=60&txt=暂无头像&w=200&h=200";
             }
           }
           return $students;
@@ -1183,6 +1180,68 @@
         }
         return $ret;
       }
+
+      /**
+      *教师用
+      *更改班级信息
+      **/
+      function update_class($class_id,$class_name,$class_grade)
+      {
+        global $db;
+        //更新班级表
+        $sql = "update rd_class set classname='".$db->escape($class_name)."',grade='$class_grade' ".
+                "where id='$class_id'";
+        $db->query($sql);
+        //更新用户表
+        $sql = "update rd_user set grade='$class_grade' where class='$class_id'";
+        $db->query($sql);
+      }
+
+      /**
+      *教师用
+      *创建班级
+      **/
+      function create_class($class_school,$class_grade,$class_name)
+      {
+        global $db;
+        $user_id = $this->get_user_id();
+        //首先检查名下班级个数
+        $has_class = $db->get_var("select count(id) from rd_class where teacher_id='$user_id'");
+        if($has_class>=5)
+        {
+          //班级个数已达上限
+          return -1;
+        }
+        else
+        {
+          //创建班级
+          $now = time();
+          $sql = "insert into rd_class(classname,school,teacher_id,grade,addtime)values('".$db->escape($class_name).
+                  "',$class_school,$user_id,$class_grade,'$now')";
+          $db->query($sql);
+          //获取刚创建的班级的id号
+          $class_id = $db->get_var("select id from rd_class where addtime='$now'");
+          //更新用户表中教师的class属性
+          $sql = "update rd_user set class=$class_id where id=$user_id";
+          $db->query($sql);
+          return $class_id;
+        }
+      }
+
+      /**
+      *教师用
+      *获取班级学生总数
+      **/
+      function get_class_students_count_teacher($class_id)
+      {
+        global $db;
+        $user_id = $this->get_user_id();
+        $class = $this->get_class_id();
+        $sql = "select count(*) from rd_user where class='$class_id' and role=1";
+        return $db->get_var($sql);
+      }
+
+
 
   }
 ?>

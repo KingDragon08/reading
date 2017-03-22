@@ -20,16 +20,17 @@
         $user = new User($_SESSION['username'],$_SESSION['password']);
         $user_info = $user->get_user_info();
         //处理更改信息的表单
-        if(isset($_GET['grade']))
+        if(isset($_POST['class']) && isset($_POST['school']))
         {
-            $grade = $_GET['grade'];
-            if(!is_numeric($grade) || strlen($grade)<1)
+            $class = $_POST['class'];
+            $school = $_POST['school'];
+            if(!is_numeric($class) || strlen($class)<1)
             {
-              tips("年级必须是纯数字");
+              tips("班级必须是纯数字");
             }
             else
             {
-              $result = $user->change_learn_info($grade);
+              $result = $user->change_learn_info($class,$school);
               if($result==1)
               {
                 tips("更改成功");
@@ -38,7 +39,7 @@
               }
               if($result==2)
               {
-                tips("更改失败");
+                tips("班级和学校信息不匹配");
               }
           }
         }
@@ -53,22 +54,13 @@
       <h4 style="line-height:50px;">学校信息</h4>
     </center>
     <br><br>
-    <form class="" action="" method="get" onsubmit="return check();">
+    <form class="" action="" method="post" onsubmit="return check();">
       <div class="container">
         <table width="400" height="auto" border="0">
           <tr>
-            <td width="100" height="50" align="center" valign="middle">年级</td>
-            <td width="200" height="50" align="left" valign="middle">
-                <input type="text" name="grade" id="grade" value="<?php echo $user_info->grade;?>" class="form-control" placeholder="请填入年级">
-            </td>
-            <td width="100" height="50" align="left" valign="middle">
-                &nbsp;
-            </td>
-          </tr>
-          <tr>
             <td width="100" height="50" align="center" valign="middle">班级</td>
             <td width="200" height="50" align="left" valign="middle">
-              <input type="text" name="class" disabled="disabled" id="class" value="<?php echo $user_info->class;?>" class="form-control" placeholder="请询问老师后填入班级代号">
+              <input type="text" name="class" <?php if(intval($user_info->class)>0){echo 'disabled="disabled"';}?> id="class" value="<?php echo $user_info->class;?>" class="form-control" placeholder="请询问老师后填入班级代号">
               </td>
             <td width="100" height="50" align="left" valign="middle" class="gray f12" style="padding-left:1em;">
                 <?php echo $user->get_class();?>
@@ -77,7 +69,7 @@
           <tr>
             <td width="100" height="50" align="center" valign="middle">学校</td>
             <td width="200" height="50" align="left" valign="middle">
-              <input type="text" name="school" disabled="disabled" id="school" value="<?php echo $user_info->school;?>" class="form-control" placeholder="请询问老师后填入学校代号">
+              <input type="text" name="school" <?php if(intval($user_info->school)>0){echo 'disabled="disabled"';}?> id="school" value="<?php echo $user_info->school;?>" class="form-control" placeholder="请询问老师后填入学校代号">
             </td>
             <td width="100" height="50" align="left" valign="middle" class="gray f12" style="padding-left:1em;">
                 <?php echo $user->get_school();?>
@@ -94,11 +86,6 @@
     <script type="text/javascript">
       function check()
       {
-        if($("#grade").val().length<1)
-        {
-          alert("年级信息不能为空");
-          return false;
-        }
         if($("#class").val().length<1)
         {
           alert("班级代号不能为空");

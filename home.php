@@ -56,7 +56,7 @@
           }
           else
           {
-            echo '<iframe src="template/teacher_left.php" width="20%" height="auto" style="float:left;" frameborder="0"></iframe>';
+            echo '<iframe src="template/teacher_left.php" width="20%" height="auto" id="menu" style="float:left;" frameborder="0"></iframe>';
             echo '<iframe src="template/teacher_right.php" width="80%" height="auto" id="main" name="main" style="float:left; padding-left:10px; margin-top:2em;" frameborder="0"></iframe>';
           }
         ?>

@@ -236,34 +236,6 @@
           ?>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;查看班级报表:&nbsp;&nbsp;&nbsp;&nbsp;
           <?php
-            if(count($classes))
-            {
-          ?>
-                <div class="btn-group">
-                    <button type="button" class="btn btn-default">选择班级</button>
-                    <button type="button" class="btn btn-default dropdown-toggle"
-                        data-toggle="dropdown">
-                        <span class="caret"></span>
-                        <span class="sr-only">选择</span>
-                    </button>
-                    <ul class="dropdown-menu" role="menu">
-                      <?php
-                      foreach($classes as $class)
-                      {
-                      ?>
-                        <li><a href="report.php?class=<?php echo $class->id;?>"><?php echo $class->classname;?></a></li>
-                      <?php
-                      }
-                      ?>
-                    </ul>
-                </div>
-          <?php
-            }
-          ?>
-        </div>
-
-        <div class="container mt20 mb20">
-          <?php
             $class_id = isset($_GET['class'])?intval($_GET['class']):-1;
             if($class_id>0)
             {
@@ -295,12 +267,42 @@
               }
             }
             //开始以班级为单位画图
+            if(count($classes))
+            {
           ?>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default" id="list_class">选择班级</button>
+                    <button type="button" class="btn btn-default dropdown-toggle"
+                        data-toggle="dropdown">
+                        <span class="caret"></span>
+                        <span class="sr-only">选择</span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                      <?php
+                      foreach($classes as $class)
+                      {
+                      ?>
+                        <li><a href="report.php?class=<?php echo $class->id;?>"><?php echo $class->classname;?></a></li>
+                      <?php
+                        if($class->id == $class_id)
+                        {
+                          echo "<script>$('#list_class').html('$class->classname');</script>";
+                        }
+                      }
+                      ?>
+                    </ul>
+                </div>
+          <?php
+            }
+          ?>
+        </div>
+
+        <div class="container mt20 mb20">
           <script type="text/javascript" src='js/echarts-all.js'></script>
           <div class="col-lg-8" id="graph1" style="height:400px; padding:0;">
             <?php
               $class_score = "";
-              if($user->get_class_students_count()>0)
+              if($user->get_class_students_count_teacher($class_id)>0)
               {
                 $class_score = $user->get_class_report_score_1($class_id);
               }

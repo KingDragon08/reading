@@ -544,13 +544,17 @@ class Common
       {
         $sql .= "and a.grade='$grade' ";
       }
-      if($type!=0 && $type!=-1)
+      if($type!=0 && $type!=-1 && $type!=-2)
       {
         $sql .= "and a.type='$type' ";
       }
       if($type == -1)
       {
         $sql .= "and b.type=1";
+      }
+      if($type == -2)
+      {
+        $sql .= "and b.type=0";
       }
       $sql .= " order by b.id desc";
       $lists = $db->get_results($sql);
@@ -988,6 +992,76 @@ class Common
             '<p class="gray" id="tips">'.$tips.'...</p></center>';
     }
 
+    /**
+    *获取学校名字
+    **/
+    function get_school_name($id)
+    {
+      global $db;
+      $sql = "select schoolname from rd_school where id='$id'";
+      return $db->get_var($sql);
+    }
+
+    /**
+    *检查学校是否合法
+    **/
+    function check_school($school)
+    {
+      global $db;
+      $sql = "select count(id) from rd_school where id='$school'";
+      if($db->get_var($sql)>0)
+      {
+        return 1;
+      }
+      else
+      {
+        return 0;
+      }
+    }
+
+    /**
+    *检查年级是否合法
+    **/
+    function check_grade($grade)
+    {
+      global $db;
+      $sql = "select count(id) from rd_grade where id='$grade'";
+      if($db->get_var($sql)>0)
+      {
+        return 1;
+      }
+      else
+      {
+        return 0;
+      }
+    }
+
+    /**
+    *检查班级是否合法
+    **/
+    function  check_class($id)
+    {
+      global $db;
+      $sql = "select count(id) from rd_class where id='$id'";
+      if($db->get_var($sql)>0)
+      {
+        return 1;
+      }
+      else
+      {
+        return 0;
+      }
+    }
+
+    /**
+    *获取所有学校的名字和id
+    **/
+    function get_all_school()
+    {
+      global $db;
+      $sql = "select * from rd_school order by id desc";
+      return $db->get_results($sql);
+    }
 
 }
 ?>

@@ -88,7 +88,7 @@
     <div class="col-lg-8">
       选择书单类型:&nbsp;&nbsp;&nbsp;&nbsp;
       <div class="btn-group">
-          <button type="button" class="btn btn-default" id="list_type">书单类型</button>
+          <button type="button" class="btn btn-default" id="list_type">图书类型</button>
           <button type="button" class="btn btn-default dropdown-toggle"
               data-toggle="dropdown">
               <span class="caret"></span>
@@ -96,7 +96,6 @@
           </button>
           <ul class="dropdown-menu" role="menu">
             <li><a href="javascript:void(0);" onclick="type_change(0)">全部类型</a></li>
-            <li><a href="javascript:void(0);" onclick="type_change(-1)">教师推送</a></li>
             <?php
               $types = $common->get_all_book_type();
               $status = isset($_GET['status'])?intval($_GET['status']):-1;
@@ -111,14 +110,36 @@
                   {
                       echo '<script>$("#list_type").html("'.$type->name.'");</script>';
                   }
-                  if(intval($_GET['type'])==-1)
-                  {
-                    echo '<script>$("#list_type").html("教师推送");</script>';
-                  }
                 }
               }
             ?>
           </ul>
+      </div>
+      &nbsp;&nbsp;
+      <div class="btn-group">
+          <button type="button" class="btn btn-default" id="kd_type">书单类型</button>
+          <button type="button" class="btn btn-default dropdown-toggle"
+              data-toggle="dropdown">
+              <span class="caret"></span>
+              <span class="sr-only">选择</span>
+          </button>
+          <ul class="dropdown-menu" role="menu">
+              <li><a href="javascript:void(0);" onclick="type_change(-1)">教师推送</a></li>
+              <li><a href="javascript:void(0);" onclick="type_change(-2)">自选书单</a></li>
+          </ul>
+          <?php
+            if(isset($_GET['type']))
+            {
+              if(intval($_GET['type'])==-1)
+              {
+                echo '<script>$("#kd_type").html("教师推送");</script>';
+              }
+              if(intval($_GET['type'])==-2)
+              {
+                echo '<script>$("#kd_type").html("自选书单");</script>';
+              }
+            }
+          ?>
       </div>
       &nbsp;&nbsp;
       <div class="btn-group">

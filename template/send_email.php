@@ -33,7 +33,7 @@
           $title = $_POST['title'];
           $content = $_POST['content'];
           $result = $user->send_email($id,$title,$content);
-          var_dump($result);
+          // var_dump($result);
           if($result['error'] == 0)
           {
             echo '<script>alert("发送成功");location.href="classmate.php"</script>';

@@ -216,9 +216,16 @@
         alert("至少选择一个班级才能推送");
         return false;
       }
-      if($("$endtime").val().length != 10)
+      if($("#endtime").val().length != 10)
       {
         alert("请选择截止日期");
+        return false;
+      }
+      var time_array = $("#endtime").val().split("-");
+      if(parseInt(time_array[0])<2017 || parseInt(time_array[1])<1 || parseInt(time_array[1])>12
+          || parseInt(time_array[2])<1 || parseInt(time_array[2])>31)
+      {
+        alert("时间格式不正确");
         return false;
       }
       return true;

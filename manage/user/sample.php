@@ -8,4 +8,4 @@ $radio_types=array(0=>"Male",1=>"Female");
 
 Template::assign('samples', $samples);
 Template::assign('radio_types', $radio_types);
-Template::display('sample/sample.tpl');
+Template::display('user/sample.tpl');

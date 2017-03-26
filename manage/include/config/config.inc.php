@@ -20,13 +20,13 @@ define('ADMIN_TITLE' ,'管理后台');
 define('COMPANY_NAME' ,'北京乐智起航文化发展有限公司');
 
 // OSAdmin 数据库设置
-define('OSA_DB_ID' ,'osadmin');
+define('OSA_DB_ID' ,'reading');
 $DATABASE_LIST[OSA_DB_ID] = array (
 	'server' => '127.0.0.1',
 	'port' => '3306',
 	'username' => 'root',
 	'password' => '123456',
-	'db_name' => 'osadmin');
+	'db_name' => 'reading');
 
 // 样例数据库设置
 define('SAMPLE_DB_ID' ,'sample');
@@ -35,14 +35,14 @@ $DATABASE_LIST[SAMPLE_DB_ID] = array (
 	'port' => '3306',
 	'username' => 'root',
 	'password' => '123456',
-	'db_name' => 'osadmin');
+	'db_name' => 'reading');
 
 
 // COOKIE 加密密钥，建议修改
 define('OSA_ENCRYPT_KEY','whatafuckingday!');
 
 // prefix 不要更改，除非修改 osadmin.sql 文件中的所有表名
-define('OSA_TABLE_PREFIX' ,'osa_');
+define('OSA_TABLE_PREFIX' ,'rd_');
 
 // 页面设置
 define('DEBUG' ,false);

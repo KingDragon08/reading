@@ -137,4 +137,15 @@ class School extends Base
         return $id;
     }
 
+
+	public static function getSchoolForOptions() {
+		$option_list = self::getAllSchools ();
+
+		foreach ( $option_list as $option ) {
+			$school_options_array [$option ['id']] = $option ['schoolname'];
+		}
+
+		return $school_options_array;
+	}
+
 }

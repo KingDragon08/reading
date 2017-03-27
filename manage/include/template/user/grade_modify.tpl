@@ -16,7 +16,7 @@
            <form id="tab" method="post" action="" autocomplete="off">
 
 				<label>年级名称</label>
-				<input type="text" name="grade_name" value="<{grade.grade_name}>" class="input-xlarge">
+				<input type="text" name="grade_name" value="<{$grade.grade_name}>" class="input-xlarge">
 			<div class="btn-toolbar">
 				<button type="submit" class="btn btn-primary"><strong>提交</strong></button>
 				<div class="btn-group"></div>

@@ -5,23 +5,22 @@ extract ( $_REQUEST, EXTR_IF_EXISTS );
 
 Common::checkParam($grade_id);
 $grade = Grade::getGradeById ( $grade_id );
-// var_dump(urlencode($grade['name']));
+// var_dump($grade_name);
 // exit();
 if(empty($grade)){
 	Common::exitWithError('年级不存在',"user/grade.php");
 }
-if (Common::isPost ()) {
 
-	if($grade_name =="" || (emtpy($grade_id)) ){
+if (Common::isPost()) {
+	if($grade_name =="" || (empty($grade_id)) ){
 
 		OSAdmin::alert("error",ErrorMessage::NEED_PARAM);
 	}else{
-
-        // echo "string";
+		// var_dump($grade_name);
 		$update_data = array ('grade_name' => $grade_name);
 
 		$result = Grade::updateGrade ( $grade_id, $update_data );
-        // var_dump($result);
+        var_dump($result);
 
 		if ($result>=0) {
 			$current_user=UserSession::getSessionInfo();
@@ -35,6 +34,7 @@ if (Common::isPost ()) {
 		}
 	}
 }
+// echo "string";
 
 Template::assign ( 'grade', $grade );
 Template::display ( 'user/grade_modify.tpl' );

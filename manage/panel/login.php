@@ -12,7 +12,7 @@ if (Common::isPost()) {
 		OSAdmin::alert("error",ErrorMessage::VERIFY_CODE_WRONG);
 	}else{
 		$user_info = User::checkPassword ( $user_name, $password );
-        var_dump($user_info);
+        // var_dump($user_info);
 
 		if ($user_info) {
 			if($user_info['status']==1){

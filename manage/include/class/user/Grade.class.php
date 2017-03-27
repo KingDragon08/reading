@@ -138,4 +138,14 @@ class Grade extends Base
         return $id;
     }
 
+
+	public static function getGradeForOptions() {
+		$option_list = self::getAllGrades ();
+
+		foreach ( $option_list as $option ) {
+			$options_array [$option ['id']] = $option ['grade_name'];
+		}
+
+		return $options_array;
+	}
 }

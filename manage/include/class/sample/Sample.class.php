@@ -1,7 +1,7 @@
 <?php
 if (!defined('ACCESS')) {exit('Access denied.');}
 
-class Sample extends SampleBase
+class Sample extends Base
 {
 //class Sample extends Base {
 	private static $table_name = 'sample';
@@ -24,6 +24,6 @@ class Sample extends SampleBase
 		if ($list) {
 			return $list;
 		}
-		return array();		
+		return array();
 	}
 }

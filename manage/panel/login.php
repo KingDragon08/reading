@@ -7,7 +7,7 @@ $user_name = $password = $remember = $verify_code = '';
 extract ( $_POST, EXTR_IF_EXISTS );
 // var_dump(Common::isPost());
 if (Common::isPost()) {
-    echo "string";
+    // echo "string";
 	if(strtolower($verify_code) != strtolower($_SESSION['osa_verify_code'])){
 		OSAdmin::alert("error",ErrorMessage::VERIFY_CODE_WRONG);
 	}else{

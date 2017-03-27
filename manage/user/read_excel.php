@@ -10,11 +10,11 @@ if (Common::isPost ()) {
 		}
 		$file = $_FILES['excel']['tmp_name'];
 		$excel_array = ExcelReader::readXLS($file);
-		
+
 		$output = print_r($excel_array,true);
 	}
 }
 
 Template::assign("_POST", $_POST);
 Template::assign("output", $output);
-Template::display('sample/read_excel.tpl');
+Template::display('user/read_excel.tpl');

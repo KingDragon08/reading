@@ -35,7 +35,7 @@
 					<td><{$banji.gradename}></td>
 					<td><{$banji.teaname}></td>
 					<td>
-					<a href="banji_modify.php?banji_id=<{$banji.id}>" title= "修改" ><i class="icon-pencil"></i></a>
+					<a href="banji_modify.php?class_id=<{$banji.id}>" title= "修改" ><i class="icon-pencil"></i></a>
 					&nbsp;
 					<a data-toggle="modal" href="#myModal" title= "删除" ><i class="icon-remove" href="banji.php?page_no=<{$page_no}>&method=del&banji_id=<{$banji.id}>" ></i></a>
 					</td>

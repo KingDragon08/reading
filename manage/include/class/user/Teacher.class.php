@@ -1,11 +1,11 @@
 <?php
 if(!defined('ACCESS')) {exit('Access denied.');}
 
-class User extends Base{
+class Teacher extends Base{
 	// 表名
-	private static $table_name = 'admin';
+	private static $table_name = 'user';
 	// 查询字段
-	private static $columns = array('user_id', 'user_name', 'password', 'real_name', 'mobile', 'email', 'user_desc', 'login_time', 'status', 'login_ip', 'user_group', 'template', 'shortcuts', 'show_quicknote');
+	private static $columns = array('id', 'user_name', 'password', 'name', 'sex', 'mobile', 'grade', 'class', 'school', 'headimg', 'score', 'role', 'addtime', 'item1_score', 'item2_score', 'item3_score', 'item4_score', 'item5_score', 'chinese_score', 'list_id');
 	//状态定义
 	const ACTIVE = 1;
 	const DEACTIVE = 0;
@@ -13,64 +13,22 @@ class User extends Base{
 		return parent::$table_prefix.self::$table_name;
 	}
 
-	public static function getUserByName($user_name) {
-		$db=self::__instance();
-		$sql= "select * ,g.group_name from ".self::getTableName() ." u,".UserGroup::getTableName()." g where u.user_name='$user_name' and u.user_group=g.group_id";
-		$list = $db->query($sql)->fetch();// self::getTableName(), self::$columns, $condition );
-		if ($list) {
-			$list['login_time']=Common::getDateTime($list['login_time']);
-			return $list;
-		}
-		return array ();
-	}
 
-	public static function getUserById($user_id) {
-		if (! $user_id || ! is_numeric ( $user_id )) {
-			return false;
-		}
-		$db=self::__instance();
-		$condition = array("AND" =>
-						array("user_id[=]" => $user_id,
-						)
-					);
-		$list = $db->select ( self::getTableName(), self::$columns, $condition );
-
-		if ($list) {
-			$list[0]['login_time']=Common::getDateTime($list[0]['login_time']);
-			return $list [0];
-		}
-		return array ();
-	}
-
-	public static function setCookieRemember($encrypted,$day=7){
-		setcookie("osa_remember",$encrypted,time()+3600*24*$day);
-	}
-
-	public static function getCookieRemember(){
-		$encrypted = $_COOKIE["osa_remember"];
-		$base64=urldecode($encrypted);
-		return OSAEncrypt::decrypt($base64);
-	}
-
-	public static function logout(){
-		setcookie("osa_remember","",time()-3600);
-		unset($_SESSION[UserSession::SESSION_NAME]);
-		unset($_SESSION['osa_timezone']);
-	}
-
-	public static function getAllUsers( $start ='' ,$page_size='' ) {
+	public static function getAllTeachers( $start ='' ,$page_size='' ) {
 		$db=self::__instance();
 		$limit ="";
 		if($page_size){
 			$limit =" limit $start,$page_size ";
 		}
-		$sql = "select * ,coalesce(g.group_name,'已删除') from ".self::getTableName()." u left join ".UserGroup::getTableName()." g on u.user_group = g.group_id order by u.user_id desc $limit";
+		$sql = "select * from ".self::getTableName()." where role = '2' order by id $limit";
 
 		$list=$db->query($sql)->fetchAll();
 		if(!empty($list)){
 			foreach($list as &$item){
-
-				$item['login_time']=Common::getDateTime($item['login_time']);
+				$item['grade_name'] = Grade::getGradeById($item['grade'])['grade_name'];
+				$item['class_name'] = Banji::getBanjiById($item['class'])['classname'];
+				$item['school_name'] = School::getSchoolById($item['school'])['schoolname'];
+				$item['addtime'] = date('Y-m-d', $item['addtime']);
 			}
 		}
 
@@ -79,6 +37,105 @@ class User extends Base{
 		}
 		return array ();
 	}
+
+
+	public static function getTeacherForOptions() {
+		$option_list = self::getAllTeachers ();
+
+		foreach ( $option_list as $option ) {
+			$options_array [$option ['id']] = $option ['name'];
+		}
+
+		return $options_array;
+	}
+
+
+
+	/**
+	 * 获取数据总数
+	 * @param  string $condition [description]
+	 * @return [type]            [description]
+	 */
+	public static function count($condition = '') {
+		$db=self::__instance();
+		$num = $db->count ( self::getTableName(), $condition );
+		return $num;
+	}
+
+
+	public static function getTeacherById($user_id, $type = '2') {
+		if (! $user_id || ! is_numeric ( $user_id )) {
+			return false;
+		}
+		$db=self::__instance();
+		// $condition = array("AND" =>
+		// 				array("id[=]" => $user_id,
+		// 					"role[=]" => $type,)
+		// 			);
+		// var_dump($condition);
+		// $list = $db->select ( self::getTableName(), self::$columns, $condition );
+		$sql = "select * from ".self::getTableName()." where role = '$type' and id = '$user_id'";
+
+		$list=$db->query($sql)->fetchAll();
+		// var_dump($list);
+
+		if ($list) {
+			// $list[0]['login_time']=Common::getDateTime($list[0]['login_time']);
+			return $list [0];
+		}
+		return array ();
+	}
+
+	public static function delTeacher($user_id) {
+		if (! $user_id || ! is_numeric ( $user_id )) {
+			return false;
+		}
+		$db=self::__instance();
+		$condition = array("id"=>$user_id);
+		$result = $db->delete ( self::getTableName(), $condition );
+		return $result;
+	}
+
+	public static function getTeacherByName($user_name) {
+		$db=self::__instance();
+		$sql= "select * from ".self::getTableName() ." where username='$user_name'";
+		$list = $db->query($sql)->fetch();// self::getTableName(), self::$columns, $condition );
+		if ($list) {
+			// $list['login_time']=Common::getDateTime($list['login_time']);
+			return $list;
+		}
+		return array ();
+	}
+
+	public static function addTeacher($user_data) {
+		if (! $user_data || ! is_array ( $user_data )) {
+			return false;
+		}
+		$db=self::__instance();
+		$id = $db->insert ( self::getTableName(), $user_data );
+		return $id;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	public static function search($user_group ,$user_name, $start ='' ,$page_size='' ) {
 		$db=self::__instance();
@@ -132,28 +189,7 @@ class User extends Base{
 		return array ();
 	}
 
-	public static function checkLogin() {
-		$user_info = UserSession::getSessionInfo ();
-		if (empty ( $user_info )) {
-			Common::jumpUrl("panel/login.php");
-			return true;
-		}
-	}
 
-	public static function checkActionAccess() {
-		$action_url = Common::getActionUrl();
-
-
-		$user_info = UserSession::getSessionInfo();
-
-		$role_menu_url = MenuUrl::getMenuByRole ( $user_info['user_role']);
-
-		$search_result = in_array ( $action_url, $role_menu_url );
-		if (! $search_result) {
-			Common::exitWithMessage ('您当前没有权限访问该功能，如需访问请联系管理员开通权限','index.php' );
-			return true;
-		}
-	}
 
 	public static function checkPassword($user_name, $password) {
 		$md5_pwd = md5 ( $password );
@@ -205,24 +241,8 @@ class User extends Base{
 		return $id;
 	}
 
-	public static function addUser($user_data) {
-		if (! $user_data || ! is_array ( $user_data )) {
-			return false;
-		}
-		$db=self::__instance();
-		$id = $db->insert ( self::getTableName(), $user_data );
-		return $id;
-	}
 
-	public static function delUser($user_id) {
-		if (! $user_id || ! is_numeric ( $user_id )) {
-			return false;
-		}
-		$db=self::__instance();
-		$condition = array("user_id"=>$user_id);
-		$result = $db->delete ( self::getTableName(), $condition );
-		return $result;
-	}
+
 
 	public static function delUserByUserName($user_name) {
 		if (! $user_name ) {
@@ -234,11 +254,7 @@ class User extends Base{
 		return $result;
 	}
 
-	public static function count($condition = '') {
-		$db=self::__instance();
-		$num = $db->count ( self::getTableName(), $condition );
-		return $num;
-	}
+
 
 	public static function countSearch($user_group,$user_name) {
 		$db=self::__instance();

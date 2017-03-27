@@ -5,7 +5,7 @@ class Banji extends Base
 {
 	private static $table_name = 'class';
 
-	private static $columns = 'id, banjiname';
+	private static $columns = 'id, classname, school, teacher_id, grade, addtime';
 
 	public static function getTableName()
 	{
@@ -140,4 +140,15 @@ class Banji extends Base
         return $id;
     }
 
+
+
+	public static function getBanjiForOptions() {
+		$option_list = self::getAllBanjis ();
+
+		foreach ( $option_list as $option ) {
+			$options_array [$option ['id']] = $option ['classname'];
+		}
+
+		return $options_array;
+	}
 }

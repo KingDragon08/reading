@@ -2,7 +2,8 @@
 require ('../include/init.inc.php');
 $type = $user_id = $user_name = $real_name = $mobile = $password = $sex = $school_id = $grade_id = $class_id = '';
 extract ( $_REQUEST, EXTR_IF_EXISTS );
-
+// var_dump($_REQUEST);
+// exit();
 Common::checkParam($user_id);
 $user = Teacher::getTeacherById ( $user_id, $type );
 // var_dump($user);
@@ -21,18 +22,22 @@ if (Common::isPost ()) {
 		 					'mobile' => $mobile,
 		 					'username' => $user_name,
 							'sex' => $sex,
-							'school_id' => $school_id,
-							'grade_id' => $grade_id,
-							'class_id' => $class_id,
+							'school' => $school_id,
+							'grade' => $grade_id,
+							'class' => $class_id,
 						 );
 
 		if (! empty ( $password )) {
 			$update_data = array_merge ( $update_data, array ('password' => md5 ( $password ) ) );
 		}
 
+		// var_dump($update_data);
 		$result = Teacher::updateUser ( $user_id,$update_data );
+		// var_dump($result);
+		// exit();
 
-		if ($result>=0) {
+
+		if ($result) {
 			$current_user=UserSession::getSessionInfo();
 			$ip = Common::getIp();
 			$update_data['ip']=$ip;

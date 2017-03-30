@@ -5,7 +5,7 @@ extract ( $_POST, EXTR_IF_EXISTS );
 
 if (Common::isPost ()) {
 	$exist = Grade::getGradeByName($grade_name);
-    var_dump($exist);
+    // var_dump($exist);
 	if($exist){
 
 		OSAdmin::alert("error",ErrorMessage::NAME_CONFLICT);

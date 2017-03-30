@@ -1,6 +1,6 @@
 <?php
 require ('../include/init.inc.php');
-$teacher_id = $method = $teacher_name = $page_no = $search = '';
+$school_id = $grade_id = $class_id = $teacher_id = $method = $teacher_name = $page_no = $search = '';
 extract ( $_REQUEST, EXTR_IF_EXISTS );
 
 if ($method == 'del' && ! empty ( $teacher_id )) {
@@ -24,16 +24,18 @@ $page_size = PAGE_SIZE;
 $page_no=$page_no<1?1:$page_no;
 
 if($search){
-	$row_count = User::countSearch($user_group,$user_name);
+	// var_dump($_REQUEST);
+	// exit();
+	$row_count = Teacher::countSearch($school_id, $grade_id, $class_id, $real_name, '2');
 	$total_page=$row_count%$page_size==0?$row_count/$page_size:ceil($row_count/$page_size);
 	$total_page=$total_page<1?1:$total_page;
 	$page_no=$page_no>($total_page)?($total_page):$page_no;
 	$start = ($page_no - 1) * $page_size;
-	$user_infos = User::search($user_group,$user_name,$start , $page_size);
+	$teacher_infos = Teacher::search($school_id, $grade_id, $class_id, $real_name, '2');
 
 }else{
 	$condition = array('role=' => '2');
-	$row_count = Teacher::count ();
+	$row_count = Teacher::count ($condition);
 	$total_page=$row_count%$page_size==0?$row_count/$page_size:ceil($row_count/$page_size);
 	$total_page=$total_page<1?1:$total_page;
 	$page_no=$page_no>($total_page)?($total_page):$page_no;

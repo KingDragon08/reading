@@ -18,12 +18,20 @@
 <{/if }>
 <form class="form_search"  action="" method="GET" style="margin-bottom:0px">
 	<div style="float:left;margin-right:5px">
-		<label>选择账号组</label>
-		<{html_options name=user_group id="DropDownTimezone" class="input-xlarge" options=$group_options selected=$_GET.user_group}>
+		<label>选择学校</label>
+		<{html_options name=school_id id="DropDownTimezone" class="input-xlarge" options=$school_options selected=$_GET.school_id}>
+	</div>
+	<div style="float:left;margin-right:5px">
+		<label>选择年级</label>
+		<{html_options name=grade_id id="DropDownTimezone" class="input-xlarge" options=$grade_options selected=$_GET.grade_id}>
+	</div>
+	<div style="float:left;margin-right:5px">
+		<label>选择班级</label>
+		<{html_options name=class_id id="DropDownTimezone" class="input-xlarge" options=$class_options selected=$_GET.class_id}>
 	</div>
 	<div style="float:left;margin-right:5px">
 		<label>查询所有用户请留空</label>
-		<input type="text" name="user_name" value="<{$_GET.user_name}>" placeholder="输入登录名" >
+		<input type="text" name="real_name" value="<{$_GET.name}>" placeholder="输入真实姓名" >
 		<input type="hidden" name="search" value="1" >
 	</div>
 	<div class="btn-toolbar" style="padding-top:25px;padding-bottom:0px;margin-bottom:0px">

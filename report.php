@@ -18,7 +18,7 @@
         include_once("top.php");
         if(!isLogin())//如果没有登录则跳转到首页
         {
-          header("Location:index.php");
+          header("Location:login.php");
         }
         else
         {

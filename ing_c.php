@@ -53,8 +53,8 @@
         <div class="forget_cover">
             语音朗读
             <div class="float_right" id="ctr_btn" style="margin-right:5.8em;">
-              <button class="btn btn-success active" style="margin-right:10px;">单字测评</button>
-              <button class="btn btn-success" style="margin-right:10px;" onclick="location.href='ing_c.php'">词语测评</button>
+              <button class="btn btn-success" style="margin-right:10px;" onclick="location.href='ing.php'">单字测评</button>
+              <button class="btn btn-success active" style="margin-right:10px;">词语测评</button>
               <button class="btn btn-success" onclick="location.href='ing_j.php'">短文测评</button>
             </div>
         </div>
@@ -171,7 +171,7 @@
       function speech_start()
       {
         var speech_time = new Date().getTime();
-        location.href = "speech.php?type=zi&textbook=<?php echo $textbook;?>&grade=<?php echo $grade;?>&unit=<?php echo $unit;?>&page=<?php echo $page;?>&speech_time="+speech_time;
+        location.href = "speech.php?type=ci&textbook=<?php echo $textbook;?>&grade=<?php echo $grade;?>&unit=<?php echo $unit;?>&page=<?php echo $page;?>&speech_time="+speech_time;
       }
     </script>
     <?php

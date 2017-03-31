@@ -1060,15 +1060,11 @@
       function check_is_student($id)
       {
         global $db;
-        $sql = "select class from rd_user where id=$id and role=1";
+        // $sql = "select class from rd_user where id=$id and role=1";
+        $user_id = $this->get_user_id();
+        $sql = "select count(*) from rd_class where teacher_id='$user_id' and id='$id'";
         $class = $db->get_var($sql);
-        if($class == $this->get_user_info()->class)
-        {
-          return true;
-        }
-        else {
-          return false;
-        }
+        return $class;
       }
 
       /**

@@ -5338,7 +5338,7 @@ button.list-group-item-danger.active:hover
     }
 }.tooltip
 {
-    font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;font-size: 12px;font-weight: 400;font-style: normal;line-height: 1.42857143;
+    font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;font-size: 20px;font-weight: 400;font-style: normal;line-height: 1.42857143;
 
     position: absolute;z-index: 1070;display: block;text-align: left;text-align: start;white-space: normal;text-decoration: none;letter-spacing: normal;word-spacing: normal;text-transform: none;word-wrap: normal;word-break: normal;opacity: 0;text-shadow: none;filter: alpha(opacity=0);line-break: auto;
 }.tooltip.in

@@ -78,7 +78,7 @@ var iflytek = (function(document){
                     {
                         // iat_result.innerHTML = result;
                         //alert(JSON.parse(result).totle_score);
-                        var index = $("input[name='selected_zi_id']").val();
+                        var index = $("input[name='selected_ci_id']").val();
                         var s_score = JSON.parse(result).totle_score
                         $("#score").html(s_score);
                         scores[index] = s_score;
@@ -132,14 +132,14 @@ var iflytek = (function(document){
     var play = function() {
         if (!mic_pressed)
         {
-            var index = $("input[name='selected_zi_id']").val();
+            var index = $("input[name='selected_ci_id']").val();
             if(index!=="")
             {
               var word = words[index];
               //["cn","read_syllable","好"]
               var ssb_param = {
                   "ise_word": word,
-                  "ise_category": "read_syllable",
+                  "ise_category": "read_word",
                   "params": "appid=58cb464c,appidkey=4246d69fc76ac885,bom=true,rstcd=utf8,category=read_syllable,auf=audio/L16;rate=16000,vad_enable=1,vad_speech_tail=10000,ent=cn,aue=speex-wb;7"
               };
               /* 调用开始录音接口，通过function(volume)和function(err, obj)回调音量和识别结果 */

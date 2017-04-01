@@ -22,9 +22,23 @@
                   text-align: center; line-height: 60px; font-size: 20px; font-weight: bold;
                   cursor: pointer;
       }
-      .speech_btn:hover,.speech_btn.active{ background: #71cba4; color:#fff;}
+      .speech_container_ci,.speech_container_ju{height:210px; width:90%; margin:0 auto; margin-top:30px;}
+      .speech_btn:hover,.speech_btn.active,.speech_btn_ci:hover,.speech_btn_ci.active,.speech_btn_ju:hover{ background: #71cba4; color:#fff;}
+      .speech_btn_ci{width:auto; height: 60px; line-height: 60px;
+                      border:1px solid #ccc; border-radius: 5px;
+                      float:left; background: #f2f2f2; margin-bottom: 20px; margin-right: 16px;
+                      text-align: center; font-size: 20px; font-weight: bold;
+                      cursor: pointer; padding:0 20px;
+      }
+      .speech_btn_ju{width:auto; height:30px; border:1px solid #ccc; border-right: 0;
+                  float:left; background: #f2f2f2; margin-bottom: 10px;
+                  text-align: center; line-height: 30px; font-size: 16px; font-weight: bold;
+                  cursor: pointer; padding:0 16px;
+      }
+
       .first{border-radius: 5px 0 0 5px;}
       .last{border-radius: 0 5px 5px 0; border-right: 1px solid #ccc;}
+      .first.last{border-radius: 5px;}
     </style>
   </head>
   <body>
@@ -249,7 +263,7 @@
                     url:'controller/speech.php',
                     type:'post',
                     dataType:'json',
-                    data:{scores:JSON.stringify(scores),sk:'<?php echo md5($user->get_user_id());?>',page:<?php echo $page;?>,size:<?php echo count($words);?>},
+                    data:{type:'zi',scores:JSON.stringify(scores),sk:'<?php echo md5($user->get_user_id());?>',page:<?php echo $page;?>,size:<?php echo count($words);?>},
                     success:function(data){
                       alert("成绩提交成功");
                       location.href = "ing.php";
@@ -290,6 +304,322 @@
             }
           ?>
           <!-- 字结束 -->
+
+
+          <!-- 词开始 -->
+          <?php
+            if($type=='ci')
+            {
+              $words = $speech->get_test($type,$page);
+              if(count($words))
+              {
+          ?>
+                <div class="col-lg-12 mt20">
+                  <div class="col-lg-8">
+                    <div class="speech_container_ci">
+                      <?php
+                          for($i=0; $i<count($words); $i++)
+                          {
+                      ?>
+                            <div class="speech_btn_ci" data-toggle="tooltip" title=""
+                                 onclick="choose(<?php echo $i.",'".$words[$i]->name."'";?>)">
+                                 <?php echo $words[$i]->name;?>
+                            </div>
+                      <?php
+                          }
+                      ?>
+                    </div>
+                    <input type="hidden" name="selected_ci" value="">
+                    <input type="hidden" name="selected_ci_id" value="">
+                  </div>
+                  <div class="col-lg-4" style="text-align:center; position:relative;">
+                    <div style="font-size:24px; margin-top:140px;">
+                      <span>得分：</span>
+                      <span id="score">0</span>
+                    </div>
+                    <div class="btn btn-success" style="margin:0 auto; margin-top:20px;" id="a">
+                      开始测试
+                    </div>
+
+                    <div id="canvas_wrapper" style="display:none">
+                        <canvas id="volume" height="4"></canvas>
+                    </div>
+
+                    <p class="gray" style="margin-top:14px;">
+                      点击右上角麦克风调试音频设备
+                    </p>
+                    <div class="btn btn-danger" style="margin:0 auto; margin-top:20px;" onclick="test_done()">
+                      提交成绩
+                    </div>
+                    <div style="position:absolute; right:20px; top:40px;">
+                      <img src="img/mic.png" alt="" style="cursor:pointer;" onclick="check_mic()">
+                    </div>
+                  </div>
+                </div>
+                <script type="text/javascript" src="js/pydic.js"></script>
+                <script type="text/javascript" src="js/ise/fingerprint2.min.js"></script>
+                <script type="text/javascript" src="js/ise/ise.all.js"></script>
+                <script type="text/javascript" src="js/ise/test_ci.js"></script>
+                <script type="text/javascript">
+                  var scores = [];
+                  var words = [];
+                  $(function(){
+                      //标注拼音
+                      $(".speech_btn_ci").each(function(){
+                        var word = $(this).html().replace(/(^\s*)|(\s*$)/g, "");
+                        scores.push(0);
+                        words.push(word);
+                        var title = "";
+                        for(var i=0; i<word.length; i++)
+                        {
+                          if(zi.indexOf(word[i]))
+                          {
+                            title += pinyin[zi.indexOf(word[i])];
+                            title += " ";
+                          }
+                          $(this).attr("title",title);
+                        }
+                      });
+                      //鼠标经过显示拼音
+                      $("[data-toggle='tooltip']").tooltip();
+
+                  });
+
+                  //选择单字
+                  function choose(i,zi)
+                  {
+                      $(".speech_btn_ci").each(function(index,val){
+                        if(index==i)
+                        {
+                          $(this).addClass("active");
+                          $("#score").html(scores[i]);
+                        }
+                        else
+                        {
+                          $(this).removeClass("active");
+                        }
+                      });
+                      $("input[name='selected_ci']").val(zi);
+                      $("input[name='selected_ci_id']").val(i);
+                }
+
+                //提交成绩
+                function test_done()
+                {
+                  for(var i=0; i<scores.length; i++)
+                  {
+                    if(scores[i]==0)
+                    {
+                      alert("未完成测评,不能提交!");
+                      return;
+                    }
+                  }
+                  $("#loading").fadeIn();
+                  $.ajax({
+                    url:'controller/speech.php',
+                    type:'post',
+                    dataType:'json',
+                    data:{type:'ci',scores:JSON.stringify(scores),sk:'<?php echo md5($user->get_user_id());?>',page:<?php echo $page;?>,size:<?php echo count($words);?>},
+                    success:function(data){
+                      alert("成绩提交成功");
+                      location.href = "ing_c.php";
+                    },
+                    error:function(){
+                      alert("网络不畅");
+                    }
+                  });
+                }
+
+                //检测麦克风是否可用
+                function check_mic()
+                {
+                    navigator.getUserMedia = navigator.getUserMedia ||
+                                    navigator.webkitGetUserMedia ||
+                                    navigator.mozGetUserMedia ||
+                                    navigator.msGetUserMedia;
+
+                    if(navigator.getUserMedia)
+                    {
+                        alert("麦克风正常");
+                    } else
+                    {
+                        alert("麦克风异常");
+                    }
+                }
+
+                </script>
+          <?php
+              }
+              else
+              {
+                $common->tips("暂时不支持该测评");
+                exit();
+              }
+          ?>
+          <?php
+            }
+          ?>
+          <!-- 词结束 -->
+
+
+
+          <!-- 句开始 -->
+          <?php
+            if($type=='ju')
+            {
+              $words = $speech->get_test($type,$page);
+              if(count($words))
+              {
+          ?>
+                <div class="col-lg-12 mt20">
+                  <div class="col-lg-8">
+                    <div class="speech_container_ju">
+                      <?php
+                          //$words = explode(",",$words[0]->name);
+                          // print_r($words);
+                          for($i=0; $i<count($words); $i++)
+                          {
+                            echo "<input type=\"hidden\" id=\"words_".$i."\" value=\"".$words[$i]->name."\">";
+                            if($i==0)
+                            {
+                              echo "<input type=\"radio\" name=\"ju\" onclick=\"choose_ju($i)\" checked=\"checked\" style=\"float:right;\"/>";
+                            }
+                            else
+                            {
+                              echo "<input type=\"radio\" name=\"ju\" onclick=\"choose_ju($i)\" style=\"float:right;\"/>";
+                            }
+                            preg_match_all("/./u",$words[$i]->name,$words[$i]);
+                            for($j=0; $j<count($words[$i][0]); $j++)
+                            {
+                      ?>
+                            <div class="speech_btn_ju <?php if($j%8==0){echo ' first';} if($j%8==7 || $j==count($words[$i][0])-1){echo ' last';} ?>"
+                                 data-toggle="tooltip" title=""><?php echo $words[$i][0][$j];?></div>
+                      <?php
+                            }
+                            echo "<div style='clear:both; height:30px;'></div>";
+                          }
+                      ?>
+                          <input type="hidden" name="selected_ju" id="selected_ju" value="0">
+                    </div>
+                  </div>
+                  <div class="col-lg-4" style="text-align:center; position:relative;">
+                    <div style="font-size:24px; margin-top:140px;">
+                      <span>得分：</span>
+                      <span id="score">0</span>
+                    </div>
+                    <div class="btn btn-success" style="margin:0 auto; margin-top:20px;" id="a">
+                      开始测试
+                    </div>
+
+                    <div id="canvas_wrapper" style="display:none">
+                        <canvas id="volume" height="4"></canvas>
+                    </div>
+
+                    <p class="gray" style="margin-top:14px;">
+                      点击右上角麦克风调试音频设备
+                    </p>
+                    <div class="btn btn-danger" style="margin:0 auto; margin-top:20px;" onclick="test_done()">
+                      提交成绩
+                    </div>
+                    <div style="position:absolute; right:20px; top:40px;">
+                      <img src="img/mic.png" alt="" style="cursor:pointer;" onclick="check_mic()">
+                    </div>
+                  </div>
+                </div>
+                <script type="text/javascript" src="js/pydic.js"></script>
+                <script type="text/javascript" src="js/ise/fingerprint2.min.js"></script>
+                <script type="text/javascript" src="js/ise/ise.all.js"></script>
+                <script type="text/javascript" src="js/ise/test_ju.js"></script>
+                <script type="text/javascript">
+                  var scores = [];
+                  // var words = 0;
+                  $(function(){
+                      //初始化scores
+                      for(var i=0; i<<?php echo count($words);?>; i++)
+                      {
+                        scores.push(0);
+                      }
+                      //标注拼音
+                      $(".speech_btn_ju").each(function(){
+                        var word = $(this).html().replace(/(^\s*)|(\s*$)/g, "");
+                        // words.push(word);
+                        if(zi.indexOf(word))
+                        {
+                          $(this).attr("title",pinyin[zi.indexOf(word)]);
+                        }
+
+                      });
+                      //鼠标经过显示拼音
+                      $("[data-toggle='tooltip']").tooltip();
+
+                  });
+
+                  //选择某一句进行测评
+                  function choose_ju(id)
+                  {
+                    var val = $("#words_"+id).val();
+                    $("#selected_ju").val(id);
+                    $("#score").html(scores[id]);
+                  }
+
+                //提交成绩
+                function test_done()
+                {
+                  for(var i=0; i<scores.length; i++)
+                  {
+                    if(scores[i]==0)
+                    {
+                      alert("未完成测评,不能提交!");
+                      return;
+                    }
+                  }
+                  $("#loading").fadeIn();
+                  $.ajax({
+                    url:'controller/speech.php',
+                    type:'post',
+                    dataType:'json',
+                    data:{type:'ju',scores:JSON.stringify(scores),sk:'<?php echo md5($user->get_user_id());?>',page:<?php echo $page;?>,size:<?php echo count($words);?>},
+                    success:function(data){
+                      alert("成绩提交成功");
+                      //console.log(data);
+                      location.href = "ing_j.php";
+                    },
+                    error:function(){
+                      alert("网络不畅");
+                    }
+                  });
+                }
+
+                //检测麦克风是否可用
+                function check_mic()
+                {
+                    navigator.getUserMedia = navigator.getUserMedia ||
+                                    navigator.webkitGetUserMedia ||
+                                    navigator.mozGetUserMedia ||
+                                    navigator.msGetUserMedia;
+
+                    if(navigator.getUserMedia)
+                    {
+                        alert("麦克风正常");
+                    } else
+                    {
+                        alert("麦克风异常");
+                    }
+                }
+
+                </script>
+          <?php
+              }
+              else
+              {
+                $common->tips("暂时不支持该测评");
+                exit();
+              }
+          ?>
+          <?php
+            }
+          ?>
+          <!-- 句结束 -->
 
 
 

@@ -23,6 +23,17 @@ class BookList extends Base{
 		return $num;
 	}
 
+	public static function booknotincout($book_id) {
+		$db=self::__instance();
+		$sql = "select count(*) as count from ".self::getTableName();
+		$sql .= " where id not in ";
+		$sql .= "(select list_id from rd_book_list where book_id = '$book_id')";
+		$list=$db->query($sql)->fetchAll();
+		$num = $list[0]['count'];
+		// $num = $db->count ( self::getTableName(), $condition );
+		return $num;
+	}
+
 
 	/**
 	 * 所有详细信息
@@ -30,13 +41,18 @@ class BookList extends Base{
 	 * @param  string $page_size [description]
 	 * @return [type]            [description]
 	 */
-	public static function getAllInfos( $start ='' ,$page_size='' ) {
+	public static function getAllInfos( $start ='' ,$page_size='', $book_id = '' ) {
 		$db=self::__instance();
 		$limit ="";
 		if($page_size){
 			$limit =" limit $start,$page_size ";
 		}
-		$sql = "select * from ".self::getTableName()." order by id $limit";
+		$sql = "select * from ".self::getTableName();
+		if ($book_id > 0) {
+			$sql .= " where id not in ";
+			$sql .= "(select list_id from rd_book_list where book_id = '$book_id')";
+		}
+		$sql .= " order by id $limit";
 
 		$list=$db->query($sql)->fetchAll();
 		// var_dump($list);
@@ -104,20 +120,8 @@ class BookList extends Base{
 	}
 
 
-	public static function countSearch($book_id,$question) {
+	public static function countSearch($where) {
 		$db=self::__instance();
-		$condition = array();
-		$where = 'where 1=1';
-		if($book_id >0  && $question!=""){
-			$where .= " and book_id = '$book_id' and question like '%$question%'";
-		}else{
-			if($book_id>0){
-				$where .= " and book_id = '$book_id'";
-			}
-			if($question!=""){
-				$where .= " and question like '%$question%'";
-			}
-		}
 
 		$sql = "select count(*) as count from ".self::getTableName()." $where ";
 
@@ -128,22 +132,11 @@ class BookList extends Base{
 	}
 
 
-	public static function search($book_id,$question,$start , $page_size) {
+	public static function search($where, $start , $page_size) {
 		$db=self::__instance();
 		$limit ="";
 		if($page_size){
 			$limit =" limit $start,$page_size ";
-		}
-		$where = " where 1=1";
-		if($book_id >0 && $question!=""){
-			$where .= " and book_id = '$book_id' and question like '%$question%'";
-		}else{
-			if($book_id>0){
-				$where .= " and book_id =$book_id ";
-			}
-			if($question!=""){
-				$where .= " and question like '%$question%' ";
-			}
 		}
 		$sql = "select * from ".self::getTableName()." $where order by id $limit";
 
@@ -151,8 +144,10 @@ class BookList extends Base{
 		if(!empty($list)){
 			foreach($list as &$item){
 				$item['addtime']= date('Y-m-d', $item['addtime']);
-				$item['book_name']= Book::getBookById($item['book_id'])['name'];
-				$item['view_name']= self::getViewName($item['view']);
+				$item['endtime']= date('Y-m-d', $item['endtime']);
+				$item['type_name']= ListType::getInfoById($item['type'])['name'];
+				$item['grade_name']= Grade::getGradeById($item['grade'])['grade_name'];
+				$item['user_name'] = ($item['user_id'] == '0')? '系统管理员':Teacher::getTeacherById($item['user_id'], '2')['name'];
 			}
 		}
 		if ($list) {

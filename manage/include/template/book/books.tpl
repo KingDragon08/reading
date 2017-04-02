@@ -17,16 +17,28 @@
 <div id="search" class="collapse out" >
 <{/if }>
 <form class="form_search"  action="" method="GET" style="margin-bottom:0px">
-	<div style="float:left;margin-right:5px">
-		<label>选择账号组</label>
-		<{html_options name=user_group id="DropDownTimezone" class="input-xlarge" options=$group_options selected=$_GET.user_group}>
-	</div>
-	<div style="float:left;margin-right:5px">
-		<label>查询所有用户请留空</label>
-		<input type="text" name="user_name" value="<{$_GET.user_name}>" placeholder="输入登录名" >
-		<input type="hidden" name="search" value="1" >
-	</div>
+    <div style="float:left;margin-right:5px">
+        <label>选择图书类型</label>
+        <{html_options name=type_id id="DropDownTimezone" class="input-xlarge" options=$type_options selected=$_GET.type_id}>
+    </div>
+    <div style="float:left;margin-right:5px">
+        <label>选择图书学段</label>
+        <{html_options name=grade_id id="DropDownTimezone" class="input-xlarge" options=$grade_options selected=$_GET.grade_id}>
+    </div>
+    <div style="float:left;margin-right:5px">
+        <label>出版社名称</label>
+        <input type="text" name="press" value="<{$_GET.press}>" placeholder="输入出版社名称" >
+    </div>
+    <div style="float:left;margin-right:5px">
+        <label>作者姓名</label>
+        <input type="text" name="author" value="<{$_GET.author}>" placeholder="输入作者姓名" >
+    </div>
+    <div style="float:left;margin-right:5px">
+        <label>图书名称</label>
+        <input type="text" name="book_name" value="<{$_GET.book_name}>" placeholder="输入图书名称" >
+    </div>
 	<div class="btn-toolbar" style="padding-top:25px;padding-bottom:0px;margin-bottom:0px">
+        <input type="hidden" name="search" value="1" >
 		<button type="submit" class="btn btn-primary">检索</button>
 	</div>
 	<div style="clear:both;"></div>
@@ -50,7 +62,7 @@
 					<th style="width:80px">积分</th>
 					<th style="width:80px">字数</th>
 					<th style="width:100px">描述</th>
-					<th style="width:40px">操作</th>
+					<th style="width:80px">操作</th>
                 </tr>
               </thead>
               <tbody>
@@ -69,6 +81,8 @@
 					<td><{$book_info.wordcount}></td>
 					<td><{$book_info.bookdesc}></td>
 					<td>
+                    <a href="/reading/manage/list/booklist.php?book_id=<{$book_info.id}>&type=addbook" title="添加到书单"><i class="icon-plus"></i></a>
+					&nbsp;
 					<a href="book_modify.php?book_id=<{$book_info.id}>" title= "修改" ><i class="icon-pencil"></i></a>
 					&nbsp;
 					<a data-toggle="modal" href="#myModal" title= "删除" ><i class="icon-remove" href="books.php?page_no=<{$page_no}>&method=del&book_id=<{$book_info.id}>" ></i></a>

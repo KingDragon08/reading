@@ -23,6 +23,15 @@ class Book extends Base{
 		return $num;
 	}
 
+	public static function notinlistcount($list_id) {
+		$db=self::__instance();
+		$sql = "select count(*) as count from ".self::getTableName()." where id not in ";
+		$sql .= "(select book_id from rd_book_list where list_id = '$list_id')";
+		$res = $db->query($sql)->fetchAll();
+		$num = $res[0]['count'];
+		return $num;
+	}
+
 
 	/**
 	 * 所有书籍详细信息
@@ -37,6 +46,35 @@ class Book extends Base{
 			$limit =" limit $start,$page_size ";
 		}
 		$sql = "select * from ".self::getTableName()." order by id $limit";
+
+		$list=$db->query($sql)->fetchAll();
+		// var_dump($list);
+		if(!empty($list)){
+			foreach($list as &$item){
+				$item['addtime']= date('Y-m-d', $item['addtime']);
+				$item['presstime']= date('Y-m-d', $item['presstime']);
+				$item['type_name']=BookType::getGroupById($item['type'])['name'];
+				$item['grade_name']=Grade::getGradeById($item['grade'])['grade_name'];
+				// $item['short_desc']= substr($item['bookdesc'], 10);
+			}
+		}
+
+		if ($list) {
+			return $list;
+		}
+		return array ();
+	}
+
+
+	public static function getNotinListBooks($list_id, $start ='' ,$page_size='' ) {
+		$db=self::__instance();
+		$limit ="";
+		if($page_size){
+			$limit =" limit $start,$page_size ";
+		}
+		$sql = "select * from ".self::getTableName()." where id not in ";
+		$sql .= "(select book_id from rd_book_list where list_id = '$list_id')";
+		$sql .= " order by id $limit";
 
 		$list=$db->query($sql)->fetchAll();
 		// var_dump($list);
@@ -135,6 +173,39 @@ class Book extends Base{
 		}
 
 		return $options_array;
+	}
+
+	public static function countSearch($where) {
+		$db=self::__instance();
+		$sql = "select count(*) as count from ".self::getTableName()." ".$where;
+		// var_dump($sql);
+		$res = $db->query($sql)->fetchAll();
+		$num = $res[0]['count'];
+		return $num;
+	}
+
+	public static function search($where, $start ='' ,$page_size='' ) {
+		$db=self::__instance();
+		$limit ="";
+		if($page_size){
+			$limit =" limit $start,$page_size ";
+		}
+
+		$sql = "select * from ".self::getTableName()." $where order by id $limit";
+
+		$list=$db->query($sql)->fetchAll();
+		if(!empty($list)){
+			foreach($list as &$item){
+				$item['addtime']= date('Y-m-d', $item['addtime']);
+				$item['presstime']= date('Y-m-d', $item['presstime']);
+				$item['type_name']=BookType::getGroupById($item['type'])['name'];
+				$item['grade_name']=Grade::getGradeById($item['grade'])['grade_name'];
+			}
+		}
+		if ($list) {
+			return $list;
+		}
+		return array ();
 	}
 
 }

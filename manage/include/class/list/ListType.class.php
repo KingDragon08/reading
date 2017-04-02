@@ -52,43 +52,24 @@ class ListType extends Base {
 		return $group_options_array;
 	}
 
+    public static function delType($type_id) {
+        if (! $type_id || ! is_numeric ( $type_id )) {
+            return false;
+        }
+        $db=self::__instance();
+        $condition = array("id" => $type_id);
+        $result = $db->delete ( self::getTableName(), $condition );
+        return $result;
+    }
 
 
+    public static function count($condition = '') {
+        $db=self::__instance();
+        $num = $db->count ( self::getTableName(), $condition );
+        return $num;
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-	public static function delBookType($type_id) {
-		if (! $type_id || ! is_numeric ( $type_id )) {
-			return false;
-		}
-		$db=self::__instance();
-		$condition = array("id" => $type_id);
-		$result = $db->delete ( self::getTableName(), $condition );
-		return $result;
-	}
-
-	/**
-	 * 总数
-	 * @param  string $condition [description]
-	 * @return [type]            [description]
-	 */
-	public static function count($condition = '') {
-		$db=self::__instance();
-		$num = $db->count ( self::getTableName(), $condition );
-		return $num;
-	}
-
-	public static function getTypeByName($type_name) {
+    public static function getTypeByName($type_name) {
 		if ( $type_name == "" ) {
 			return false;
 		}

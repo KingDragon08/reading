@@ -8,7 +8,7 @@
 <{$osadmin_quick_note}>
 
 <div class="btn-toolbar" style="margin-bottom:2px;">
-    <a href="student_add.php" class="btn btn-primary"><i class="icon-plus"></i> 账号</a>
+    <a href="teacher_add.php" class="btn btn-primary"><i class="icon-plus"></i> 账号</a>
 	<a data-toggle="collapse" data-target="#search"  href="#" title= "检索"><button class="btn btn-primary" style="margin-left:5px"><i class="icon-search"></i></button></a>
 </div>
 <{if $_GET.search }>
@@ -17,7 +17,7 @@
 <div id="search" class="collapse out" >
 <{/if }>
 <form class="form_search"  action="" method="GET" style="margin-bottom:0px">
-    <div style="float:left;margin-right:5px">
+	<div style="float:left;margin-right:5px">
 		<label>选择学校</label>
 		<{html_options name=school_id id="DropDownTimezone" class="input-xlarge" options=$school_options selected=$_GET.school_id}>
 	</div>
@@ -58,7 +58,7 @@
                 </tr>
               </thead>
               <tbody>
-                <{foreach name=user from=$student_infos item=user_info}>
+                <{foreach name=user from=$teacher_infos item=user_info}>
 					<tr>
 					<td><{$user_info.id}></td>
 					<td><{$user_info.username}></td>
@@ -69,9 +69,9 @@
 					<td><{$user_info.class_name}></td>
 					<td><{$user_info.addtime}></td>
 					<td>
-					<a href="teacher_modify.php?user_id=<{$user_info.id}>&type=1" title= "修改" ><i class="icon-pencil"></i></a>
+					<a href="teacher_modify.php?user_id=<{$user_info.id}>&type=2" title= "修改" ><i class="icon-pencil"></i></a>
 					&nbsp;
-					<a data-toggle="modal" href="#myModal" title= "删除" ><i class="icon-remove" href="student.php?page_no=<{$page_no}>&method=del&teacher_id=<{$user_info.id}>" ></i></a>
+					<a data-toggle="modal" href="#myModal" title= "删除" ><i class="icon-remove" href="teacher.php?page_no=<{$page_no}>&method=del&teacher_id=<{$user_info.id}>" ></i></a>
 					</td>
 					</tr>
 				<{/foreach}>

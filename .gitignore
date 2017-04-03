@@ -1,2 +1,5 @@
 # manage compile folder
 manage/include/compiled/
+
+# uploads
+manage/uploads/

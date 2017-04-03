@@ -27,5 +27,5 @@ $teacher_options = Teacher::getTeacherForOptions();
 Template::assign("_POST" ,$_POST);
 Template::assign ( 'school_options', $school_options );
 Template::assign ( 'grade_options', $grade_options );
-Template::assign ( 'grade_options', $grade_options );
-Template::display ( 'panel/user_add.tpl' );
+Template::assign ( 'teacher_options', $teacher_options );
+Template::display ( 'user/banji_add.tpl' );

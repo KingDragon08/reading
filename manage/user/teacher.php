@@ -11,8 +11,8 @@ if ($method == 'del' && ! empty ( $teacher_id )) {
 		$result = Teacher::delTeacher ( $teacher_id );
 		if ($result>=0) {
 			$user['password']=null;
-			SysLog::addLog ( UserSession::getUserName(), 'DELETE',  'student' ,$teacher_id ,json_encode($user) );
-			Common::exitWithSuccess ( '已删除','user/student.php' );
+			SysLog::addLog ( UserSession::getUserName(), 'DELETE',  'teacher' ,$teacher_id ,json_encode($user) );
+			Common::exitWithSuccess ( '已删除','user/teacher.php' );
 		}else{
 			OSAdmin::alert("error");
 		}
@@ -24,24 +24,27 @@ $page_size = PAGE_SIZE;
 $page_no=$page_no<1?1:$page_no;
 
 if($search){
-	$row_count = Teacher::countSearch($school_id, $grade_id, $class_id, $real_name, '1');
+	// var_dump($_REQUEST);
+	// exit();
+	$row_count = Teacher::countSearch($school_id, $grade_id, $class_id, $real_name, '2');
 	$total_page=$row_count%$page_size==0?$row_count/$page_size:ceil($row_count/$page_size);
 	$total_page=$total_page<1?1:$total_page;
 	$page_no=$page_no>($total_page)?($total_page):$page_no;
 	$start = ($page_no - 1) * $page_size;
-	$student_infos = Teacher::search($school_id, $grade_id, $class_id, $real_name, '1');
+	$teacher_infos = Teacher::search($school_id, $grade_id, $class_id, $real_name, '2');
+
 }else{
-	$condition = array('role=' => '1');
+	$condition = array('role=' => '2');
 	$row_count = Teacher::count ($condition);
 	$total_page=$row_count%$page_size==0?$row_count/$page_size:ceil($row_count/$page_size);
 	$total_page=$total_page<1?1:$total_page;
 	$page_no=$page_no>($total_page)?($total_page):$page_no;
 	$start = ($page_no - 1) * $page_size;
-	$student_infos = Teacher::getAllStudents ( $start , $page_size );
+	$teacher_infos = Teacher::getAllTeachers ( $start , $page_size );
 	// var_dump($teacher_infos);
 }
 
-$page_html=Pagination::showPager("student.php?school_id=$school_id&grade_id=$grade_id&class_id=$class_id&teacher_name=$teacher_name&search=$search",$page_no,$page_size,$row_count);
+$page_html=Pagination::showPager("teacher.php?school_id=$school_id&grade_id=$grade_id&class_id=$class_id&teacher_name=$teacher_name&search=$search",$page_no,$page_size,$row_count);
 
 //追加操作的确认层
 $confirm_html = OSAdmin::renderJsConfirm("icon-pause,icon-play,icon-remove");
@@ -57,9 +60,9 @@ $class_options[0] = "全部";
 Template::assign ( 'school_options', $school_options );
 Template::assign ( 'grade_options', $grade_options );
 Template::assign ( 'class_options', $class_options );
-Template::assign ( 'student_infos', $student_infos );
+Template::assign ( 'teacher_infos', $teacher_infos );
 Template::assign ( '_GET', $_GET );
 Template::assign ( 'page_no', $page_no );
 Template::assign ( 'page_html', $page_html );
 Template::assign ( 'osadmin_action_confirm' , $confirm_html);
-Template::display ( 'user/student.tpl' );
+Template::display ( 'user/teacher.tpl' );

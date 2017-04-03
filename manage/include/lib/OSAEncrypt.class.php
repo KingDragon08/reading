@@ -6,8 +6,10 @@ class OSAEncrypt{
 	   $key = OSA_ENCRYPT_KEY;
 	   $text = $value;
 	   $iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB);
+	//    var_dump($iv_size);
 	   $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
 	   $crypttext = mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $key, $text, MCRYPT_MODE_ECB, $iv);
+	//    var_dump($crypttext);
 	   return trim(base64_encode($crypttext)); //encode for cookie
 	}
 

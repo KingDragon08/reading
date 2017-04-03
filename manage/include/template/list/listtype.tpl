@@ -8,36 +8,30 @@
 <{$osadmin_quick_note}>
 
 <div class="btn-toolbar" style="margin-bottom:2px;">
-    <a href="banji_add.php" class="btn btn-primary"><i class="icon-plus"></i> 班级</a>
+    <a href="listtype_add.php" class="btn btn-primary"><i class="icon-plus"></i>书单类型</a>
 	<!-- <a data-toggle="collapse" data-target="#search"  href="#" title= "检索"><button class="btn btn-primary" style="margin-left:5px"><i class="icon-search"></i></button></a> -->
 </div>
 </div>
     <div class="block">
-        <a href="#page-stats" class="block-heading" data-toggle="collapse">账号列表</a>
+        <a href="#page-stats" class="block-heading" data-toggle="collapse">类型列表</a>
         <div id="page-stats" class="block-body collapse in">
                <table class="table table-striped">
               <thead>
                 <tr>
 					<th style="width:20px">#</th>
-					<th style="width:80px">班级名称</th>
-					<th style="width:80px">学校名称</th>
-                    <th style="width:80px">年级名称</th>
-					<th style="width:80px">教师名称</th>
+					<th style="width:80px">类型名称</th>
 					<th style="width:80px">操作</th>
                 </tr>
               </thead>
               <tbody>
-                <{foreach name=banji from=$banjis item=banji}>
+                <{foreach name=type from=$types item=type}>
 					<tr>
-					<td><{$banji.id}></td>
-					<td><{$banji.classname}></td>
-					<td><{$banji.schoolname}></td>
-					<td><{$banji.gradename}></td>
-					<td><{$banji.teaname}></td>
+					<td><{$type.id}></td>
+					<td><{$type.name}></td>
 					<td>
-					<a href="banji_modify.php?class_id=<{$banji.id}>" title= "修改" ><i class="icon-pencil"></i></a>
+					<a href="listtype_modify.php?type_id=<{$type.id}>" title= "修改" ><i class="icon-pencil"></i></a>
 					&nbsp;
-					<a data-toggle="modal" href="#myModal" title= "删除" ><i class="icon-remove" href="banji.php?page_no=<{$page_no}>&method=del&banji_id=<{$banji.id}>" ></i></a>
+					<a data-toggle="modal" href="#myModal" title= "删除" ><i class="icon-remove" href="listtype.php?page_no=<{$page_no}>&method=del&type_id=<{$type.id}>" ></i></a>
 					</td>
 					</tr>
 				<{/foreach}>

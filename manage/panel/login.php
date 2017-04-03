@@ -1,6 +1,5 @@
 <?php
 require ('../include/init.inc.php');
-
 $user_name = $password = $remember = $verify_code = '';
 // var_dump($user_name);
 // exit();
@@ -17,12 +16,14 @@ if (Common::isPost()) {
 		if ($user_info) {
 			if($user_info['status']==1){
 
-				User::loginDoSomething($user_info['user_id']);
 
 				if($remember){
+					echo $user_info['user_id'];
 					$encrypted = OSAEncrypt::encrypt($user_info['user_id']);
 					User::setCookieRemember(urlencode($encrypted),30);
 				}
+
+				User::loginDoSomething($user_info['user_id']);
 				$ip = Common::getIp();
 				SysLog::addLog ( $user_name, 'LOGIN', 'User' ,UserSession::getUserId(),json_encode(array("IP" => $ip)));
 				Common::jumpUrl ( 'panel/index.php' );

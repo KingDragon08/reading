@@ -743,24 +743,151 @@
           $school_students_count = $this->get_school_students_count();
           $sql = "select count(id) from rd_user where item1_score>".
                   "(select item1_score from rd_user where id=$user_id) and school='$school'";
-          $ret[] = round(($school_students_count-$db->get_var($sql))/$school_students_count,2)*100;
+          $ret[] = round(($school_students_count-$db->get_var($sql)-1)/($school_students_count-1),2)*100;
           $sql = "select count(id) from rd_user where item2_score>".
                   "(select item2_score from rd_user where id=$user_id) and school='$school'";
-          $ret[] = round(($school_students_count-$db->get_var($sql))/$school_students_count,2)*100;
+          $ret[] = round(($school_students_count-$db->get_var($sql)-1)/($school_students_count-1),2)*100;
           $sql = "select count(id) from rd_user where item3_score>".
                   "(select item3_score from rd_user where id=$user_id) and school='$school'";
-          $ret[] = round(($school_students_count-$db->get_var($sql))/$school_students_count,2)*100;
+          $ret[] = round(($school_students_count-$db->get_var($sql)-1)/($school_students_count-1),2)*100;
           $sql = "select count(id) from rd_user where item4_score>".
                   "(select item4_score from rd_user where id=$user_id) and school='$school'";
-          $ret[] = round(($school_students_count-$db->get_var($sql))/$school_students_count,2)*100;
+          $ret[] = round(($school_students_count-$db->get_var($sql)-1)/($school_students_count-1),2)*100;
           $sql = "select count(id) from rd_user where item5_score>".
                   "(select item5_score from rd_user where id=$user_id) and school='$school'";
-          $ret[] = round(($school_students_count-$db->get_var($sql))/$school_students_count,2)*100;
+          $ret[] = round(($school_students_count-$db->get_var($sql)-1)/($school_students_count-1),2)*100;
           return $ret;
         }
         else
         {
           return [-1,-1,-1,-1,-1];
+        }
+      }
+
+      /**
+      *学校级别
+      *获取语音测评的排行
+      **/
+      function get_speech_percent_by_item_school()
+      {
+        global $db;
+        $user_id = $this->get_user_id();
+        if($this->get_school_id())
+        {
+          $school = $this->get_school_id();
+          $school_students_count = $this->get_school_students_count();
+          $school_students = $this->get_school_students();
+          if($school_students)
+          {
+            $zi = $db->get_var("select AVG(average) from rd_speech_exam_results where user_id=$user_id and type='zi'");
+            $ci = $db->get_var("select AVG(average) from rd_speech_exam_results where user_id=$user_id and type='ci'");
+            $ju = $db->get_var("select AVG(average) from rd_speech_exam_results where user_id=$user_id and type='ju'");
+            $rank_zi = 1; $rank_ci = 1; $rank_ju = 1;
+            foreach($school_students as $student)
+            {
+              $temp_zi = $db->get_var("select AVG(average) from rd_speech_exam_results where user_id=".$student->id." and type='zi'");
+              if($temp_zi>$zi)
+              {
+                $rank_zi++;
+              }
+              $temp_ci = $db->get_var("select AVG(average) from rd_speech_exam_results where user_id=".$student->id." and type='ci'");
+              if($temp_ci>$ci)
+              {
+                $rank_ci++;
+              }
+              $temp_ju = $db->get_var("select AVG(average) from rd_speech_exam_results where user_id=".$student->id." and type='ju'");
+              if($temp_ju>$ju)
+              {
+                $rank_ju++;
+              }
+            }
+            $rank_zi = round(($school_students_count-$rank_zi)/($school_students_count-1),2)*100;
+            $rank_ci = round(($school_students_count-$rank_ci)/($school_students_count-1),2)*100;
+            $rank_ju = round(($school_students_count-$rank_ju)/($school_students_count-1),2)*100;
+            return [$rank_zi,$rank_ci,$rank_ju];
+          }
+          else
+          {
+            return NULL;
+          }
+        }
+        else
+        {
+          return [-1,-1,-1];
+        }
+      }
+
+      /**
+      *学校级别
+      *获取语音测评的排行
+      *第三方视角
+      **/
+      function get_speech_percent_by_item_school_teacher($id)
+      {
+        global $db;
+        $user_id = $id;
+        if($this->get_school_id())
+        {
+          $school = $this->get_school_id();
+          $school_students_count = $this->get_school_students_count();
+          $school_students = $this->get_school_students();
+          if($school_students)
+          {
+            $zi = $db->get_var("select AVG(average) from rd_speech_exam_results where user_id=$user_id and type='zi'");
+            $ci = $db->get_var("select AVG(average) from rd_speech_exam_results where user_id=$user_id and type='ci'");
+            $ju = $db->get_var("select AVG(average) from rd_speech_exam_results where user_id=$user_id and type='ju'");
+            $rank_zi = 1; $rank_ci = 1; $rank_ju = 1;
+            foreach($school_students as $student)
+            {
+              $temp_zi = $db->get_var("select AVG(average) from rd_speech_exam_results where user_id=".$student->id." and type='zi'");
+              if($temp_zi>$zi)
+              {
+                $rank_zi++;
+              }
+              $temp_ci = $db->get_var("select AVG(average) from rd_speech_exam_results where user_id=".$student->id." and type='ci'");
+              if($temp_ci>$ci)
+              {
+                $rank_ci++;
+              }
+              $temp_ju = $db->get_var("select AVG(average) from rd_speech_exam_results where user_id=".$student->id." and type='ju'");
+              if($temp_ju>$ju)
+              {
+                $rank_ju++;
+              }
+            }
+            $rank_zi = round(($school_students_count-$rank_zi)/($school_students_count-1),2)*100;
+            $rank_ci = round(($school_students_count-$rank_ci)/($school_students_count-1),2)*100;
+            $rank_ju = round(($school_students_count-$rank_ju)/($school_students_count-1),2)*100;
+            return [$rank_zi,$rank_ci,$rank_ju];
+          }
+          else
+          {
+            return NULL;
+          }
+        }
+        else
+        {
+          return [-1,-1,-1];
+        }
+      }
+
+
+      /**
+      *获取学校所有学生的id
+      **/
+      function get_school_students()
+      {
+        global $db;
+        $user_id = $this->get_user_id();
+        if($this->get_school_id())
+        {
+          $school = $this->get_school_id();
+          $sql = "select id from rd_user where school=$school and role=1 and id<>$user_id";
+          return $db->get_results($sql);
+        }
+        else
+        {
+          return NULL;
         }
       }
 
@@ -786,19 +913,19 @@
           $school_students_count = $this->get_school_students_count();
           $sql = "select count(id) from rd_user where item1_score>".
                   "(select item1_score from rd_user where id=$user_id) and school='$school'";
-          $ret[] = round(($school_students_count-$db->get_var($sql))/$school_students_count,2)*100;
+          $ret[] = round(($school_students_count-$db->get_var($sql)-1)/($school_students_count-1),2)*100;
           $sql = "select count(id) from rd_user where item2_score>".
                   "(select item2_score from rd_user where id=$user_id) and school='$school'";
-          $ret[] = round(($school_students_count-$db->get_var($sql))/$school_students_count,2)*100;
+          $ret[] = round(($school_students_count-$db->get_var($sql)-1)/($school_students_count-1),2)*100;
           $sql = "select count(id) from rd_user where item3_score>".
                   "(select item3_score from rd_user where id=$user_id) and school='$school'";
-          $ret[] = round(($school_students_count-$db->get_var($sql))/$school_students_count,2)*100;
+          $ret[] = round(($school_students_count-$db->get_var($sql)-1)/($school_students_count-1),2)*100;
           $sql = "select count(id) from rd_user where item4_score>".
                   "(select item4_score from rd_user where id=$user_id) and school='$school'";
-          $ret[] = round(($school_students_count-$db->get_var($sql))/$school_students_count,2)*100;
+          $ret[] = round(($school_students_count-$db->get_var($sql)-1)/($school_students_count-1),2)*100;
           $sql = "select count(id) from rd_user where item5_score>".
                   "(select item5_score from rd_user where id=$user_id) and school='$school'";
-          $ret[] = round(($school_students_count-$db->get_var($sql))/$school_students_count,2)*100;
+          $ret[] = round(($school_students_count-$db->get_var($sql)-1)/($school_students_count-1),2)*100;
           return $ret;
         }
         else
@@ -822,30 +949,86 @@
         $item4_socre = $this->user_info->item4_score;
         $item5_socre = $this->user_info->item5_score;
         $ret = [];
+        $rank = 1;
         if($this->get_class_id())
         {
           $class = $this->get_class_id();
           $class_students_count = $this->get_class_students_count();
           $sql = "select count(id) from rd_user where item1_score>".
                   "(select item1_score from rd_user where id=$user_id) and class='$class'";
-          $ret[] = round(($class_students_count-$db->get_var($sql))/$class_students_count,2)*100;
+          $ret[] = round(($class_students_count-$db->get_var($sql)-1)/($class_students_count-1),2)*100;
           $sql = "select count(id) from rd_user where item2_score>".
                   "(select item2_score from rd_user where id=$user_id) and class='$class'";
-          $ret[] = round(($class_students_count-$db->get_var($sql))/$class_students_count,2)*100;
+          $ret[] = round(($class_students_count-$db->get_var($sql)-1)/($class_students_count-1),2)*100;
           $sql = "select count(id) from rd_user where item3_score>".
                   "(select item3_score from rd_user where id=$user_id) and class='$class'";
-          $ret[] = round(($class_students_count-$db->get_var($sql))/$class_students_count,2)*100;
+          $ret[] = round(($class_students_count-$db->get_var($sql)-1)/($class_students_count-1),2)*100;
           $sql = "select count(id) from rd_user where item4_score>".
                   "(select item4_score from rd_user where id=$user_id) and class='$class'";
-          $ret[] = round(($class_students_count-$db->get_var($sql))/$class_students_count,2)*100;
+          $ret[] = round(($class_students_count-$db->get_var($sql)-1)/($class_students_count-1),2)*100;
           $sql = "select count(id) from rd_user where item5_score>".
                   "(select item5_score from rd_user where id=$user_id) and class='$class'";
-          $ret[] = round(($class_students_count-$db->get_var($sql))/$class_students_count,2)*100;
+          $ret[] = round(($class_students_count-$db->get_var($sql)-1)/($class_students_count-1),2)*100;
           return $ret;
         }
         else
         {
           return [-1,-1,-1,-1,-1];
+        }
+      }
+
+      /**
+      *获取语音测评排名
+      *以班级为单位
+      **/
+      function get_speech_percent_by_item_class()
+      {
+        global $db;
+        $user_id = $this->get_user_id();
+        $ret = [];
+        if($this->get_class_id())
+        {
+          $class = $this->get_class_id();
+          $class_students_count = $this->get_class_students_count();
+          $class_students = $this->get_class_students($class,$user_id);
+          if($class_studnets)
+          {
+            $zi = $db->get_var("select AVG(average) from rd_speech_exam_results where user_id=$user_id and type='zi'");
+            $ci = $db->get_var("select AVG(average) from rd_speech_exam_results where user_id=$user_id and type='ci'");
+            $ju = $db->get_var("select AVG(average) from rd_speech_exam_results where user_id=$user_id and type='ju'");
+            $rank_zi = 1; $rank_ci = 1; $rank_ju = 1;
+            foreach($class_students as $student)
+            {
+              $id = $student->id;
+              $temp_zi = $db->get_var("select AVG(average) from rd_speech_exam_results where user_id=$id and type='zi'");
+              if($temp_zi > $zi)
+              {
+                $rank_zi++;
+              }
+              $temp_ci = $db->get_var("select AVG(average) from rd_speech_exam_results where user_id=$id and type='ci'");
+              if($temp_zi > $zi)
+              {
+                $rank_ci++;
+              }
+              $temp_ju = $db->get_var("select AVG(average) from rd_speech_exam_results where user_id=$id and type='ju'");
+              if($temp_zi > $zi)
+              {
+                $rank_ju++;
+              }
+            }
+            $rank_zi = round(($class_students_count-$rank_zi)/($class_students_count-1),2)*100;
+            $rank_ci = round(($class_students_count-$rank_ci)/($class_students_count-1),2)*100;
+            $rank_ju = round(($class_students_count-$rank_ju)/($class_students_count-1),2)*100;
+            return [$rank_zi,$rank_ci,$rank_ju];
+          }
+          else
+          {
+            return NULL;
+          }
+        }
+        else
+        {
+          return NULL;
         }
       }
 
@@ -871,19 +1054,19 @@
           $class_students_count = $this->get_class_students_count();
           $sql = "select count(id) from rd_user where item1_score>".
                   "(select item1_score from rd_user where id=$user_id) and class='$class'";
-          $ret[] = round(($class_students_count-$db->get_var($sql))/$class_students_count,2)*100;
+          $ret[] = round(($class_students_count-$db->get_var($sql)-1)/($class_students_count-1),2)*100;
           $sql = "select count(id) from rd_user where item2_score>".
                   "(select item2_score from rd_user where id=$user_id) and class='$class'";
-          $ret[] = round(($class_students_count-$db->get_var($sql))/$class_students_count,2)*100;
+          $ret[] = round(($class_students_count-$db->get_var($sql)-1)/($class_students_count-1),2)*100;
           $sql = "select count(id) from rd_user where item3_score>".
                   "(select item3_score from rd_user where id=$user_id) and class='$class'";
-          $ret[] = round(($class_students_count-$db->get_var($sql))/$class_students_count,2)*100;
+          $ret[] = round(($class_students_count-$db->get_var($sql)-1)/($class_students_count-1),2)*100;
           $sql = "select count(id) from rd_user where item4_score>".
                   "(select item4_score from rd_user where id=$user_id) and class='$class'";
-          $ret[] = round(($class_students_count-$db->get_var($sql))/$class_students_count,2)*100;
+          $ret[] = round(($class_students_count-$db->get_var($sql)-1)/($class_students_count-1),2)*100;
           $sql = "select count(id) from rd_user where item5_score>".
                   "(select item5_score from rd_user where id=$user_id) and class='$class'";
-          $ret[] = round(($class_students_count-$db->get_var($sql))/$class_students_count,2)*100;
+          $ret[] = round(($class_students_count-$db->get_var($sql)-1)/($class_students_count-1),2)*100;
           return $ret;
         }
         else
@@ -916,7 +1099,7 @@
       function get_students_by_class($class_id)
       {
         global $db;
-        $students = $db->get_results("select id,name,score,chinese_score,headimg from rd_user where role=1 and class='$class_id'");
+        $students = $db->get_results("select id,name,score,chinese_score,headimg from rd_user where role=1 and class='$class_id' order by id");
         if($students)
         {
           foreach($students as $student)
@@ -946,6 +1129,16 @@
       {
         global $db;
         return $db->get_var("select count(id) from rd_user where role=1 and class='$class_id'");
+      }
+
+      /**
+      *学生用
+      *获取班级内所有学生id
+      **/
+      function get_class_students($class_id,$user_id)
+      {
+        global $db;
+        return $db->get_results("select id from rd_user where role=1 and class='$class_id' and id<>$user_id");
       }
 
       /**
@@ -1055,6 +1248,68 @@
 
       /**
       *教师用
+      *获取语音测评图的数据
+      **/
+      function get_class_report_score_5($class_id)
+      {
+        global $db;
+        $ret = [];
+        $sql = "select AVG(average) from rd_speech_exam_results where type='zi' and ".
+                " user_id in(select id from rd_user where class='$class_id' and role=1)";
+        $ret[] = $db->get_var($sql);
+        $sql = "select AVG(average) from rd_speech_exam_results where type='ci' and ".
+                " user_id in(select id from rd_user where class='$class_id' and role=1)";
+        $ret[] = $db->get_var($sql);
+        $sql = "select AVG(average) from rd_speech_exam_results where type='ju' and ".
+                " user_id in(select id from rd_user where class='$class_id' and role=1)";
+        $ret[] = $db->get_var($sql);
+        return $ret;
+      }
+
+      /**
+      *教师用
+      *获取语音测评教师单字数据
+      **/
+      function get_class_report_score_5_1($class_id)
+      {
+        global $db;
+        $students = $this->get_students_by_class($class_id);
+        $sql = "select average from rd_speech_exam_results where type='zi' and user_id in(".
+              " select id from rd_user where role=1 and class='$class_id' order by id)";
+        $data = $db->get_results($sql);
+        return [$students,$data];
+      }
+
+      /**
+      *教师用
+      *获取语音测评教师词语数据
+      **/
+      function get_class_report_score_5_2($class_id)
+      {
+        global $db;
+        $students = $this->get_students_by_class($class_id);
+        $sql = "select average from rd_speech_exam_results where type='ci' and user_id in(".
+              " select id from rd_user where role=1 and class='$class_id' order by id)";
+        $data = $db->get_results($sql);
+        return [$students,$data];
+      }
+
+      /**
+      *教师用
+      *获取语音测评教师短文数据
+      **/
+      function get_class_report_score_5_3($class_id)
+      {
+        global $db;
+        $students = $this->get_students_by_class($class_id);
+        $sql = "select average from rd_speech_exam_results where type='ju' and user_id in(".
+              " select id from rd_user where role=1 and class='$class_id' order by id)";
+        $data = $db->get_results($sql);
+        return [$students,$data];
+      }
+
+      /**
+      *教师用
       *获取学生是否是教师的学生
       **/
       function check_is_student($id)
@@ -1062,9 +1317,19 @@
         global $db;
         // $sql = "select class from rd_user where id=$id and role=1";
         $user_id = $this->get_user_id();
-        $sql = "select count(*) from rd_class where teacher_id='$user_id' and id='$id'";
+        //$sql = "select count(*) from rd_class where teacher_id='$user_id' and id='$id'";
+        $sql = "select id from rd_class where teacher_id=$user_id";
+        $classes = $db->get_results($sql);
+        $sql = "select class from rd_user where id=".$db->escape($id);
         $class = $db->get_var($sql);
-        return $class;
+        foreach($classes as $c)
+        {
+          if($c->id==$class)
+          {
+            return true;
+          }
+        }
+        return false;
       }
 
       /**
@@ -1237,6 +1502,18 @@
         return $db->get_var($sql);
       }
 
+
+      /**
+      *教师用
+      *获取某个学生的所有读书笔记
+      **/
+      function get_notes($id)
+      {
+        global $db;
+        $sql = "select id,name,coverimg from rd_book where id in(select DISTINCT(book_id) from ".
+                "rd_read_note_answer where user_id=$id)";
+        return $db->get_results($sql);
+      }
 
 
   }

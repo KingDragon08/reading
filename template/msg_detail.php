@@ -66,6 +66,10 @@
             <td>内容</td>
             <td style="word-break:break-all;"><?php echo $msg->msg_content;?></td>
           </tr>
+          <?php
+            if($msg->msg_type<>4)
+            {
+          ?>
           <tr>
             <td>回复</td>
             <td>
@@ -82,6 +86,9 @@
               </button>
             </td>
           </tr>
+          <?php
+            }
+          ?>
         </table>
       <?php
         }

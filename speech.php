@@ -22,6 +22,14 @@
                   text-align: center; line-height: 60px; font-size: 20px; font-weight: bold;
                   cursor: pointer;
       }
+      .speech_btn_1{width:60px; height:60px; border:1px solid #ccc; border-right: 0;
+                  float:left; background: #f2f2f2; margin-bottom: 30px;
+                  text-align: center; line-height: 60px; font-size: 20px; font-weight: bold;
+                  cursor: pointer;
+      }
+      .tips_cover_ci .speech_btn_1{font-size:14px; font-weight: normal; overflow: hidden;}
+      #report .speech_btn_1:nth-child(2n){font-size:14px; font-weight: normal;}
+      #report .speech_btn_1:hover{background:none; color:#333;}
       .speech_container_ci,.speech_container_ju{height:210px; width:90%; margin:0 auto; margin-top:30px;}
       .speech_btn:hover,.speech_btn.active,.speech_btn_ci:hover,.speech_btn_ci.active,.speech_btn_ju:hover{ background: #71cba4; color:#fff;}
       .speech_btn_ci{width:auto; height: 60px; line-height: 60px;
@@ -206,6 +214,29 @@
                     </div>
                   </div>
                 </div>
+                <div class="tips_cover" id="report" style="display:none;">
+                  <div style="width:510px; height:400px; padding:14px; box-shadow:0 0 5px #999; border-radius:5px; background:#f2f2f2; left:50%; top:50%; margin-left:-255px; margin-top:-200px; position:fixed;">
+                  <?php
+                      for($i=0; $i<count($words); $i++)
+                      {
+                  ?>
+                        <div class="speech_btn_1 <?php if($i%4==0){echo 'first';} ?>"><?php echo $words[$i]->name;?></div>
+                        <div class="speech_btn_1 <?php if($i%4==3 || $i==count($words)-1){echo 'last';} ?>" id="report_<?php echo $i;?>"></div>
+                  <?php
+                      }
+                  ?>
+                    <div style="clear:both;"></div>
+                    <center>
+                      <div class="btn btn-danger" style="margin:0 auto; margin-top:20px;" onclick="go()">
+                        提交成绩
+                      </div>
+                      <div class="btn btn-default" style="margin:0 auto; margin-top:20px;" onclick="$('#report').fadeOut();">
+                        取消
+                      </div>
+                      <div class="label label-info" style="margin:0 auto; margin-top:20px; display:block;"></div>
+                    </center>
+                  </div>
+                </div>
                 <script type="text/javascript" src="js/pydic.js"></script>
                 <script type="text/javascript" src="js/ise/fingerprint2.min.js"></script>
                 <script type="text/javascript" src="js/ise/ise.all.js"></script>
@@ -226,7 +257,6 @@
                       });
                       //鼠标经过显示拼音
                       $("[data-toggle='tooltip']").tooltip();
-
                   });
 
                   //选择单字
@@ -258,7 +288,27 @@
                       return;
                     }
                   }
-                  $("#loading").fadeIn();
+                  var sum = 0;
+                  for(var i=0; i<scores.length; i++)
+                  {
+                    $("#report_"+i).html(scores[i]);
+                    sum += scores[i];
+                  }
+                  sum = sum/scores.length;
+                  $("#report .label-info").html("平均分:"+sum.toFixed(3));
+                  $("#report").fadeIn();
+                }
+
+                function go()
+                {
+                  for(var i=0; i<scores.length; i++)
+                  {
+                    if(scores[i]==0)
+                    {
+                      alert("未完成测评,不能提交!");
+                      return;
+                    }
+                  }
                   $.ajax({
                     url:'controller/speech.php',
                     type:'post',
@@ -356,6 +406,29 @@
                     </div>
                   </div>
                 </div>
+                <div class="tips_cover tips_cover_ci" id="report" style="display:none;">
+                  <div style="width:510px; height:400px; overflow-y:scroll; padding:14px; box-shadow:0 0 5px #999; border-radius:5px; background:#f2f2f2; left:50%; top:50%; margin-left:-255px; margin-top:-200px; position:fixed;">
+                  <?php
+                      for($i=0; $i<count($words); $i++)
+                      {
+                  ?>
+                        <div class="speech_btn_1 <?php if($i%4==0){echo 'first';} ?>"><?php echo $words[$i]->name;?></div>
+                        <div class="speech_btn_1 <?php if($i%4==3 || $i==count($words)-1){echo 'last';} ?>" id="report_<?php echo $i;?>"></div>
+                  <?php
+                      }
+                  ?>
+                    <div style="clear:both;"></div>
+                    <center>
+                      <div class="btn btn-danger" style="margin:0 auto; margin-top:20px;" onclick="go()">
+                        提交成绩
+                      </div>
+                      <div class="btn btn-default" style="margin:0 auto; margin-top:20px;" onclick="$('#report').fadeOut();">
+                        取消
+                      </div>
+                      <div class="label label-info" style="margin:0 auto; margin-top:20px; display:block;"></div>
+                    </center>
+                  </div>
+                </div>
                 <script type="text/javascript" src="js/pydic.js"></script>
                 <script type="text/javascript" src="js/ise/fingerprint2.min.js"></script>
                 <script type="text/javascript" src="js/ise/ise.all.js"></script>
@@ -414,7 +487,26 @@
                       return;
                     }
                   }
-                  $("#loading").fadeIn();
+                  var sum = 0;
+                  for(var i=0; i<scores.length; i++)
+                  {
+                    $("#report_"+i).html(scores[i]);
+                    sum += scores[i];
+                  }
+                  sum = sum/scores.length;
+                  $("#report .label-info").html("平均分:"+sum.toFixed(3));
+                  $("#report").fadeIn();
+                }
+                function go()
+                {
+                  for(var i=0; i<scores.length; i++)
+                  {
+                    if(scores[i]==0)
+                    {
+                      alert("未完成测评,不能提交!");
+                      return;
+                    }
+                  }
                   $.ajax({
                     url:'controller/speech.php',
                     type:'post',
@@ -526,6 +618,29 @@
                     </div>
                   </div>
                 </div>
+                <div class="tips_cover tips_cover_ci" id="report" style="display:none;">
+                  <div style="width:510px; height:300px; overflow-y:scroll; padding:14px; box-shadow:0 0 5px #999; border-radius:5px; background:#f2f2f2; left:50%; top:50%; margin-left:-255px; margin-top:-150px; position:fixed;">
+                  <?php
+                      for($i=0; $i<count($words); $i++)
+                      {
+                  ?>
+                        <div class="speech_btn_1 <?php if($i%4==0){echo 'first';} ?>">第<?php echo $i+1;?>句</div>
+                        <div class="speech_btn_1 <?php if($i%4==3 || $i==count($words)-1){echo 'last';} ?>" id="report_<?php echo $i;?>"></div>
+                  <?php
+                      }
+                  ?>
+                    <div style="clear:both;"></div>
+                    <center>
+                      <div class="btn btn-danger" style="margin:0 auto; margin-top:20px;" onclick="go()">
+                        提交成绩
+                      </div>
+                      <div class="btn btn-default" style="margin:0 auto; margin-top:20px;" onclick="$('#report').fadeOut();">
+                        取消
+                      </div>
+                      <div class="label label-info" style="margin:0 auto; margin-top:20px; display:block;"></div>
+                    </center>
+                  </div>
+                </div>
                 <script type="text/javascript" src="js/pydic.js"></script>
                 <script type="text/javascript" src="js/ise/fingerprint2.min.js"></script>
                 <script type="text/javascript" src="js/ise/ise.all.js"></script>
@@ -573,7 +688,26 @@
                       return;
                     }
                   }
-                  $("#loading").fadeIn();
+                  var sum = 0;
+                  for(var i=0; i<scores.length; i++)
+                  {
+                    $("#report_"+i).html(scores[i]);
+                    sum += scores[i];
+                  }
+                  sum = sum/scores.length;
+                  $("#report .label-info").html("平均分:"+sum.toFixed(3));
+                  $("#report").fadeIn();
+                }
+                function go()
+                {
+                  for(var i=0; i<scores.length; i++)
+                  {
+                    if(scores[i]==0)
+                    {
+                      alert("未完成测评,不能提交!");
+                      return;
+                    }
+                  }
                   $.ajax({
                     url:'controller/speech.php',
                     type:'post',

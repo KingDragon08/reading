@@ -39,7 +39,7 @@
             <a href="../template/classmate.php" target="main" class="list-group-item">同班同学</a>
             <!-- <a href="../template/student_eval_school.php" target="main" class="list-group-item">测评结果</a> -->
             <!-- <a href="../template/student_book_shelf.php" target="main" class="list-group-item">我的书架</a> -->
-            <a href="#" target="main" class="list-group-item">读书笔记</a>
+            <a href="view_notes.php?type=self" target="main" class="list-group-item">读书笔记</a>
             <!-- <a href="#" target="main" class="list-group-item">我的提问</a> -->
         </ul>
     <?php

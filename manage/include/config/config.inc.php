@@ -22,7 +22,7 @@ define('COMPANY_NAME' ,'北京乐智起航文化发展有限公司');
 // OSAdmin 数据库设置
 define('OSA_DB_ID' ,'reading');
 $DATABASE_LIST[OSA_DB_ID] = array (
-	'server' => '127.0.0.1',
+	'server' => '123.57.31.72',
 	'port' => '3306',
 	'username' => 'root',
 	'password' => '123456',

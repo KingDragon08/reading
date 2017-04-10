@@ -55,7 +55,7 @@ class Book extends Base{
 				$item['presstime']= date('Y-m-d', $item['presstime']);
 				$item['type_name']=BookType::getGroupById($item['type'])['name'];
 				$item['grade_name']=Grade::getGradeById($item['grade'])['grade_name'];
-				// $item['short_desc']= substr($item['bookdesc'], 10);
+				$item['short_desc']= mb_substr($item['bookdesc'], 0, 40).'...';
 			}
 		}
 

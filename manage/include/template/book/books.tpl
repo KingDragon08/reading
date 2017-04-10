@@ -80,7 +80,7 @@
 					<td><{$book_info.level}></td>
 					<td><{$book_info.score}></td>
 					<td><{$book_info.wordcount}></td>
-					<td><{$book_info.bookdesc}></td>
+					<td><{$book_info.short_desc}></td>
 					<td>
                     <a href="/reading/manage/list/booklist.php?book_id=<{$book_info.id}>&type=addbook" title="添加到书单"><i class="icon-plus"></i></a>
 					&nbsp;

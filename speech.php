@@ -210,6 +210,7 @@
                       提交成绩
                     </div>
                     <div style="position:absolute; right:20px; top:40px;">
+                      <i class="glyphicon glyphicon-bullhorn" onclick="play_xiaoyan()" style="font-size:20px; cursor:pointer; color:#71cba4;">&nbsp;</i>
                       <img src="img/mic.png" alt="" style="cursor:pointer;" onclick="check_mic()">
                     </div>
                   </div>
@@ -241,6 +242,9 @@
                 <script type="text/javascript" src="js/ise/fingerprint2.min.js"></script>
                 <script type="text/javascript" src="js/ise/ise.all.js"></script>
                 <script type="text/javascript" src="js/ise/test_zi.js"></script>
+                <script type="text/javascript" src="js/tts/fingerprint.js"></script>
+                <script type="text/javascript" src="js/tts/tts.min.js"></script>
+                <script type="text/javascript" src="js/tts/tts_zi.js"></script>
                 <script type="text/javascript">
                   var scores = [];
                   var words = [];
@@ -402,6 +406,7 @@
                       提交成绩
                     </div>
                     <div style="position:absolute; right:20px; top:40px;">
+                      <i class="glyphicon glyphicon-bullhorn" onclick="play_xiaoyan()" style="font-size:20px; cursor:pointer; color:#71cba4;">&nbsp;</i>
                       <img src="img/mic.png" alt="" style="cursor:pointer;" onclick="check_mic()">
                     </div>
                   </div>
@@ -433,6 +438,9 @@
                 <script type="text/javascript" src="js/ise/fingerprint2.min.js"></script>
                 <script type="text/javascript" src="js/ise/ise.all.js"></script>
                 <script type="text/javascript" src="js/ise/test_ci.js"></script>
+                <script type="text/javascript" src="js/tts/fingerprint.js"></script>
+                <script type="text/javascript" src="js/tts/tts.min.js"></script>
+                <script type="text/javascript" src="js/tts/tts_ci.js"></script>
                 <script type="text/javascript">
                   var scores = [];
                   var words = [];
@@ -614,6 +622,7 @@
                       提交成绩
                     </div>
                     <div style="position:absolute; right:20px; top:40px;">
+                      <i class="glyphicon glyphicon-bullhorn" onclick="play_xiaoyan()" style="font-size:20px; cursor:pointer; color:#71cba4;">&nbsp;</i>
                       <img src="img/mic.png" alt="" style="cursor:pointer;" onclick="check_mic()">
                     </div>
                   </div>
@@ -645,6 +654,9 @@
                 <script type="text/javascript" src="js/ise/fingerprint2.min.js"></script>
                 <script type="text/javascript" src="js/ise/ise.all.js"></script>
                 <script type="text/javascript" src="js/ise/test_ju.js"></script>
+                <script type="text/javascript" src="js/tts/fingerprint.js"></script>
+                <script type="text/javascript" src="js/tts/tts.min.js"></script>
+                <script type="text/javascript" src="js/tts/tts_ju.js"></script>
                 <script type="text/javascript">
                   var scores = [];
                   // var words = 0;

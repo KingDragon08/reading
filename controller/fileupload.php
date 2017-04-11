@@ -30,7 +30,7 @@ if ( !empty($_REQUEST[ 'debug' ]) ) {
 
 
 
-$webroot = "http://127.0.0.1/reading";
+$webroot = "https://127.0.0.1/reading";
 
 
 

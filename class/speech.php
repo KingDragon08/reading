@@ -127,7 +127,9 @@ class Speech
       while($i<10)
       {
         $ret[] = $result[$i];
+        $i++;
       }
+      var_dump($ret);
       return $ret;
     }
     return $result;

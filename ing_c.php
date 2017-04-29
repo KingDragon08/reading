@@ -125,38 +125,25 @@
             }
            ?>
         </div>
-        <?php
-            $units = $speech->get_units($grade);
-            if(count($units))
-            {
-              foreach($units as $item)
+        <div class="row mt20">
+          <?php
+              $units = $speech->get_units($grade);
+              if(count($units))
               {
-		$unit = $item->id;
-        ?>
-                <h5 class="mt20"><?php echo $item->name;?></h5>
-                <div class="row mt20">
-                  <?php
-                    $pages = $speech->get_pages($item->id);
-                    if(count($pages))
-                    {
-                      foreach($pages as $item)
-                      {
-                  ?>
-                        <div class="col-lg-2">
-                          <a href="?textbook=<?php echo $textbook;?>&grade=<?php echo $grade;?>&unit=<?php echo $unit;?>&page=<?php echo $item->id;?>" target="_self"
-                              class="textbook <?php if($page==$item->id){echo 'active'; $url="speech.php?type=ci&textbook=$textbook&grade=$grade&unit=$unit&page=".$item->id;} ?>">
-                            <?php echo $item->name ?>
-                          </a>
-                        </div>
-                  <?php
-                      }
-                    }
-                  ?>
+                foreach($units as $item)
+                {
+          ?>
+                  <div class="col-lg-2">
+                    <a href="?textbook=<?php echo $textbook;?>&grade=<?php echo $grade;?>&unit=<?php echo $unit;?>&page=1" target="_self"
+                        class="textbook <?php if($unit==$item->id){echo 'active'; $url="speech.php?type=zi&textbook=$textbook&grade=$grade&unit=$unit&page=1"; } ?>">
+                      <?php echo $item->name ?>
+                    </a>
+                  </div>
                 </div>
-        <?php
+          <?php
+                }
               }
-            }
-        ?>
+          ?>
       </div>
     </div>
     <style media="screen">

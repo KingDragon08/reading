@@ -83,17 +83,28 @@ class Speech
   /**
   *获取测评书籍的面包屑路径
   **/
-  function get_path($textbook,$grade,$unit,$page)
+  function get_path($type,$textbook,$grade,$unit,$page)
   {
     global $db;
     $corum = "";
-    $corum .= $db->get_var("select name from rd_speech_textbook_version where id=$textbook");
-    $corum .= ">";
-    $corum .= $db->get_var("select name from rd_speech_grade where id=$grade");
-    $corum .= ">";
-    $corum .= $db->get_var("select name from rd_speech_unit where id=$unit");
-    $corum .= ">";
-    $corum .= $db->get_var("select name from rd_speech_page where id=$page");
+    if($type=='ju')
+    {
+      $corum .= $db->get_var("select name from rd_speech_textbook_version where id=$textbook");
+      $corum .= ">";
+      $corum .= $db->get_var("select name from rd_speech_grade where id=$grade");
+      $corum .= ">";
+      $corum .= $db->get_var("select name from rd_speech_unit where id=$unit");
+      $corum .= ">";
+      $corum .= $db->get_var("select name from rd_speech_page where id=$page");
+    }
+    else
+    {
+      $corum .= $db->get_var("select name from rd_speech_textbook_version where id=$textbook");
+      $corum .= ">";
+      $corum .= $db->get_var("select name from rd_speech_grade where id=$grade");
+      $corum .= ">";
+      $corum .= $db->get_var("select name from rd_speech_unit where id=$unit");
+    }
     return $corum;
   }
 

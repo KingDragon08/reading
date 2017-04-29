@@ -152,7 +152,7 @@
         }
         if($speech->check_path($textbook,$grade,$unit,$page) && ($type=='zi' || $type=='ci' || $type=='ju'))
         {
-          $corum = $speech->get_path($textbook,$grade,$unit,$page);
+          $corum = $speech->get_path($type,$textbook,$grade,$unit,$page);
       ?>
         <script type="text/javascript">
           $().ready(function(){
@@ -162,7 +162,7 @@
         <div style="width:800px; height:515px; margin:0 auto; box-shadow:0 0 5px #999; border-radius:5px;">
           <div class="col-lg-12 mt20">
             <img src="img/book_icon.png" alt="">
-            跟读文本：<?php echo explode(">",$corum)[3];?>
+            跟读文本：<?php if($type=='ju'){echo explode(">",$corum)[3];}else{echo explode(">",$corum)[2];}?>
           </div>
 
 

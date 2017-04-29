@@ -13,6 +13,7 @@ function play(content, vcn){
 
 	session.start(ssb_param, content, function (err, obj)
 	{
+		console.log(JSON.stringify(obj));
 		var audio_url = audioPalyUrl + obj.audio_url;
 		if( audio_url != null && audio_url != undefined )
 		{

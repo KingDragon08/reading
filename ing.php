@@ -125,6 +125,7 @@
             }
            ?>
         </div>
+        <h5 class="mt20">请选择单元</h5>
         <div class="row mt20">
         <?php
             $units = $speech->get_units($grade);
@@ -145,6 +146,7 @@
         ?>
         </div>
     </div>
+  </div>
     <style media="screen">
       .start{width:100px; height:100px; color:#fff; position: fixed; right:20px; bottom:40px;
               background: rgba(113,187,164,0.8); border-radius:999px;

@@ -8,6 +8,7 @@
 <{$osadmin_quick_note}>
 
 <div class="btn-toolbar" style="margin-bottom:2px;">
+    <a href="/reading/manage/user/read_excel.php?type=book" class="btn btn-primary">批量添加图书</a>
     <a href="book_add.php" class="btn btn-primary"><i class="icon-plus"></i> 图书</a>
 	<a data-toggle="collapse" data-target="#search"  href="#" title= "检索"><button class="btn btn-primary" style="margin-left:5px"><i class="icon-search"></i></button></a>
 </div>
@@ -79,7 +80,7 @@
 					<td><{$book_info.level}></td>
 					<td><{$book_info.score}></td>
 					<td><{$book_info.wordcount}></td>
-					<td><{$book_info.bookdesc}></td>
+					<td><{$book_info.short_desc}></td>
 					<td>
                     <a href="/reading/manage/list/booklist.php?book_id=<{$book_info.id}>&type=addbook" title="添加到书单"><i class="icon-plus"></i></a>
 					&nbsp;

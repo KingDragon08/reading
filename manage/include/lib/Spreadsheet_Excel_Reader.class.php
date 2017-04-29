@@ -31,40 +31,40 @@ function GetInt4d($data, $pos)
 
 class OLERead {
     var $data = '';
-    
-    
+
+
     function OLERead(){
-        
-        
+
+
     }
-    
+
     function read($sFileName){
-        
+
     	// check if file exist and is readable (Darko Miljanovic)
     	if(!is_readable($sFileName)) {
-			
+
     		$this->error = 1;
     		return false;
     	}
-    	
+
     	$this->data = @file_get_contents($sFileName);
-		
-    	if (!$this->data) { 
-    		$this->error = 1; 
-    		return false; 
+
+    	if (!$this->data) {
+    		$this->error = 1;
+    		return false;
    		}
    		//echo IDENTIFIER_OLE;
    		//echo 'start';
    		if (substr($this->data, 0, 8) != IDENTIFIER_OLE) {
-    		$this->error = 1; 
-    		return false; 
+    		$this->error = 1;
+    		return false;
    		}
         $this->numBigBlockDepotBlocks = GetInt4d($this->data, NUM_BIG_BLOCK_DEPOT_BLOCKS_POS);
         $this->sbdStartBlock = GetInt4d($this->data, SMALL_BLOCK_DEPOT_BLOCK_POS);
         $this->rootStartBlock = GetInt4d($this->data, ROOT_START_BLOCK_POS);
         $this->extensionBlock = GetInt4d($this->data, EXTENSION_BLOCK_POS);
         $this->numExtensionBlocks = GetInt4d($this->data, NUM_EXTENSION_BLOCK_POS);
-        
+
 	/*
         echo $this->numBigBlockDepotBlocks." ";
         echo $this->sbdStartBlock." ";
@@ -77,17 +77,17 @@ class OLERead {
         $pos = BIG_BLOCK_DEPOT_BLOCKS_POS;
        // echo "pos = $pos";
 	$bbdBlocks = $this->numBigBlockDepotBlocks;
-        
+
             if ($this->numExtensionBlocks != 0) {
-                $bbdBlocks = (BIG_BLOCK_SIZE - BIG_BLOCK_DEPOT_BLOCKS_POS)/4; 
+                $bbdBlocks = (BIG_BLOCK_SIZE - BIG_BLOCK_DEPOT_BLOCKS_POS)/4;
             }
-        
+
         for ($i = 0; $i < $bbdBlocks; $i++) {
               $bigBlockDepotBlocks[$i] = GetInt4d($this->data, $pos);
               $pos += 4;
         }
-        
-        
+
+
         for ($j = 0; $j < $this->numExtensionBlocks; $j++) {
             $pos = ($this->extensionBlock + 1) * BIG_BLOCK_SIZE;
             $blocksToRead = min($this->numBigBlockDepotBlocks - $bbdBlocks, BIG_BLOCK_SIZE / 4 - 1);
@@ -95,7 +95,7 @@ class OLERead {
             for ($i = $bbdBlocks; $i < $bbdBlocks + $blocksToRead; $i++) {
                 $bigBlockDepotBlocks[$i] = GetInt4d($this->data, $pos);
                 $pos += 4;
-            }   
+            }
 
             $bbdBlocks += $blocksToRead;
             if ($bbdBlocks < $this->numBigBlockDepotBlocks) {
@@ -104,15 +104,15 @@ class OLERead {
         }
 
        // var_dump($bigBlockDepotBlocks);
-        
+
         // readBigBlockDepot
         $pos = 0;
         $index = 0;
         $this->bigBlockChain = array();
-        
+
         for ($i = 0; $i < $this->numBigBlockDepotBlocks; $i++) {
             $pos = ($bigBlockDepotBlocks[$i] + 1) * BIG_BLOCK_SIZE;
-            //echo "pos = $pos";	
+            //echo "pos = $pos";
             for ($j = 0 ; $j < BIG_BLOCK_SIZE / 4; $j++) {
                 $this->bigBlockChain[$index] = GetInt4d($this->data, $pos);
                 $pos += 4 ;
@@ -127,26 +127,26 @@ class OLERead {
 	    $index = 0;
 	    $sbdBlock = $this->sbdStartBlock;
 	    $this->smallBlockChain = array();
-	
+
 	    while ($sbdBlock != -2) {
-	
+
 	      $pos = ($sbdBlock + 1) * BIG_BLOCK_SIZE;
-	
+
 	      for ($j = 0; $j < BIG_BLOCK_SIZE / 4; $j++) {
 	        $this->smallBlockChain[$index] = GetInt4d($this->data, $pos);
 	        $pos += 4;
 	        $index++;
 	      }
-	
+
 	      $sbdBlock = $this->bigBlockChain[$sbdBlock];
 	    }
 
-        
+
         // readData(rootStartBlock)
         $block = $this->rootStartBlock;
         $pos = 0;
         $this->entry = $this->__readData($block);
-        
+
         /*
         while ($block != -2)  {
             $pos = ($block + 1) * BIG_BLOCK_SIZE;
@@ -158,44 +158,44 @@ class OLERead {
         $this->__readPropertySets();
 
     }
-    
+
      function __readData($bl) {
         $block = $bl;
         $pos = 0;
         $data = '';
-        
+
         while ($block != -2)  {
             $pos = ($block + 1) * BIG_BLOCK_SIZE;
             $data = $data.substr($this->data, $pos, BIG_BLOCK_SIZE);
-            //echo "pos = $pos data=$data\n";	
+            //echo "pos = $pos data=$data\n";
 	    $block = $this->bigBlockChain[$block];
         }
 		return $data;
      }
-        
+
     function __readPropertySets(){
         $offset = 0;
         //var_dump($this->entry);
         while ($offset < strlen($this->entry)) {
               $d = substr($this->entry, $offset, PROPERTY_STORAGE_BLOCK_SIZE);
-            
+
               $nameSize = ord($d[SIZE_OF_NAME_POS]) | (ord($d[SIZE_OF_NAME_POS+1]) << 8);
-              
+
               $type = ord($d[TYPE_POS]);
               //$maxBlock = strlen($d) / BIG_BLOCK_SIZE - 1;
-        
+
               $startBlock = GetInt4d($d, START_BLOCK_POS);
               $size = GetInt4d($d, SIZE_POS);
-        
+
             $name = '';
             for ($i = 0; $i < $nameSize ; $i++) {
               $name .= $d[$i];
             }
-            
+
             $name = str_replace("\x00", "", $name);
-            
+
             $this->props[] = array (
-                'name' => $name, 
+                'name' => $name,
                 'type' => $type,
                 'startBlock' => $startBlock,
                 'size' => $size);
@@ -207,22 +207,22 @@ class OLERead {
             if ($name == "Root Entry") {
                 $this->rootentry = count($this->props) - 1;
             }
-            
+
             //echo "name ==$name=\n";
 
-            
+
             $offset += PROPERTY_STORAGE_BLOCK_SIZE;
-        }   
-        
+        }
+
     }
-    
-    
+
+
     function getWorkBook(){
     	if ($this->props[$this->wrkbook]['size'] < SMALL_BLOCK_THRESHOLD){
 //    	  getSmallBlockStream(PropertyStorage ps)
 
 			$rootdata = $this->__readData($this->props[$this->rootentry]['startBlock']);
-	        
+
 			$streamData = '';
 	        $block = $this->props[$this->wrkbook]['startBlock'];
 	        //$count = 0;
@@ -233,19 +233,19 @@ class OLERead {
 
 			      $block = $this->smallBlockChain[$block];
 		    }
-			
+
 		    return $streamData;
-    		
+
 
     	}else{
-    	
+
 	        $numBlocks = $this->props[$this->wrkbook]['size'] / BIG_BLOCK_SIZE;
 	        if ($this->props[$this->wrkbook]['size'] % BIG_BLOCK_SIZE != 0) {
 	            $numBlocks++;
 	        }
-	        
+
 	        if ($numBlocks == 0) return '';
-	        
+
 	        //echo "numBlocks = $numBlocks\n";
 	    //byte[] streamData = new byte[numBlocks * BIG_BLOCK_SIZE];
 	        //print_r($this->wrkbook);
@@ -258,12 +258,12 @@ class OLERead {
 	          $pos = ($block + 1) * BIG_BLOCK_SIZE;
 	          $streamData .= substr($this->data, $pos, BIG_BLOCK_SIZE);
 	          $block = $this->bigBlockChain[$block];
-	        }   
+	        }
 	        //echo 'stream'.$streamData;
 	        return $streamData;
     	}
     }
-    
+
 }
 
 define('SPREADSHEET_EXCEL_READER_BIFF8',             0x600);
@@ -347,7 +347,7 @@ class Spreadsheet_Excel_Reader
 
     /**
      * Array of format records found
-     * 
+     *
      * @var array
      * @access public
      */
@@ -443,7 +443,8 @@ class Spreadsheet_Excel_Reader
      */
     var $dateFormats = array (
         0xe => "d/m/Y",
-        0xf => "d-M-Y",
+        // 0xf => "d-M-Y",
+        0xf => "Y-M-d",
         0x10 => "d-M",
         0x11 => "M-Y",
         0x12 => "h:i a",
@@ -490,7 +491,7 @@ class Spreadsheet_Excel_Reader
      * Constructor
      *
      * Some basic initialisation
-     */ 
+     */
     function Spreadsheet_Excel_Reader()
     {
         $this->_ole =new OLERead();
@@ -614,7 +615,7 @@ class Spreadsheet_Excel_Reader
     */
 
         $res = $this->_ole->read($sFileName);
-		
+
         // oops, something goes wrong (Darko Miljanovic)
         if($res === false) {
             // check error code
@@ -1192,13 +1193,13 @@ class Spreadsheet_Excel_Reader
     /**
      * Convert the raw Excel date into a human readable format
      *
-     * Dates in Excel are stored as number of seconds from an epoch.  On 
+     * Dates in Excel are stored as number of seconds from an epoch.  On
      * Windows, the epoch is 30/12/1899 and on Mac it's 01/01/1904
      *
      * @access private
      * @param integer The raw Excel value to convert
      * @return array First element is the converted date, the second element is number a unix timestamp
-     */ 
+     */
     function createDate($numValue)
     {
         if ($numValue > 1) {

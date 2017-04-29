@@ -15,14 +15,14 @@ define('TEMPLATE_CONFIGS', ADMIN_BASE . '/config/');
 define('TEMPLATE_CACHE', ADMIN_BASE . '/cache/');
 
 // OSAdmin 常量
-define('ADMIN_URL' ,'http://101.200.45.105/reading/manage');
+define('ADMIN_URL' ,'https://101.200.45.105/manage');
 define('ADMIN_TITLE' ,'管理后台');
 define('COMPANY_NAME' ,'北京乐智起航文化发展有限公司');
 
 // OSAdmin 数据库设置
 define('OSA_DB_ID' ,'reading');
 $DATABASE_LIST[OSA_DB_ID] = array (
-	'server' => '127.0.0.1',
+	'server' => '123.57.31.72',
 	'port' => '3306',
 	'username' => 'root',
 	'password' => '123456',

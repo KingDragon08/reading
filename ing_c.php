@@ -135,7 +135,7 @@
                 {
           ?>
                   <div class="col-lg-2">
-                    <a href="?textbook=<?php echo $textbook;?>&grade=<?php echo $grade;?>&unit=<?php echo $unit;?>&page=1" target="_self"
+                    <a href="?textbook=<?php echo $textbook;?>&grade=<?php echo $grade;?>&unit=<?php echo $item->id;?>&page=1" target="_self"
                         class="textbook <?php if($unit==$item->id){echo 'active'; $url="speech.php?type=zi&textbook=$textbook&grade=$grade&unit=$unit&page=1"; } ?>">
                       <?php echo $item->name ?>
                     </a>

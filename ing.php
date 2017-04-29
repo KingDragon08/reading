@@ -125,7 +125,7 @@
             }
            ?>
         </div>
-            <div class="row mt20">
+        <div class="row mt20">
         <?php
             $units = $speech->get_units($grade);
             if(count($units))
@@ -139,12 +139,11 @@
                     <?php echo $item->name ?>
                   </a>
                 </div>
-              </div>
         <?php
               }
             }
         ?>
-      </div>
+        </div>
     </div>
     <style media="screen">
       .start{width:100px; height:100px; color:#fff; position: fixed; right:20px; bottom:40px;

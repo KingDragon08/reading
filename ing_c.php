@@ -139,7 +139,6 @@
                       <?php echo $item->name ?>
                     </a>
                   </div>
-                </div>
           <?php
                 }
               }

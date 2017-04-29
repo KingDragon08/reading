@@ -117,7 +117,21 @@ class Speech
     global $db;
     $table = "rd_speech_".$type;
     $sql = "select * from $table where page_id=$page";
-    return $db->get_results($sql);
+    $result = $db->get_results($sql);
+    //字词的测评要随机抽取10个,当总的个数大于10的时候
+    if(count($result)>10 && $type!='ju')
+    {
+      shuffle($result);
+      $ret = [];
+      $i=0;
+      while($i<10)
+      {
+        $ret[] = $result[$i];
+      }
+      return $ret;
+    }
+    return $result;
+
   }
 
 

@@ -30,7 +30,7 @@ if ( !empty($_REQUEST[ 'debug' ]) ) {
 
 
 
-$webroot = "http://127.0.0.1/reading";
+$webroot = "";
 
 
 
@@ -65,7 +65,7 @@ include_once("../ezSQL/init.php");
 include_once("../class/user.php");
 $user = new User($_SESSION['username'],$_SESSION['password']);
 // $user->change_headimg($uploadPath);
-$user->change_headimg($webroot . DIRECTORY_SEPARATOR . 'upload' . DIRECTORY_SEPARATOR . $fileName);
+$user->change_headimg(DIRECTORY_SEPARATOR . 'upload' . DIRECTORY_SEPARATOR . $fileName);
 
 // Chunking might be enabled
 $chunk = isset($_REQUEST["chunk"]) ? intval($_REQUEST["chunk"]) : 0;

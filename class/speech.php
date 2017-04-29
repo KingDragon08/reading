@@ -72,11 +72,11 @@ class Speech
       return false;
     }
     //检查unit下边是否有page
-    $sql = "select count(id) from rd_speech_page where unit_id=$unit and id=$page";
-    if($db->get_var($sql)<1)
-    {
-      return false;
-    }
+    //$sql = "select count(id) from rd_speech_page where unit_id=$unit and id=$page";
+    //if($db->get_var($sql)<1)
+    //{
+    //  return false;
+    //}
     return true;
   }
 

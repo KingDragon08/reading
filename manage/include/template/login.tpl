@@ -35,7 +35,7 @@
                 </form>
             </div>
         </div>
-        <p class="pull-right" style=""><a href="http://osadmin.org" target="blank"></a></p>
+        <p class="pull-right" style=""><a href="" target="blank"></a></p>
     </div>
 <script type="text/javascript">
 $("#verify_code").click(function(){

@@ -82,7 +82,7 @@
 
     //上传过程中
     uploader.on( 'uploadProgress', function( file, percentage ) {
-        //alert(percentage);
+        console.log("ing:"+percentage);
         $("#progress").css("display","");
         $("#progress").html(percentage*100+"%");
     });
@@ -90,7 +90,7 @@
     // 文件上传成功，给item添加成功class, 用样式标记上传成功。
     uploader.on( 'uploadSuccess', function( file ) {
         // console.log(file);
-        //alert("success");
+        console.log("success");
         $("#progress").css("display","none");
         parent.location.reload();
     });
@@ -98,12 +98,12 @@
     // 文件上传失败，显示上传出错。
     uploader.on( 'uploadError', function( file ) {
         //alert("error");
-        //console.log(file);
+        console.log("error"+file);
     });
 
     // 完成上传完了，成功或者失败，先删除进度条。
     uploader.on( 'uploadComplete', function( file ) {
-        //alert("complete");
+        console.log("complete");
     });
   </script>
 </html>

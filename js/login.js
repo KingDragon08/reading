@@ -70,6 +70,7 @@ function get_verify_code() {
         alert("手机号码格式错误");
         return false;
     }
+    console.log("send sms");
     $.ajax({
         url: 'sms/sendSMS.php',
         type: 'POST',

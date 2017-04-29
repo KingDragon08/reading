@@ -73,6 +73,7 @@
             $grade = 1;
             $unit = 1;
             $page = 1;
+		$url = "javascript:void(0);";
             if(isset($_GET['textbook']))
             {
               $textbook = intval($_GET['textbook'])<1?1:intval($_GET['textbook']);
@@ -130,6 +131,7 @@
             {
               foreach($units as $item)
               {
+		$unit = $item->id;
         ?>
                 <h5 class="mt20"><?php echo $item->name;?></h5>
                 <div class="row mt20">
@@ -142,7 +144,7 @@
                   ?>
                         <div class="col-lg-2">
                           <a href="?textbook=<?php echo $textbook;?>&grade=<?php echo $grade;?>&unit=<?php echo $unit;?>&page=<?php echo $item->id;?>" target="_self"
-                              class="textbook <?php if($page==$item->id){echo 'active';} ?>">
+                              class="textbook <?php if($page==$item->id){echo 'active'; $url="speech.php?type=ci&textbook=$textbook&grade=$grade&unit=$unit&page=".$item->id;} ?>">
                             <?php echo $item->name ?>
                           </a>
                         </div>
@@ -171,7 +173,7 @@
       function speech_start()
       {
         var speech_time = new Date().getTime();
-        location.href = "speech.php?type=ci&textbook=<?php echo $textbook;?>&grade=<?php echo $grade;?>&unit=<?php echo $unit;?>&page=<?php echo $page;?>&speech_time="+speech_time;
+        location.href = "<?php echo $url?>&speech_time="+speech_time;
       }
     </script>
     <?php

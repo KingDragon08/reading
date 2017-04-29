@@ -98,7 +98,7 @@
         }
         else
         {
-            $common->tips("路径不合法");
+            $common->tips("路径不合法1");
             exit();
         }
         if(isset($_GET['textbook']))
@@ -107,7 +107,7 @@
         }
         else
         {
-            $common->tips("路径不合法");
+            $common->tips("路径不合法2");
             exit();
         }
         if(isset($_GET['grade']))
@@ -116,7 +116,7 @@
         }
         else
         {
-            $common->tips("路径不合法");
+            $common->tips("路径不合法3");
             exit();
         }
         if(isset($_GET['unit']))
@@ -125,7 +125,7 @@
         }
         else
         {
-            $common->tips("路径不合法");
+            $common->tips("路径不合法4");
             exit();
         }
         if(isset($_GET['page']))
@@ -134,12 +134,12 @@
         }
         else
         {
-            $common->tips("路径不合法");
+            $common->tips("路径不合法5");
             exit();
         }
         if(!isset($_GET['speech_time']))
         {
-            $common->tips("路径不合法");
+            $common->tips("路径不合法6");
             exit();
         }
         if($speech->check_path($textbook,$grade,$unit,$page) && ($type=='zi' || $type=='ci' || $type=='ju'))
@@ -162,7 +162,7 @@
           <?php
             if($type=='zi')
             {
-              $words = $speech->get_test($type,$page);
+              $words = $speech->get_test($type,$unit);
               if(count($words))
               {
           ?>
@@ -310,7 +310,7 @@
           <?php
             if($type=='ci')
             {
-              $words = $speech->get_test($type,$page);
+              $words = $speech->get_test($type,$unit);
               if(count($words))
               {
           ?>

@@ -182,7 +182,24 @@
               {
                   type:'bar',
                   barCategoryGap:'50%',
-                  data:[79, 73,75]
+                  data:[<?php
+                      if($school_students_count)
+                      {
+                        $score_percent_by_item = $user->get_speech_percent_by_item_school();
+                        $out_string = "";
+                        foreach($score_percent_by_item as $score)
+                        {
+                            $out_string .= $score;
+                            $out_string .= ',';
+                        }
+                        $out_string = substr($out_string,0,-1);
+                        echo $out_string;
+                      }
+                      else
+                      {
+                        echo "0,0,0";
+                      }
+                  ?>]
               }
           ]
           };
@@ -532,25 +549,9 @@
                 polar : [
                     {
                         indicator : [
-                            {text : '双唇音', max  : 10},
-                            {text : '唇齿音', max  : 10},
-                            {text : '舌尖前音', max  : 10},
-                            {text : '舌尖中音', max  : 10},
-                            {text : '舌尖后音', max  : 10},
-                            {text : '舌面音', max  : 10},
-                            {text : '舌根音', max  : 10},
-                            {text : '舌面元音单韵母', max  : 10},
-                            {text : '舌尖元音单韵母', max  : 10},
-                            {text : '卷舌单韵母', max  : 10},
-                            {text : '前响复韵母', max  : 10},
-                            {text : '中响复韵母', max  : 10},
-                            {text : '后响复韵母', max  : 10},
-                            {text : '前鼻音韵母', max  : 10},
-                            {text : '后鼻音韵母', max  : 10},
-                            {text : '阴平第1声', max  : 10},
-                            {text : '阳平第2声', max  : 10},
-                            {text : '上声第3声', max  : 10},
-                            {text : '去声第4声', max  : 10}
+                            {text : '单字', max  : 100},
+                            {text : '词语', max  : 100},
+                            {text : '短文', max  : 100}
                         ],
                         radius : 130
                     }
@@ -568,7 +569,10 @@
                         },
                         data : [
                             {
-                                value : [10,8,5,7,4,8,9,2,5,7,3,8,5,9,3,6,8,7,9],
+                                value : [<?php
+                                  $speech_data = $user->get_class_report_score_5($class_id);
+                                  echo $speech_data[0].','.$speech_data[1].','.$speech_data[2];
+                                ?>],
                                 name : '发音得分'
                             }
                         ]
@@ -586,7 +590,7 @@
             ?>
           </div>
           <div class="col-lg-6" style="height:400px;">
-            <div class="row" id="yuyin_graph2" style="height:50%; text-align:center;">
+            <div class="row" id="yuyin_graph2" style="height:100%; text-align:center;">
               <script type="text/javascript">
               var myChart_yuyin_2 = echarts.init(document.getElementById('yuyin_graph2'),'default');
               var option_yuyin_2 = {
@@ -597,7 +601,7 @@
                 xAxis : [
                     {
                       type : 'category',
-                      data : ['声母发音报告','韵母发音报告','调型发音报告']
+                      data : ['单字发音报告','词语发音报告','短文发音报告']
                     }
                 ],
                 yAxis : [
@@ -611,46 +615,13 @@
                     {
                         type:'bar',
                         barCategoryGap:'80%',
-                        data:[79, 73,75]
+                        data:[<?php
+                          echo $speech_data[0].','.$speech_data[1].','.$speech_data[2];
+                        ?>]
                     }
                 ]
               };
               myChart_yuyin_2.setOption(option_yuyin_2);
-              </script>
-            </div>
-            <div class="row" id="yuyin_graph3" style="height:50%; text-align:center;">
-              <script type="text/javascript">
-                var myChart_yuyin_3 = echarts.init(document.getElementById('yuyin_graph3'),'default');
-                var option_yuyin_3 = {
-                      tooltip : {
-                          trigger: 'axis'
-                      },
-                      polar : [
-                         {
-                             radius:80,
-                             indicator : [
-                                 { text: '声母发音报告',max:100},
-                                 { text: '韵母发音报告',max:100},
-                                 { text: '调型发音报告',max:100}
-                              ]
-                          }
-                      ],
-                      calculable : true,
-                      series : [
-                          {
-                              name: '发音报告',
-                              type: 'radar',
-                              data : [
-                                  {
-                                      value : [98,68,79],
-                                      name : '发音报告'
-                                  }
-                              ]
-                          }
-                      ]
-                  };
-
-                myChart_yuyin_3.setOption(option_yuyin_3);
               </script>
             </div>
           </div>
@@ -731,16 +702,104 @@
           </div>
 
 
+          <div class="container mt20 mb20" id="graph6" style="height:300px;">
+            <?php
+              $students = $user->get_students_by_class($class_id);
+              if($students)
+              {
+                $name_string = "";
+                $data_string = "";
+                foreach ($students as $student)
+                {
+                  $name_string .= "'".$student->name."'";
+                  $name_string .= ",";
+                  $data_string .= $student->score;
+                  $data_string .= ",";
+                }
+                $name_string = substr($name_string,0,-1);
+                $data_string = substr($data_string,0,-1);
+              ?>
+              <script type="text/javascript">
+              var myChart_6 = echarts.init(document.getElementById('graph6'),'default');
+              var option_6 = {
+                title:{
+                  text:"阅读评分",
+                  x:'center'
+                },
+                tooltip : {
+                    trigger: 'axis'
+                },
+                toolbox: {
+                    show : false
+                },
+                calculable : true,
+                xAxis : [
+                    {
+                        type : 'category',
+                        axisLabel:{
+                          rotate:-90
+                        },
+                        data:[<?php echo $name_string;?>]
+                    }
+                ],
+                yAxis : [
+                    {
+                      type : 'value'
+                    }
+                ],
+                series : [
+                    {
+                        type:'bar',
+                        barCategoryGap:'50%',
+                        data:[<?php echo $data_string;?>]
+                    }
+                ]
+              };
+              myChart_6.setOption(option_6);
+              </script>
+              <?php
+              }
+              else
+              {
+                echo "班内没有学生";
+              }
+            ?>
+          </div>
 
 
 
 
-          <div class="container mt20 mb20" style="height:300px;" id="graph5">
+
+          <div class="container mt20 mb20" style="height:300px;" id="graph5_1">
+            <?php
+              $data = $user->get_class_report_score_5_1($class_id);
+              $students = $data[0];
+              $scores = $data[1];
+              $name_string = "";
+              $data_string = "";
+              if($students)
+              {
+                for($i=0; $i<count($students); $i++)
+                {
+                  $name_string .= "'".$students[$i]->name."'";
+                  $name_string .= ",";
+                  $data_string .= $scores[$i]->average;
+                  $data_string .= ",";
+                }
+                $name_string = substr($name_string,0,-1);
+                $data_string = substr($data_string,0,-1);
+              }
+              else
+              {
+                  $name_string = "无";
+                  $data_string = "0";
+              }
+            ?>
           <script type="text/javascript">
-            var myChart_5 = echarts.init(document.getElementById('graph5'),'default');
-            var option_5 = {
+            var myChart_5_1 = echarts.init(document.getElementById('graph5_1'),'default');
+            var option_5_1 = {
             title:{
-              text:"语音评分",
+              text:"语音评分(单字)",
               x:'center'
             },
             tooltip : {
@@ -756,9 +815,7 @@
                     axisLabel:{
                       rotate:-90
                     },
-                    data:['张三','李四','王五','张三','李四','王五','张三','李四','王五',
-                          '张三','李四','王五','张三','李四','王五','张三','李四','王五',
-                          '张三','李四','王五','张三','李四','王五','张三','李四','王五']
+                    data:[<?php echo $name_string;?>]
                 }
             ],
             yAxis : [
@@ -770,90 +827,149 @@
                 {
                     type:'bar',
                     barCategoryGap:'50%',
-                    data:[<?php
-                        $i=0; $out_string = "";
-                        while($i<27)
-                        {
-                          $out_string .= strval(rand(0,100));
-                          $out_string .= ",";
-                          $i++;
-                        }
-                        echo substr($out_string,0,-1);
-                    ?>]
+                    data:[<?php echo $data_string;?>]
                 }
             ]
           };
-          myChart_5.setOption(option_5);
+          myChart_5_1.setOption(option_5_1);
           </script>
         </div>
 
-
-
-
-
-        <div class="container mt20 mb20" id="graph6" style="height:300px;">
+        <div class="container mt20 mb20" style="height:300px;" id="graph5_2">
           <?php
-            $students = $user->get_students_by_class($class_id);
+            $data = $user->get_class_report_score_5_2($class_id);
+            $students = $data[0];
+            $scores = $data[1];
+            $name_string = "";
+            $data_string = "";
             if($students)
             {
-              $name_string = "";
-              $data_string = "";
-              foreach ($students as $student)
+              for($i=0; $i<count($students); $i++)
               {
-                $name_string .= "'".$student->name."'";
+                $name_string .= "'".$students[$i]->name."'";
                 $name_string .= ",";
-                $data_string .= $student->score;
+                $data_string .= $scores[$i]->average;
                 $data_string .= ",";
               }
               $name_string = substr($name_string,0,-1);
               $data_string = substr($data_string,0,-1);
-            ?>
-            <script type="text/javascript">
-            var myChart_6 = echarts.init(document.getElementById('graph6'),'default');
-            var option_6 = {
-              title:{
-                text:"阅读评分",
-                x:'center'
-              },
-              tooltip : {
-                  trigger: 'axis'
-              },
-              toolbox: {
-                  show : false
-              },
-              calculable : true,
-              xAxis : [
-                  {
-                      type : 'category',
-                      axisLabel:{
-                        rotate:-90
-                      },
-                      data:[<?php echo $name_string;?>]
-                  }
-              ],
-              yAxis : [
-                  {
-                    type : 'value'
-                  }
-              ],
-              series : [
-                  {
-                      type:'bar',
-                      barCategoryGap:'50%',
-                      data:[<?php echo $data_string;?>]
-                  }
-              ]
-            };
-            myChart_6.setOption(option_6);
-            </script>
-            <?php
             }
             else
             {
-              echo "班内没有学生";
+                $name_string = "无";
+                $data_string = "0";
             }
           ?>
-        </div>
+        <script type="text/javascript">
+          var myChart_5_2 = echarts.init(document.getElementById('graph5_2'),'default');
+          var option_5_2 = {
+          title:{
+            text:"语音评分(词语)",
+            x:'center'
+          },
+          tooltip : {
+              trigger: 'axis'
+          },
+          toolbox: {
+              show : false
+          },
+          calculable : true,
+          xAxis : [
+              {
+                  type : 'category',
+                  axisLabel:{
+                    rotate:-90
+                  },
+                  data:[<?php echo $name_string;?>]
+              }
+          ],
+          yAxis : [
+              {
+                type : 'value'
+              }
+          ],
+          series : [
+              {
+                  type:'bar',
+                  barCategoryGap:'50%',
+                  data:[<?php echo $data_string;?>]
+              }
+          ]
+        };
+        myChart_5_2.setOption(option_5_2);
+        </script>
+      </div>
+
+      <div class="container mt20 mb20" style="height:300px;" id="graph5_3">
+        <?php
+          $data = $user->get_class_report_score_5_3($class_id);
+          $students = $data[0];
+          $scores = $data[1];
+          $name_string = "";
+          $data_string = "";
+          if($students)
+          {
+            for($i=0; $i<count($students); $i++)
+            {
+              $name_string .= "'".$students[$i]->name."'";
+              $name_string .= ",";
+              $data_string .= $scores[$i]->average;
+              $data_string .= ",";
+            }
+            $name_string = substr($name_string,0,-1);
+            $data_string = substr($data_string,0,-1);
+          }
+          else
+          {
+              $name_string = "无";
+              $data_string = "0";
+          }
+        ?>
+      <script type="text/javascript">
+        var myChart_5_3 = echarts.init(document.getElementById('graph5_3'),'default');
+        var option_5_3 = {
+        title:{
+          text:"语音评分(短文)",
+          x:'center'
+        },
+        tooltip : {
+            trigger: 'axis'
+        },
+        toolbox: {
+            show : false
+        },
+        calculable : true,
+        xAxis : [
+            {
+                type : 'category',
+                axisLabel:{
+                  rotate:-90
+                },
+                data:[<?php echo $name_string;?>]
+            }
+        ],
+        yAxis : [
+            {
+              type : 'value'
+            }
+        ],
+        series : [
+            {
+                type:'bar',
+                barCategoryGap:'50%',
+                data:[<?php echo $data_string;?>]
+            }
+        ]
+      };
+      myChart_5_3.setOption(option_5_3);
+      </script>
+    </div>
+
+
+
+
+
+
 
 
 

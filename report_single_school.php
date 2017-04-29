@@ -210,7 +210,24 @@
               {
                   type:'bar',
                   barCategoryGap:'50%',
-                  data:[79, 73,75]
+                  data:[<?php
+                      if($school_students_count)
+                      {
+                        $score_percent_by_item = $user->get_speech_percent_by_item_school_teacher($id);
+                        $out_string = "";
+                        foreach($score_percent_by_item as $score)
+                        {
+                            $out_string .= $score;
+                            $out_string .= ',';
+                        }
+                        $out_string = substr($out_string,0,-1);
+                        echo $out_string;
+                      }
+                      else
+                      {
+                        echo "0,0,0";
+                      }
+                  ?>]
               }
           ]
           };

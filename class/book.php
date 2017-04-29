@@ -68,7 +68,7 @@ class Book
     //获取所有书评的总数
     $sql = "select count(*) from rd_book_review where book_id='$this->book_id'";
     $total = $db->get_var($sql);
-    $page_num = 8;
+    $page_num = 2;
     $this->book_pages = ceil($total/$page_num);
     if($page < 1)
     {
@@ -111,6 +111,58 @@ class Book
   function get_book_comment_pages()
   {
     return $this->book_pages;
+  }
+
+  /**
+  *获取读书笔记题目
+  **/
+  function get_book_note()
+  {
+    global $db;
+    $id = $this->book_id;
+    $sql = "select id,question from rd_read_note where book_id=$id";
+    return $db->get_results($sql);
+  }
+
+  /**
+  *获取是否已经答过读书笔记
+  **/
+  function check_note($user_id)
+  {
+    global $db;
+    $sql = "select count(id) from rd_read_note_answer where user_id='$user_id' and book_id='".$this->book_id."'";
+    if($db->get_var($sql)>0)
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
+
+  /**
+  *获取推荐书籍
+  **/
+  function get_related_book()
+  {
+    global $db;
+    $book = $this->book_id;
+    $sql = "select id,name,coverimg from rd_book where id in(select rec_book_id from rd_book_recommend where book_id=$book)";
+    $books= $db->get_results($sql);
+    return $books;
+  }
+
+  /**
+  *获取用户提交的读书笔记的答案
+  **/
+  function get_book_note_answers($user_id)
+  {
+    global $db;
+    $book_id = $this->book_id;
+    $sql = "select answer from rd_read_note_answer where book_id=$book_id and user_id=$user_id";
+    $answers = $db->get_results($sql);
+    return $answers;
   }
 
 }

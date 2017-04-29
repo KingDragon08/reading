@@ -171,6 +171,7 @@
             if($type=='zi')
             {
               $words = $speech->get_test($type,$unit);
+              var_dump($words);
               if(count($words))
               {
           ?>

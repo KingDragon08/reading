@@ -13,12 +13,15 @@ function play(content, vcn){
 
 	session.start(ssb_param, content, function (err, obj)
 	{
-		console.log(JSON.stringify(obj));
 		var audio_url = audioPalyUrl + obj.audio_url;
 		if( audio_url != null && audio_url != undefined )
 		{
+			console.log("window.iaudio");
+			console.log(window.iaudio);
 			window.iaudio.src = audio_url;
+			console.log("seeting src ok");
 			window.iaudio.play();
+			console.log("play OK");
 		}
 	});
 };

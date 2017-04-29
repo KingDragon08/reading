@@ -129,7 +129,6 @@ class Speech
         $ret[] = $result[$i];
         $i++;
       }
-      var_dump($ret);
       return $ret;
     }
     return $result;

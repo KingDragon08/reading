@@ -98,7 +98,7 @@
           全本阅读（测试习题）
           <div class="float_right" style="margin-right:5.8em;">
             <p id="time">
-              10:00
+              
             </p>
           </div>
         </div>

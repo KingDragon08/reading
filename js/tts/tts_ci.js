@@ -1,4 +1,4 @@
-var audioPalyUrl = "http://h5.xf-yun.com/audioStream/";
+var audioPalyUrl = "https://ttscloud.openspeech.cn/audioStream/";
 var session = new IFlyTtsSession({
 									'url'                : 'wss://ttscloud.openspeech.cn/tts.do',
 									'reconnection'       : true,

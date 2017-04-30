@@ -171,7 +171,7 @@
           <div class="col-lg-4 mb20">
             <div class="col-lg-6 book_img">
               <a href="book.php?book=<?php echo $book->id;?>" target="_blank">
-                <img src="<?php echo $book->coverimg;?>" width="100%"/>
+                <img src="<?php echo $book->coverimg;?>" style="width:120px; height:160px;"/>
               </a>
             </div>
             <div class="col-lg-6 book_info" style="display:table;">

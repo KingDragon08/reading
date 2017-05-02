@@ -117,7 +117,7 @@
       </div>
       &nbsp;&nbsp;
       <div class="btn-group">
-          <button type="button" class="btn btn-default" id="kd_type">书单类型</button>
+          <button type="button" class="btn btn-default" id="kd_type">教师推送</button>
           <button type="button" class="btn btn-default dropdown-toggle"
               data-toggle="dropdown">
               <span class="caret"></span>
@@ -169,6 +169,32 @@
             ?>
           </ul>
       </div>
+      &nbsp;&nbsp;
+
+      <div class="btn-group">
+          <button type="button" class="btn btn-default" id="grade_type">截至日期</button>
+          <button type="button" class="btn btn-default dropdown-toggle"
+              data-toggle="dropdown">
+              <span class="caret"></span>
+              <span class="sr-only">选择</span>
+          </button>
+          <ul class="dropdown-menu" role="menu">
+            <?php
+              $endtimes = $common->get_endtimes($user_id);
+              if(count($endtimes))
+              {
+                foreach($endtimes as $endtime)
+                {
+            ?>
+                <li><a href="javascript:void(0);" onclick="endtime_change(<?php echo $endtime->endtime?>)"><?php echo date('Y-m-d H:i:s',$endtime->endtime)?></a></li>
+            <?php
+                }
+              }
+            ?>
+          </ul>
+      </div>
+
+
     </div>
     <div class="col-lg-4">
       <form action="search.php" method="get" target="_blank" name="search" id="search" onsubmit="return check_search()">
@@ -211,8 +237,16 @@
       $type = isset($_GET['type'])?intval($_GET['type']):0;
       $status = isset($_GET['status'])?intval($_GET['status']):-1;
       $page =isset($_GET['page'])?intval($_GET['page']):1;
+      $endtime =isset($_GET['endtime'])?intval($_GET['endtime']):0;
       // $books = $common->get_lists_task($user_id,$grade,$type,$status,$page);
-      $books = $common->get_books_task($user_id,$grade,$type,$status,$page);
+      if($endtime!=0)
+      {
+          $books = $common->get_books_task($user_id,0,0,-1,1,$endtime);
+      }
+      else
+      {
+          $books = $common->get_books_task($user_id,$grade,$type,$status,$page,$endtime);
+      }
       if($books)
       {
       foreach($books as $book)
@@ -404,6 +438,11 @@
         location.href = "book_shelf.php?status="+id+"&grade="+grade+"&type="+type;
       }
     }
+  }
+
+  function endtime_change(endtime)
+  {
+    location.href = "book_shelf.php?endtime="+endtime;
   }
 
 

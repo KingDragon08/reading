@@ -529,11 +529,22 @@ class Common
     }
 
     /**
+    *获取我的任务中的截至日期
+    **/
+    function get_books_task_endtimes()
+    {
+      global $db;
+      $sql = "select endtime from rd_user_read_book group by endtime order by endtime asc";
+      return $db->get_results($sql);
+    }
+
+
+    /**
     *分页获取我的任务中的所有书单列表
     *grade:0 type:0 status:-1 page:1
     *status 0:测试未通过 1:测试通过 2:未测试
     **/
-    function get_books_task($user_id,$grade,$type,$status,$page)
+    function get_books_task($user_id,$grade,$type,$status,$page,$endtime)
     {
       global $db;
       // $sql = "select a.* from rd_read_list as a left join rd_user_read_list as b on ".
@@ -555,6 +566,10 @@ class Common
       if($type == -2)
       {
         $sql .= "and b.type=0";
+      }
+      if($entime!=0)
+      {
+        $sql .= "and b.endtime='$endtime' ";
       }
       $sql .= " order by b.id desc";
       $lists = $db->get_results($sql);

@@ -567,7 +567,7 @@ class Common
       {
         $sql .= "and b.type=0";
       }
-      if($entime!=0)
+      if($endtime!=0)
       {
         $sql .= "and b.endtime='$endtime' ";
       }

@@ -172,7 +172,7 @@
       &nbsp;&nbsp;
 
       <div class="btn-group">
-          <button type="button" class="btn btn-default" id="grade_type">截至日期</button>
+          <button type="button" class="btn btn-default" id="endtime">截止日期</button>
           <button type="button" class="btn btn-default dropdown-toggle"
               data-toggle="dropdown">
               <span class="caret"></span>
@@ -180,15 +180,22 @@
           </button>
           <ul class="dropdown-menu" role="menu">
             <?php
-              $endtimes = $common->get_endtimes($user_id);
+              $endtimes = $common->get_books_task_endtimes($user_id);
               if(count($endtimes))
               {
                 foreach($endtimes as $endtime)
                 {
             ?>
-                <li><a href="javascript:void(0);" onclick="endtime_change(<?php echo $endtime->endtime?>)"><?php echo date('Y-m-d H:i:s',$endtime->endtime)?></a></li>
+                <li><a href="javascript:void(0);" onclick="endtime_change(<?php echo $endtime->endtime?>)"><?php echo date('Y-m-d',$endtime->endtime)?></a></li>
             <?php
                 }
+              }
+              if(isset($_GET['grade']))
+              {
+                  if($grade->id==intval($_GET['endtime']))
+                  {
+                      echo '<script>$("#endtime").html("'.data('Y-m-d',$endtime).'");</script>';
+                  }
               }
             ?>
           </ul>

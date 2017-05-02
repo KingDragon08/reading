@@ -82,6 +82,7 @@ var iflytek = (function(document){
                         var s_score = JSON.parse(result).totle_score;
                         scores[index] = s_score;
                         $("#score").html(s_score);
+                        $("#j_exam_"+index).addClass("ed");
                    }
                 }
                 else//若回调的err不为空且错误码不为0，则会话失败，可提取错误码

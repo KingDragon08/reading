@@ -30,7 +30,7 @@
       .tips_cover_ci .speech_btn_1{font-size:14px; font-weight: normal; overflow: hidden;}
       #report .speech_btn_1:nth-child(2n){font-size:14px; font-weight: normal;}
       #report .speech_btn_1:hover{background:none; color:#333;}
-      .speech_container_ci,.speech_container_ju{height:210px; width:90%; margin:0 auto; margin-top:30px;}
+      .speech_container_ci,.speech_container_ju{height:210px; width:90%; margin:0 auto; margin-top:50px;}
       .speech_btn:hover,.speech_btn.active,.speech_btn_ci:hover,.speech_btn_ci.active,.speech_btn_ju:hover{ background: #71cba4; color:#fff;}
       .speech_btn_ci{width:auto; height: 60px; line-height: 60px;
                       border:1px solid #ccc; border-radius: 5px;
@@ -38,10 +38,10 @@
                       text-align: center; font-size: 20px; font-weight: bold;
                       cursor: pointer; padding:0 20px;
       }
-      .speech_btn_ju{width:auto; height:30px; border:1px solid #ccc; border-right: 0;
+      .speech_btn_ju{width:40px; height:40px; border:1px solid #ccc; border-right: 0;
                   float:left; background: #f2f2f2; margin-bottom: 10px;
-                  text-align: center; line-height: 30px; font-size: 16px; font-weight: bold;
-                  cursor: pointer; padding:0 16px;
+                  text-align: center; line-height: 40px; font-size: 18px; font-weight: bold;
+                  cursor: pointer;
       }
 
       .first{border-radius: 5px 0 0 5px;}
@@ -571,36 +571,97 @@
               if(count($words))
               {
           ?>
+          <style media="screen">
+            .j_left_control{
+              width:122px; height:auto; min-height: 60px; position: absolute;
+              left:-142px; border:1px solid #e5e5e5; border-radius: 5px;
+            }
+            .j_left_control div{
+              float:left;width:60px; height:60px; line-height: 60px; text-align: center;
+              color:#333; font-size: 20px; font-weight: bold; border-bottom: 1px solid #e5e5e5;
+              cursor: pointer;
+            }
+            .j_left_control div:nth-child(2n+1){
+              border-right: 1px solid #e5e5e5;
+            }
+            .j_left_control div:hover,.j_left_control div.active{
+              background:#71cba4; color:#fff;
+            }
+            .j_left_control div.ed{
+              background:#aaa; color:#fff;
+            }
+          </style>
                 <div class="col-lg-12 mt20">
                   <div class="col-lg-8">
-                    <div class="speech_container_ju">
+                    <div class="j_left_control">
+                      <?php
+                      for($i=0; $i<count($words); $i++)
+                      {
+                      ?>
+                        <div id="j_exam_<?php echo $i;?>" onclick="j_exam(<?php echo $i;?>)" class="j_exam_kd <?php if($i==0){echo "active";}?>"><?php echo ($i+1);?></div>
+                      <?php
+                      }
+                      ?>
+                    </div>
+                    <script type="text/javascript">
+                      function j_exam(page)
+                      {
+                        choose_ju(page);
+                        $("#j_words_"+page).click();
+                        $(".j_exam_kd").each(function(){
+                          $(this).removeClass("active");
+                        });
+                        $("#j_exam_"+page).addClass("active");
+                        $("#myCarousel").carousel(page);
+                        $("#myCarousel").carousel("pause");
+                      }
+                    </script>
+
+
+                    <div id="myCarousel" class="carousel slide">
+                      <!-- 轮播（Carousel）项目 -->
+                      <div class="carousel-inner">
                       <?php
                           //$words = explode(",",$words[0]->name);
                           // print_r($words);
                           for($i=0; $i<count($words); $i++)
                           {
-                            echo "<input type=\"hidden\" id=\"words_".$i."\" value=\"".$words[$i]->name."\">";
                             if($i==0)
                             {
-                              echo "<input type=\"radio\" name=\"ju\" onclick=\"choose_ju($i)\" checked=\"checked\" style=\"float:right;\"/>";
+                                echo '<div class="speech_container_ju item active">';
                             }
                             else
                             {
-                              echo "<input type=\"radio\" name=\"ju\" onclick=\"choose_ju($i)\" style=\"float:right;\"/>";
+                                echo '<div class="speech_container_ju item">';
+                            }
+                            echo "<input type=\"hidden\" id=\"words_".$i."\" value=\"".$words[$i]->name."\">";
+                            if($i==0)
+                            {
+                              echo "<input type=\"radio\" name=\"ju\" id=\"j_words_$i\" onclick=\"choose_ju($i)\" checked=\"checked\" style=\"float:right; display:none;\"/>";
+                            }
+                            else
+                            {
+                              echo "<input type=\"radio\" name=\"ju\" id=\"j_words_$i\" onclick=\"choose_ju($i)\" style=\"float:right; display:none;\"/>";
                             }
                             preg_match_all("/./u",$words[$i]->name,$words[$i]);
                             for($j=0; $j<count($words[$i][0]); $j++)
                             {
                       ?>
-                            <div class="speech_btn_ju <?php if($j%8==0){echo ' first';} if($j%8==7 || $j==count($words[$i][0])-1){echo ' last';} ?>"
+                            <div class="speech_btn_ju <?php if($j%10==0){echo ' first';} if($j%10==9 || $j==count($words[$i][0])-1){echo ' last';} ?>"
                                  data-toggle="tooltip" title=""><?php echo $words[$i][0][$j];?></div>
                       <?php
                             }
-                            echo "<div style='clear:both; height:30px;'></div>";
+                            echo "</div>";
                           }
                       ?>
                           <input type="hidden" name="selected_ju" id="selected_ju" value="0">
                     </div>
+                  </div>
+                  <script type="text/javascript">
+                  $().ready(function(){
+                    $('#myCarousel').carousel('pause');
+                  });
+                  </script>
                   </div>
                   <div class="col-lg-4" style="text-align:center; position:relative;">
                     <div style="font-size:24px; margin-top:140px;">

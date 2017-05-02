@@ -190,7 +190,7 @@
             <?php
                 }
               }
-              if(isset($_GET['grade']))
+              if(isset($_GET['endtime']))
               {
                   if($grade->id==intval($_GET['endtime']))
                   {

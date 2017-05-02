@@ -131,9 +131,9 @@
               {
             ?>
                 <td height="30" align="center" valign="middle" width="20%">细节认知：<?php echo intval($exam_report->scores[0])+intval($exam_report->scores[1])?>/2分</td>
-                <td height="30" align="center" valign="middle" width="20%">信息提取：<?php echo intval($exam_report->scores[2])+intval($exam_report->scores[3])?>/2分</td>
-                <td height="30" align="center" valign="middle" width="20%">意义建构：<?php echo intval($exam_report->scores[4])+intval($exam_report->scores[5])?>/2分</td>
-                <td height="30" align="center" valign="middle" width="20%">直接推论：<?php echo intval($exam_report->scores[6])+intval($exam_report->scores[7])?>/2分</td>
+                <td height="30" align="center" valign="middle" width="20%">信息获取：<?php echo intval($exam_report->scores[2])+intval($exam_report->scores[3])?>/2分</td>
+                <td height="30" align="center" valign="middle" width="20%">直接推论：<?php echo intval($exam_report->scores[4])+intval($exam_report->scores[5])?>/2分</td>
+                <td height="30" align="center" valign="middle" width="20%">组织概括：<?php echo intval($exam_report->scores[6])+intval($exam_report->scores[7])?>/2分</td>
                 <td height="30" align="center" valign="middle" width="20%">批判思考：<?php echo intval($exam_report->scores[8])+intval($exam_report->scores[9])?>/2分</td>
             <?php
               }
@@ -141,9 +141,9 @@
               {
             ?>
                 <td height="30" align="center" valign="middle" width="20%">细节认知：<?php echo intval($exam_report->scores[0])+intval($exam_report->scores[1])+intval($exam_report->scores[2])?>/3分</td>
-                <td height="30" align="center" valign="middle" width="20%">信息提取：<?php echo intval($exam_report->scores[3])+intval($exam_report->scores[4])+intval($exam_report->scores[5])?>/3分</td>
-                <td height="30" align="center" valign="middle" width="20%">意义建构：<?php echo intval($exam_report->scores[6])+intval($exam_report->scores[7])+intval($exam_report->scores[8])?>/3分</td>
-                <td height="30" align="center" valign="middle" width="20%">直接推论：<?php echo intval($exam_report->scores[9])+intval($exam_report->scores[10])+intval($exam_report->scores[11])?>/3分</td>
+                <td height="30" align="center" valign="middle" width="20%">信息获取：<?php echo intval($exam_report->scores[3])+intval($exam_report->scores[4])+intval($exam_report->scores[5])?>/3分</td>
+                <td height="30" align="center" valign="middle" width="20%">直接推论：<?php echo intval($exam_report->scores[6])+intval($exam_report->scores[7])+intval($exam_report->scores[8])?>/3分</td>
+                <td height="30" align="center" valign="middle" width="20%">组织概括：<?php echo intval($exam_report->scores[9])+intval($exam_report->scores[10])+intval($exam_report->scores[11])?>/3分</td>
                 <td height="30" align="center" valign="middle" width="20%">批判思考：<?php echo intval($exam_report->scores[12])+intval($exam_report->scores[13])+intval($exam_report->scores[14])?>/3分</td>
             <?php
               }
@@ -186,19 +186,19 @@
                     {
                       if($counter<2*count($exam_report->scores)/5)
                       {
-                        echo "信息提取";
+                        echo "信息获取";
                       }
                       else
                       {
                         if($counter<3*count($exam_report->scores)/5)
                         {
-                          echo "意义建构";
+                          echo "直接推论";
                         }
                         else
                         {
                           if($counter<4*count($exam_report->scores)/5)
                           {
-                            echo "直接推论";
+                            echo "组织概括";
                           }
                           else
                           {

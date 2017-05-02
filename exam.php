@@ -23,21 +23,22 @@
         background-size: contain;
       }
       .choice_item_container{
-        width:90%; height:40px; line-height:40px; border:1px solid #e5e5e5; border-radius:5px;
+        width:90%; height:auto; min-height:40px; border:1px solid #e5e5e5; border-radius:5px;
         margin-bottom: 8px;
       }
       .choice_item_left{
-        width:40px; line-height:38px; border-right:1px solid #e5e5e5; text-align:center;
+        width:40px; line-height:38px; text-align:center;
         float:left; font-size:16px;
       }
       .choice_item_right{
-        float:left; line-height: 40px; padding-left: 0.5em;
+        float:left; line-height: 38px; padding-left: 0.5em;
+        width:calc(100% - 40px);  border-left:1px solid #e5e5e5;
       }
       .choice_item_container:hover{
         cursor: pointer; border:1px solid #662a7c;
       }
-      .choice_item_container:hover .choice_item_left{
-        border-right:1px solid #662a7c;
+      .choice_item_container:hover .choice_item_right{
+        border-left:1px solid #662a7c;
       }
       .choice_item_container.active{
         cursor: pointer; border:1px solid #662a7c;
@@ -98,7 +99,7 @@
           全本阅读（测试习题）
           <div class="float_right" style="margin-right:5.8em;">
             <p id="time">
-              
+
             </p>
           </div>
         </div>
@@ -299,11 +300,11 @@
                     </div>
                     <table style="margin-top:50px; width:100%;">
                       <tr>
-                        <td width="50%" valign="middle" align="center">
+                        <td width="50%" valign="middle" align="left" style="padding-right:8px; line-height:24px;">
                             <p>
                               第<?php echo $counter;?>题：<?php echo $question->question;?>
                             </p>
-                            <img src="<?php echo $coverimg;?>" alt="图书封面走丢了" style="max-width:80%;">
+                            <center><img src="<?php echo $coverimg;?>" alt="图书封面走丢了" style="max-width:80%;"></center>
                         </td>
                         <td width="50%" valign="middle" id="kd_<?php echo $counter;?>">
                             <div class="choice_item_container" onclick="select_item(this,<?php echo $counter;?>,1)">

@@ -123,7 +123,7 @@
                   <input type="checkbox" name="book[]" value="<?php echo $book->id?>" checked="checked" style="margin-top:50px;">
                 </div>
                 <div class="col-lg-2">
-                  <img src="img/book1.png" class="img-responsive"/>
+                  <img src="<?php echo $book->coverimg?>" class="img-responsive"/>
                 </div>
                 <div class="col-lg-9">
                   <h5>
@@ -131,7 +131,7 @@
                     <span>作者：<?php echo $book->author;?></span>
                     <span>出版社：<?php echo $book->press;?></span>
                   </h5>
-                  <p class="gray"><?php echo substr($book->bookdesc,0,201)."...";?></p>
+                  <p class="gray"><?php echo mb_substr($book->bookdesc,0,120)."...";?></p>
                 </div>
               </div>
               <?php

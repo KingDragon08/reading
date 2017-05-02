@@ -140,7 +140,7 @@
           //判断是不是低年级的书
           global $db;
           $grade = $db->get_var("select grade from rd_book where id='$book'");
-          if($grade<=2)
+          if($grade<2)
           {
             exit();
           }

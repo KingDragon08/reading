@@ -141,7 +141,7 @@
           //判断书是不是高年级的书
           global $db;
           $grade = $db->get_var("select grade from rd_book where id='$book'");
-          if($grade>2)
+          if($grade>1)
           {
             exit();
           }

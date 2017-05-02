@@ -107,7 +107,7 @@
     <!-- division panel end -->
     <!-- list start -->
     <div class="container mt20 mb20">
-      <div style="width:800px; height:515px; margin:0 auto; box-shadow:0 0 5px #999; border-radius:5px;">
+      <div style="width:800px; min-height:515px; height:auto; overflow-y:auto; margin:0 auto; box-shadow:0 0 5px #999; border-radius:5px;">
         <?php
           if(!isset($_GET['book']))
           {

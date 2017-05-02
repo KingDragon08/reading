@@ -12,7 +12,7 @@
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <title>乐智悦读-测验</title>
     <style media="screen">
-      .item{height:515px; width: 600px;}
+      .item{min-height:515px; width: 600px; height:auto; overflow: auto;}
       .question_title{margin-left:30px; margin-top:40px; font-size: 16px; font-weight: bold;}
       .answers{margin-left: 30px; margin-top:20px;}
       .question_ctr{margin-top:50px; text-align: center; clear: both;}
@@ -24,7 +24,7 @@
       }
       .choice_item_container{
         width:90%; height:auto; min-height:40px; border:1px solid #e5e5e5; border-radius:5px;
-        margin-bottom: 8px;
+        margin-bottom: 8px; overflow: auto;
       }
       .choice_item_left{
         width:40px; line-height:38px; text-align:center;
@@ -240,9 +240,9 @@
           {
         ?>
         <form action="" id="kd_exam" method="post" onsubmit="return check();">
-        <div id="myCarousel" class="carousel slide" style="width:599px; float:left; height:515px; border-right:1px solid #ccc;">
+        <div id="myCarousel" class="carousel slide" style="width:599px; float:left; min-height:515px; height:auto; overflow:auto; border-right:1px solid #ccc;">
           <!-- 轮播（Carousel）项目 -->
-          <div class="carousel-inner" style="height:515px;">
+          <div class="carousel-inner" style="min-height:515px; height:auto; overflow:auto;">
             <?php
               $exam = new Exam($book);
               //检查当前用户是否可以在当天进行测试

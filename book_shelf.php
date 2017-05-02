@@ -192,10 +192,7 @@
               }
               if(isset($_GET['endtime']))
               {
-                  if($grade->id==intval($_GET['endtime']))
-                  {
-                      echo '<script>$("#endtime").html("'.data('Y-m-d',$endtime).'");</script>';
-                  }
+                  echo '<script>$("#endtime").html("'.date('Y-m-d',$_GET['endtime']).'");</script>';
               }
             ?>
           </ul>

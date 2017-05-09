@@ -1381,7 +1381,7 @@
       {
         global $db;
         $user_id = $this->get_user_id();
-        $sql = "select id from rd_read_list where user_id='$user_id'";
+        $sql = "select id from rd_read_list where user_id='$user_id' order by endtime asc";
         return $db->get_results($sql);
       }
 

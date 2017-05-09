@@ -523,14 +523,14 @@ if($role == "教师")
         选择书单类型:&nbsp;&nbsp;&nbsp;&nbsp;
 
         <div class="btn-group">
-            <button type="button" class="btn btn-default" id="list_type">全部图书</button>
+            <button type="button" class="btn btn-default" id="list_type">历史书单</button>
             <button type="button" class="btn btn-default dropdown-toggle"
                 data-toggle="dropdown">
                 <span class="caret"></span>
                 <span class="sr-only">选择</span>
             </button>
             <ul class="dropdown-menu" role="menu">
-              <li><a href="book_shelf.php?id=0">全部图书</a></li>
+              <li><a href="book_shelf.php?id=0">全部历史书单</a></li>
               <?php
                 $grades = $common->get_grade();
                 $lists = $user->get_history_list();

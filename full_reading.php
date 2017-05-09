@@ -78,7 +78,7 @@
         <div class="col-lg-8">
           选择书单类型:&nbsp;&nbsp;&nbsp;&nbsp;
           <div class="btn-group">
-              <button type="button" class="btn btn-default" id="list_type">书单类型</button>
+              <button type="button" class="btn btn-default" id="list_type">图书类型</button>
               <button type="button" class="btn btn-default dropdown-toggle"
                   data-toggle="dropdown">
                   <span class="caret"></span>
@@ -185,11 +185,11 @@
                 <?php
                   if($book->status == 1)
                   {
-                    echo "<label class=\"label label-info\">在书架上</label>";
+                    echo "<label class=\"label label-info\">在任务里</label>";
                   }
                   else
                   {
-                    echo "<label class=\"label label-success\" style='cursor:pointer;' onclick='add2_book_shelf($book->id)'>加入书架</label>";
+                    echo "<label class=\"label label-success\" style='cursor:pointer;' onclick='add2_book_shelf($book->id)'>加入任务</label>";
                   }
                 ?>
 

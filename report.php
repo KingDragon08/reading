@@ -118,7 +118,7 @@
                 {
                     type : 'value',
                     min:0,
-                    max:100
+                    max:3
                 }
             ],
             series : [

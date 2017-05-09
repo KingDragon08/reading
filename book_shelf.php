@@ -538,13 +538,13 @@ if($role == "教师")
                 while($counter<count($lists))
                 {
               ?>
-                  <li><a href="book_shelf.php?id=<?php echo $lists[$counter]->id;?>">教师书单<?php echo $counter+1;?></a></li>
+                  <li><a href="book_shelf.php?id=<?php echo $lists[$counter]->id;?>">教师书单<?php echo $lists[$counter]->id;?></a></li>
               <?php
                   if(isset($_GET['id']))
                   {
-                    if(($counter+1)==$_GET['id'])
+                    if($lists[$counter]->id==$_GET['id'])
                     {
-                      echo "<script>$('#list_type').html('教师书单".($counter+1)."')</script>";
+                      echo "<script>$('#list_type').html('教师书单".$lists[$counter]->id."')</script>";
                     }
                   }
                   $counter++;

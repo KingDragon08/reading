@@ -154,8 +154,8 @@
                     type:'bar',
                     barCategoryGap:'50%',
                     data:[<?php
-                        if($class_students_count)
-                        {
+                        // if($class_students_count)
+                        // {
                           $score_percent_by_item = $user->get_score_percent_by_item_school2($id);
                           $out_string = "";
                           foreach($score_percent_by_item as $score)
@@ -165,11 +165,11 @@
                           }
                           $out_string = substr($out_string,0,-1);
                           echo $out_string;
-                        }
-                        else
-                        {
-                          echo "0,0,0,0,0";
-                        }
+                        // }
+                        // else
+                        // {
+                        //   echo "0,0,0,0,0";
+                        // }
                     ?>]
                 }
             ]
@@ -211,8 +211,8 @@
                   type:'bar',
                   barCategoryGap:'50%',
                   data:[<?php
-                      if($class_students_count)
-                      {
+                      // if($class_students_count)
+                      // {
                         $score_percent_by_item = $user->get_speech_percent_by_item_school_teacher($id);
                         $out_string = "";
                         foreach($score_percent_by_item as $score)
@@ -222,11 +222,11 @@
                         }
                         $out_string = substr($out_string,0,-1);
                         echo $out_string;
-                      }
-                      else
-                      {
-                        echo "0,0,0";
-                      }
+                      // }
+                      // else
+                      // {
+                      //   echo "0,0,0";
+                      // }
                   ?>]
               }
           ]

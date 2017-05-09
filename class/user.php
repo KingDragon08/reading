@@ -911,12 +911,15 @@
       {
         global $db;
         $user_id = $id;
-        $user_info = $db->get_row("select item1_socre,item2_socre,item3_socre,item4_socre,item5_socre from rd_user where id=$user_id");
-        $item1_socre = $user_info['item1_score'];
-        $item2_socre = $user_info['item2_score'];
-        $item3_socre = $user_info['item3_score'];
-        $item4_socre = $user_info['item4_score'];
-        $item5_socre = $user_info['item5_score'];
+        $user_info = $db->get_row("select item1_socre,item2_socre,item3_socre,"
+                                  ."item4_socre,item5_socre from rd_user where id=$user_id");
+        var_dump($user_info);
+        $item1_socre = $user_info->item1_score;
+        $item2_socre = $user_info->item2_score;
+        $item3_socre = $user_info->item3_score;
+        $item4_socre = $user_info->item4_score;
+        $item5_socre = $user_info->item5_score;
+        exit(0);
         //获取测试的总次数
         $times = $db->get_var("select count(*) from rd_user_exam_scores where user_id=$user_id");
         if($times<1)

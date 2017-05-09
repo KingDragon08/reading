@@ -126,7 +126,8 @@
                     data:[<?php
                         if($class_students_count)
                         {
-                          $score_percent_by_item = $user->get_score_percent_by_item_class();
+                          // $score_percent_by_item = $user->get_score_percent_by_item_class();
+                          $score_percent_by_item = $user->get_score_percent_by_item_school();
                           $out_string = "";
                           foreach($score_percent_by_item as $score)
                           {
@@ -183,7 +184,8 @@
                   data:[<?php
                       if($class_students_count)
                       {
-                        $score_percent_by_item = $user->get_speech_percent_by_item_class();
+                        // $score_percent_by_item = $user->get_speech_percent_by_item_class();
+                        $score_percent_by_item = $user->get_speech_percent_by_item_school();
                         $out_string = "";
                         foreach($score_percent_by_item as $score)
                         {
@@ -195,7 +197,7 @@
                       }
                       else
                       {
-                        echo "0,0,0,0,0";
+                        echo "0,0,0";
                       }
                   ?>]
               }

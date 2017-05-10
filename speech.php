@@ -93,6 +93,24 @@
             </div>
         </div>
      </div>
+
+     <?php
+     if($user->get_user_info()->can_speech==0)
+     {
+     ?>
+     <center>
+       <img src="img/gongchengshi.jpeg" style="margin-top:20px;"/>
+       <br>
+       <p class="gray" id="tips">
+         没有访问权限...
+       </p>
+     </center>
+     <?php
+       include("footer.php");
+       exit();
+     }
+     ?>
+
     <div class="container mt20 mb20">
       <?php
         $textbook = 0;

@@ -504,7 +504,7 @@
                                       value : [<?php
                                         echo $raddar_data[9].','.$raddar_data[8].','.$raddar_data[7].','.$raddar_data[6]
                                               .','.$raddar_data[5].','.$raddar_data[4].','.$raddar_data[3].','
-                                              .$raddar_data[2].','.$raddar_data[2].','.$raddar_data[0];
+                                              .$raddar_data[2].','.$raddar_data[1].','.$raddar_data[0];
                                       ?>],
                                       name : '难度等级'
                                   }
@@ -631,34 +631,239 @@
 
 
 
-
-        <div class="container mt20 mb20" style="height:300px;" id="graph4">
-        <?php
-          $yuedu_data = "";
-          if($user->get_students_by_class($class_id))
-          {
-              $yuedu_data = $user->get_class_report_score_4($class_id);
-              if($yuedu_data)
+        <div class="container">
+          <div class="col-lg-1">
+            <button type="button" class="btn btn-success mb10" id='kd_btn1' onclick="kd_change(1)" style="margin-top:90px;">阅读数量</button>
+            <button type="button" class="btn btn-default mb10" id='kd_btn2' onclick="kd_change(2)">阅读评分</button>
+            <button type="button" class="btn btn-default mb10" id='kd_btn3' onclick="kd_change(3)">朗读评分</button>
+          </div>
+          <script type="text/javascript">
+            $().ready(function(){
+              $("#graph5_1").hide();
+              $("#graph6").hide();
+            });
+            function kd_change(i)
+            {
+              if(i==1)
               {
-                $x = "";
-                $y = "";
-                foreach($yuedu_data as $item)
-                {
-                  $x .= "'".$item['name']."',";
-                  $y .= "'". (intval($item['num'])) ."',";
+                $("#kd_btn1").addClass("btn-success");
+                $("#kd_btn1").removeClass("btn-default");
+                $("#kd_btn2").removeClass("btn-success");
+                $("#kd_btn2").addClass("btn-default");
+                $("#kd_btn3").removeClass("btn-success");
+                $("#kd_btn3").addClass("btn-default");
+                $("#graph4").show();
+                $("#graph5_1").hide();
+                $("#graph6").hide();
+              }
+              if(i==2)
+              {
+                $("#kd_btn2").addClass("btn-success");
+                $("#kd_btn2").removeClass("btn-default");
+                $("#kd_btn1").removeClass("btn-success");
+                $("#kd_btn1").addClass("btn-default");
+                $("#kd_btn3").removeClass("btn-success");
+                $("#kd_btn3").addClass("btn-default");
+                $("#graph6").show();
+                $("#graph4").hide();
+                $("#graph5_1").hide();
+              }
+              if(i==3)
+              {
+                $("#kd_btn3").addClass("btn-success");
+                $("#kd_btn3").removeClass("btn-default");
+                $("#kd_btn2").removeClass("btn-success");
+                $("#kd_btn2").addClass("btn-default");
+                $("#kd_btn1").removeClass("btn-success");
+                $("#kd_btn1").addClass("btn-default");
+                $("#graph5_1").show();
+                $("#graph6").hide();
+                $("#graph4").hide();
+              }
+            }
+          </script>
+          <div class="col-lg-11" style="padding-right:0;">
+            <div style="height:300px; width:100%;" id="graph4">
+            <?php
+              $yuedu_data = "";
+              if($user->get_students_by_class($class_id))
+              {
+                  $yuedu_data = $user->get_class_report_score_4($class_id);
+                  if($yuedu_data)
+                  {
+                    $x = "";
+                    $y = "";
+                    foreach($yuedu_data as $item)
+                    {
+                      $x .= "'".$item['name']."',";
+                      $y .= "'". (intval($item['num'])) ."',";
+                    }
+                    $x = substr($x,0,-1);
+                    $y = substr($y,0,-1);
+            ?>
+                  <script type="text/javascript">
+                  var myChart_4 = echarts.init(document.getElementById('graph4'),'default');
+                  var option_4 = {
+                    title: {
+                        text: '阅读数量'
+                    },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    xAxis: {
+                        type: 'category',
+                        boundaryGap: false,
+                        data: [<?php echo $x;?>],
+                        axisLabel:{
+                          rotate:-90
+                        }
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [
+                        {
+                            name:'阅读数量',
+                            type:'line',
+                            data:[<?php echo $y;?>]
+                        }
+                    ]
+                  };
+                  myChart_4.setOption(option_4);
+                  </script>
+            <?php
                 }
-                $x = substr($x,0,-1);
-                $y = substr($y,0,-1);
-        ?>
+                else
+                {
+                  echo "暂无数据";
+                }
+              }
+              else
+              {
+                echo "班内没有学生";
+              }
+            ?>
+              </div>
+
+              <!--阅读评分-->
+              <div class="container" id="graph6" style="height:300px; width:100%; padding-right:0;">
+                <?php
+                  $students = $user->get_students_by_class($class_id);
+                  if($students)
+                  {
+                    $name_string = "";
+                    $data_string = "";
+                    foreach ($students as $student)
+                    {
+                      $name_string .= "'".$student->name."'";
+                      $name_string .= ",";
+                      $data_string .= $student->score;
+                      $data_string .= ",";
+                    }
+                    $name_string = substr($name_string,0,-1);
+                    $data_string = substr($data_string,0,-1);
+                  ?>
+                  <script type="text/javascript">
+                  var myChart_6 = echarts.init(document.getElementById('graph6'),'default');
+                  var option_6 = {
+                    title: {
+                        text: '阅读评分'
+                    },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    xAxis: {
+                        type: 'category',
+                        boundaryGap: false,
+                        data: [<?php echo $name_string;?>],
+                        axisLabel:{
+                          rotate:-90
+                        }
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [
+                        {
+                            name:'阅读评分',
+                            type:'line',
+                            data:[<?php echo $data_string;?>]
+                        }
+                    ]
+                  };
+                  myChart_6.setOption(option_6);
+                  </script>
+                  <?php
+                  }
+                  else
+                  {
+                    echo "班内没有学生";
+                  }
+                ?>
+              </div>
+
+
+
+
+
+              <div class="container" style="height:300px; width:100%; padding-right:0;" id="graph5_1">
+                <?php
+                  $data_1 = $user->get_class_report_score_5_1($class_id);
+                  $data_2 = $user->get_class_report_score_5_2($class_id);
+                  $data_3 = $user->get_class_report_score_5_3($class_id);
+                  $students = $data_1[0];
+                  $scores_1 = $data_1[1];
+                  $scores_2 = $data_2[1];
+                  $scores_3 = $data_3[1];
+                  $name_string = "";
+                  $data_string_1 = "";
+                  if($students)
+                  {
+                    for($i=0; $i<count($students); $i++)
+                    {
+                      $name_string .= "'".$students[$i]->name."'";
+                      $name_string .= ",";
+                      $data_string_1 .= $scores_1[$i]->average;
+                      $data_string_1 .= ",";
+                      $data_string_2 .= $scores_2[$i]->average;
+                      $data_string_2 .= ",";
+                      $data_string_3 .= $scores_3[$i]->average;
+                      $data_string_3 .= ",";
+                    }
+                    $name_string = substr($name_string,0,-1);
+                    $data_string_1 = substr($data_string_1,0,-1);
+                    $data_string_2 = substr($data_string_2,0,-1);
+                    $data_string_3 = substr($data_string_3,0,-1);
+                  }
+                  else
+                  {
+                      $name_string = "无";
+                      $data_string = "0";
+                  }
+                ?>
               <script type="text/javascript">
-              var myChart_4 = echarts.init(document.getElementById('graph4'),'default');
-              var option_4 = {
+              var myChart_5_1 = echarts.init(document.getElementById('graph5_1'),'default');
+              var option_5_1 = {
                 title: {
-                    text: '阅读数量',
-                    x:'center'
+                    text: '朗读评分'
                 },
                 tooltip: {
                     trigger: 'axis'
+                },
+                legend: {
+                    data:['单字','词语','短文']
                 },
                 grid: {
                     left: '3%',
@@ -669,173 +874,37 @@
                 xAxis: {
                     type: 'category',
                     boundaryGap: false,
-                    data: [<?php echo $x;?>],
-                    axisLabel:{
-                      rotate:-90
-                    }
+                    data: [<?php echo $name_string;?>]
                 },
                 yAxis: {
                     type: 'value'
                 },
                 series: [
                     {
-                        name:'阅读数量',
+                        name:'单字',
                         type:'line',
-                        data:[<?php echo $y;?>]
-                    }
-                ]
-              };
-              myChart_4.setOption(option_4);
-              </script>
-        <?php
-            }
-            else
-            {
-              echo "暂无数据";
-            }
-          }
-          else
-          {
-            echo "班内没有学生";
-          }
-        ?>
-          </div>
-
-
-          <div class="container mt20 mb20" id="graph6" style="height:300px;">
-            <?php
-              $students = $user->get_students_by_class($class_id);
-              if($students)
-              {
-                $name_string = "";
-                $data_string = "";
-                foreach ($students as $student)
-                {
-                  $name_string .= "'".$student->name."'";
-                  $name_string .= ",";
-                  $data_string .= $student->score;
-                  $data_string .= ",";
-                }
-                $name_string = substr($name_string,0,-1);
-                $data_string = substr($data_string,0,-1);
-              ?>
-              <script type="text/javascript">
-              var myChart_6 = echarts.init(document.getElementById('graph6'),'default');
-              var option_6 = {
-                title:{
-                  text:"阅读评分",
-                  x:'center'
-                },
-                tooltip : {
-                    trigger: 'axis'
-                },
-                toolbox: {
-                    show : false
-                },
-                calculable : true,
-                xAxis : [
-                    {
-                        type : 'category',
-                        axisLabel:{
-                          rotate:-90
-                        },
-                        data:[<?php echo $name_string;?>]
-                    }
-                ],
-                yAxis : [
-                    {
-                      type : 'value'
-                    }
-                ],
-                series : [
-                    {
-                        type:'bar',
-                        barCategoryGap:'50%',
-                        data:[<?php echo $data_string;?>]
-                    }
-                ]
-              };
-              myChart_6.setOption(option_6);
-              </script>
-              <?php
-              }
-              else
-              {
-                echo "班内没有学生";
-              }
-            ?>
-          </div>
-
-
-
-
-
-          <div class="container mt20 mb20" style="height:300px;" id="graph5_1">
-            <?php
-              $data = $user->get_class_report_score_5_1($class_id);
-              $students = $data[0];
-              $scores = $data[1];
-              $name_string = "";
-              $data_string = "";
-              if($students)
-              {
-                for($i=0; $i<count($students); $i++)
-                {
-                  $name_string .= "'".$students[$i]->name."'";
-                  $name_string .= ",";
-                  $data_string .= $scores[$i]->average;
-                  $data_string .= ",";
-                }
-                $name_string = substr($name_string,0,-1);
-                $data_string = substr($data_string,0,-1);
-              }
-              else
-              {
-                  $name_string = "无";
-                  $data_string = "0";
-              }
-            ?>
-          <script type="text/javascript">
-            var myChart_5_1 = echarts.init(document.getElementById('graph5_1'),'default');
-            var option_5_1 = {
-            title:{
-              text:"语音评分(单字)",
-              x:'center'
-            },
-            tooltip : {
-                trigger: 'axis'
-            },
-            toolbox: {
-                show : false
-            },
-            calculable : true,
-            xAxis : [
-                {
-                    type : 'category',
-                    axisLabel:{
-                      rotate:-90
+                        data:[<?php echo $data_string_1;?>]
                     },
-                    data:[<?php echo $name_string;?>]
-                }
-            ],
-            yAxis : [
-                {
-                  type : 'value'
-                }
-            ],
-            series : [
-                {
-                    type:'bar',
-                    barCategoryGap:'50%',
-                    data:[<?php echo $data_string;?>]
-                }
-            ]
-          };
-          myChart_5_1.setOption(option_5_1);
-          </script>
+                    {
+                        name:'词语',
+                        type:'line',
+                        data:[<?php echo $data_string_2;?>]
+                    },
+                    {
+                        name:'短文',
+                        type:'line',
+                        data:[<?php echo $data_string_3;?>]
+                    }
+                ]
+              };
+              myChart_5_1.setOption(option_5_1);
+              </script>
+            </div>
+          </div>
         </div>
 
-        <div class="container mt20 mb20" style="height:300px;" id="graph5_2">
+
+        <!-- <div class="container mt20 mb20" style="height:300px;" id="graph5_2">
           <?php
             $data = $user->get_class_report_score_5_2($class_id);
             $students = $data[0];
@@ -963,7 +1032,7 @@
       };
       myChart_5_3.setOption(option_5_3);
       </script>
-    </div>
+    </div> -->
 
 
 

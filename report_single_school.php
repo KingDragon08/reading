@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="css/index.css" media="screen">
     <script type="text/javascript" src="js/jquery.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/echarts-all.js"></script>
     <title>乐智悦读-测评中心</title>
   </head>
   <body>
@@ -58,11 +59,7 @@
                 if($user->check_is_student($id))
                 {
             ?>
-            测评中心
-            <div class="float_right" style="margin-right:5.8em;">
-              <button class="btn btn-success active">全校能力值范围</button>
-              <button class="btn btn-success" onclick="location.href='report_single_class.php?id=<?php echo $_GET['id'];?>'">全班能力值范围</button>
-            </div>
+            本班学生成绩详情
             <?php
                 }
                 else
@@ -91,149 +88,382 @@
           if($role == "教师")
           {
         ?>
-          <div class="col-lg-6" style="height:300px;" id="graph1"></div>
-          <div class="col-lg-2" style="height:300px; padding:5px;">
-            <img src="img/rabbit.png" alt="" class="img-responsive" style="margin-top:80px;">
-          </div>
-          <div class="col-lg-4" style="height:300px;" id="graph2"></div>
-          <div class="col-lg-12" style="margin-top:30px; margin-bottom:20px;" id="">
-            <div style="width:847px; margin:0 auto;">
-              <img src="img/luobo.png" alt="" style="margin-left:<?php
-                  if($school_students_count)
-                  {
-                      echo 829*round(($school_students_count-$user->get_user_school_rank2($id)-1)/($school_students_count-1),2)-4;
-                      echo "px;";
+        <style media="screen">
+          .box{width:100%; padding:1.5em; min-height:515px; height:auto; overflow-y:auto; margin:0 auto; box-shadow:0 0 5px #999; border-radius:5px;}
+          .box_head{background:#824399; color:#fff; text-align:center; font-size:16px; border-radius:5px 5px 0 0; height:40px; line-height:40px;}
+          .box_graph{border:1px solid #824399; height:auto; box-shadow:0 0 5px #999; border-radius:0 0 5px 5px;}
+          .box_graph_item{position:relative; height:260px;}
+          .box_graph_item_title{position:absolute; left:0; top:40px; font-size:16px; color:#824399;}
+          .box_graph_graph{width:100%; height:100%;}
+        </style>
+        <div class="container mt20 mb20">
+          <div class="box">
+            <h4><?php echo $user->get_student_name($id);?>个人测评报告</h4>
+            <div class="col-lg-12 box_head">
+              全本阅读
+            </div>
+            <div class="col-lg-12 box_graph">
+              <div class="col-lg-4 box_graph_item">
+                <div class="box_graph_item_title">阅读结构</div>
+                <div class="box_graph_graph" id="box_graph1"></div>
+              </div>
+              <?php
+                $pie_data = "";
+                $pie_data = $user->get_single_student_report_1($id);
+                if(count($pie_data)>0)
+                {
+            ?>
+                  <script type="text/javascript">
+                      var myChart_1 = echarts.init(document.getElementById('box_graph1'),'default');
+                      var option_1 = {
+                          tooltip : {
+                              trigger: 'item',
+                              formatter: "{b} : {c} ({d}%)"
+                          },
+                          legend: {
+                              orient: 'horizontal',
+                              left: 'right',
+                              data: [<?php
+                                    $out_string = '';
+                                    $s_string = '';
+                                    foreach($pie_data as $item)
+                                    {
+                                      if($item->num>0)
+                                      {
+                                          $out_string .= "'".$item->name."'";
+                                          $out_string .= ',';
+                                          $s_string .= "{value:$item->num,name:'$item->name'},";
+                                      }
+                                    }
+                                    $out_string = substr($out_string,0,-1);
+                                    $s_string = substr($s_string,0,-1);
+                                    echo $out_string;
+                              ?>]
+                          },
+                          series : [
+                              {
+                                  name: '读书类别',
+                                  type: 'pie',
+                                  radius : '50%',
+                                  center: ['50%', '60%'],
+                                  data:[<?php echo $s_string;?>],
+                                  itemStyle: {
+                                      emphasis: {
+                                          shadowBlur: 10,
+                                          shadowOffsetX: 1,
+                                          shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                      }
+                                  }
+                              }
+                          ]
+                      };
+                    myChart_1.setOption(option_1);
+                  </script>
+            <?php
                   }
                   else
                   {
-                    echo 0;
-                  }?>">
-              <img src="img/biaochi.png" alt="">
-              <div style="width:100%; height:30px; line-height:30px; text-align:center; font-size:16px; margin-top:10px;">
-                全校能力值范围
+                    echo "暂时没有数据";
+                  }
+              ?>
+              <div class="col-lg-4 box_graph_item">
+                <div class="box_graph_item_title">阅读能力</div>
+                <div class="box_graph_graph" id="box_graph2"></div>
               </div>
-              <span style="float:right; margin-right:6em; font-size:14px; color:#999; margin-top:-22px;">
-                共：<?php echo $school_students_count;?>人
-              </span>
-            </div>
-          </div>
-          <script type="text/javascript" src="js/echarts-all.js"></script>
-          <script type="text/javascript">
-            //第一个图
-            var myChart_1 = echarts.init(document.getElementById('graph1'),'default');
-            var option_1 = {
-            title : {
-                text: '<?php echo $user->get_student_name($id);?>的阅读－图书项测评结果'
-            },
-            tooltip : {
-                trigger: 'axis'
-            },
-            toolbox: {
-                show : true,
-                feature : {
-                    dataView : {show: true, readOnly: false},
-                    saveAsImage : {show: true}
-                }
-            },
-            calculable : true,
-            xAxis : [
-                {
-                    type : 'category',
-                    data : ['细节认知','信息获取','直接推论','组织概括','批判思考']
-                }
-            ],
-            yAxis : [
-                {
-                    type : 'value',
-                    min:0,
-                    max:3
-                }
-            ],
-            series : [
-                {
-                    type:'bar',
-                    barCategoryGap:'50%',
-                    data:[<?php
-                        // if($school_students_count)
-                        // {
-                          $score_percent_by_item = $user->get_score_percent_by_item_school2($id);
-                          $out_string = "";
-                          foreach($score_percent_by_item as $score)
-                          {
-                              $out_string .= $score;
-                              $out_string .= ',';
-                          }
-                          $out_string = substr($out_string,0,-1);
-                          echo $out_string;
-                        // }
-                        // else
-                        // {
-                        //   echo "100,100,100,100,100";
-                        // }
-                    ?>]
-                }
-            ]
-          };
-          myChart_1.setOption(option_1);
-
-          //第二个图
-          var myChart_2 = echarts.init(document.getElementById('graph2'),'default');
-          var option_2 = {
-          title : {
-              text: '<?php echo $user->get_student_name($id);?>的普通话测评结果'
-          },
-          tooltip : {
-              trigger: 'axis'
-          },
-          toolbox: {
-              show : true,
-              feature : {
-                  dataView : {show: true, readOnly: false},
-                  saveAsImage : {show: true}
-              }
-          },
-          calculable : true,
-          xAxis : [
-              {
-                type : 'category',
-                data : ['单字','词语','短文']
-              }
-          ],
-          yAxis : [
-              {
-                type : 'value',
-                min:0,
-                max:100
-              }
-          ],
-          series : [
-              {
-                  type:'bar',
-                  barCategoryGap:'50%',
-                  data:[<?php
-                      // if($school_students_count)
-                      // {
-                        $score_percent_by_item = $user->get_speech_percent_by_item_school_teacher($id);
-                        $out_string = "";
-                        foreach($score_percent_by_item as $score)
-                        {
-                            $out_string .= $score;
-                            $out_string .= ',';
+              <?php
+                $score_percent_by_item = $user->get_score_percent_by_item_school2($id);
+              ?>
+              <script type="text/javascript">
+              var myChart_2 = echarts.init(document.getElementById('box_graph2'),'default');
+              var option_2 = {
+                    tooltip : {
+                        trigger: 'axis'
+                    },
+                    polar : [
+                       {
+                           radius:80,
+                           indicator : [
+                               { text: '细节认知',max:3},
+                               { text: '信息获取',max:3},
+                               { text: '直接推论',max:3},
+                               { text: '组织概括',max:3},
+                               { text: '批判思考',max:3}
+                            ]
                         }
-                        $out_string = substr($out_string,0,-1);
-                        echo $out_string;
-                      // }
-                      // else
-                      // {
-                      //   echo "0,0,0";
-                      // }
-                  ?>]
+                    ],
+                    calculable : true,
+                    series : [
+                        {
+                            name: '阅读能力',
+                            type: 'radar',
+                            data : [
+                                {
+                                    value : [<?php echo implode(",",$score_percent_by_item)?>],
+                                    name : '阅读能力'
+                                }
+                            ]
+                        }
+                    ]
+                };
+                myChart_2.setOption(option_2);
+              </script>
+              <div class="col-lg-4 box_graph_item">
+                <div class="box_graph_item_title">阅读难度</div>
+                <div class="box_graph_graph" id="box_graph3"></div>
+              </div>
+            </div>
+            <?php
+            $raddar_data = $user->get_single_student_report_2($id);
+            $max = 1;
+            foreach($raddar_data as $data)
+            {
+              if($data>$max)
+              {
+                $max = $data;
               }
-          ]
-          };
-          myChart_2.setOption(option_2);
-          </script>
+            }
+          ?>
+            <script type="text/javascript">
+            var myChart_3 = echarts.init(document.getElementById('box_graph3'),'default');
+            var option_3 = {
+                  tooltip : {
+                      trigger: 'axis'
+                  },
+                  polar : [
+                     {
+                         radius:80,
+                         indicator : [
+                             { text: '10级',max:<?php echo $max;?>},
+                             { text: '9级',max:<?php echo $max;?>},
+                             { text: '8级',max:<?php echo $max;?>},
+                             { text: '7级',max:<?php echo $max;?>},
+                             { text: '6级',max:<?php echo $max;?>},
+                             { text: '5级',max:<?php echo $max;?>},
+                             { text: '4级',max:<?php echo $max;?>},
+                             { text: '3级',max:<?php echo $max;?>},
+                             { text: '2级',max:<?php echo $max;?>},
+                             { text: '1级',max:<?php echo $max;?>}
+                          ]
+                      }
+                  ],
+                  calculable : true,
+                  series : [
+                      {
+                          name: '阅读难度',
+                          type: 'radar',
+                          data : [
+                              {
+                                  value : [<?php
+                                    echo $raddar_data[9].','.$raddar_data[8].','.$raddar_data[7].','.$raddar_data[6]
+                                          .','.$raddar_data[5].','.$raddar_data[4].','.$raddar_data[3].','
+                                          .$raddar_data[2].','.$raddar_data[1].','.$raddar_data[0];
+                                  ?>],
+                                  name : '阅读难度'
+                              }
+                          ]
+                      }
+                  ]
+              };
 
+              myChart_3.setOption(option_3);
+            </script>
+            <div class="col-lg-12 box_head mt20">
+              语音朗读
+            </div>
+            <div class="col-lg-12 box_graph">
+              <div class="col-lg-4 box_graph_item">
+                <div class="box_graph_item_title">单字</div>
+                <div class="box_graph_graph" id="box_graph4"></div>
+              </div>
+
+              <?php
+              $raddar_data = $user->get_single_student_report_3($id,'zi');
+              $max = 1;
+              foreach($raddar_data as $data)
+              {
+                if($data>$max)
+                {
+                  $max = $data;
+                }
+              }
+            ?>
+              <script type="text/javascript">
+              var myChart_4 = echarts.init(document.getElementById('box_graph4'),'default');
+              var option_4 = {
+                    tooltip : {
+                        trigger: 'axis'
+                    },
+                    polar : [
+                       {
+                           radius:80,
+                           indicator : [
+                               { text: '100分档',max:<?php echo $max;?>},
+                               { text: '90分档',max:<?php echo $max;?>},
+                               { text: '80分档',max:<?php echo $max;?>},
+                               { text: '70分档',max:<?php echo $max;?>},
+                               { text: '60分档',max:<?php echo $max;?>},
+                               { text: '50分档',max:<?php echo $max;?>},
+                               { text: '40分档',max:<?php echo $max;?>},
+                               { text: '30分档',max:<?php echo $max;?>},
+                               { text: '20分档',max:<?php echo $max;?>},
+                               { text: '10分档',max:<?php echo $max;?>}
+                            ]
+                        }
+                    ],
+                    calculable : true,
+                    series : [
+                        {
+                            name: '得分区间',
+                            type: 'radar',
+                            data : [
+                                {
+                                    value : [<?php
+                                      echo $raddar_data[9].','.$raddar_data[8].','.$raddar_data[7].','.$raddar_data[6]
+                                            .','.$raddar_data[5].','.$raddar_data[4].','.$raddar_data[3].','
+                                            .$raddar_data[2].','.$raddar_data[1].','.$raddar_data[0];
+                                    ?>],
+                                    name : '得分区间'
+                                }
+                            ]
+                        }
+                    ]
+                };
+
+                myChart_4.setOption(option_4);
+              </script>
+
+              <div class="col-lg-4 box_graph_item">
+                <div class="box_graph_item_title">词语</div>
+                <div class="box_graph_graph" id="box_graph5"></div>
+              </div>
+
+
+              <?php
+              $raddar_data = $user->get_single_student_report_3($id,'ci');
+              $max = 1;
+              foreach($raddar_data as $data)
+              {
+                if($data>$max)
+                {
+                  $max = $data;
+                }
+              }
+            ?>
+              <script type="text/javascript">
+              var myChart_5 = echarts.init(document.getElementById('box_graph5'),'default');
+              var option_5 = {
+                    tooltip : {
+                        trigger: 'axis'
+                    },
+                    polar : [
+                       {
+                           radius:80,
+                           indicator : [
+                             { text: '100分档',max:<?php echo $max;?>},
+                             { text: '90分档',max:<?php echo $max;?>},
+                             { text: '80分档',max:<?php echo $max;?>},
+                             { text: '70分档',max:<?php echo $max;?>},
+                             { text: '60分档',max:<?php echo $max;?>},
+                             { text: '50分档',max:<?php echo $max;?>},
+                             { text: '40分档',max:<?php echo $max;?>},
+                             { text: '30分档',max:<?php echo $max;?>},
+                             { text: '20分档',max:<?php echo $max;?>},
+                             { text: '10分档',max:<?php echo $max;?>}
+                            ]
+                        }
+                    ],
+                    calculable : true,
+                    series : [
+                        {
+                            name: '得分区间',
+                            type: 'radar',
+                            data : [
+                                {
+                                    value : [<?php
+                                      echo $raddar_data[9].','.$raddar_data[8].','.$raddar_data[7].','.$raddar_data[6]
+                                            .','.$raddar_data[5].','.$raddar_data[4].','.$raddar_data[3].','
+                                            .$raddar_data[2].','.$raddar_data[1].','.$raddar_data[0];
+                                    ?>],
+                                    name : '得分区间'
+                                }
+                            ]
+                        }
+                    ]
+                };
+
+                myChart_5.setOption(option_5);
+              </script>
+
+
+              <div class="col-lg-4 box_graph_item">
+                <div class="box_graph_item_title">短文</div>
+                <div class="box_graph_graph" id="box_graph6"></div>
+              </div>
+            </div>
+
+            <?php
+            $raddar_data = $user->get_single_student_report_3($id,'ju');
+            $max = 1;
+            foreach($raddar_data as $data)
+            {
+              if($data>$max)
+              {
+                $max = $data;
+              }
+            }
+          ?>
+            <script type="text/javascript">
+            var myChart_6 = echarts.init(document.getElementById('box_graph6'),'default');
+            var option_6 = {
+                  tooltip : {
+                      trigger: 'axis'
+                  },
+                  polar : [
+                     {
+                         radius:80,
+                         indicator : [
+                           { text: '100分档',max:<?php echo $max;?>},
+                           { text: '90分档',max:<?php echo $max;?>},
+                           { text: '80分档',max:<?php echo $max;?>},
+                           { text: '70分档',max:<?php echo $max;?>},
+                           { text: '60分档',max:<?php echo $max;?>},
+                           { text: '50分档',max:<?php echo $max;?>},
+                           { text: '40分档',max:<?php echo $max;?>},
+                           { text: '30分档',max:<?php echo $max;?>},
+                           { text: '20分档',max:<?php echo $max;?>},
+                           { text: '10分档',max:<?php echo $max;?>}
+                          ]
+                      }
+                  ],
+                  calculable : true,
+                  series : [
+                      {
+                          name: '得分区间',
+                          type: 'radar',
+                          data : [
+                              {
+                                  value : [<?php
+                                    echo $raddar_data[9].','.$raddar_data[8].','.$raddar_data[7].','.$raddar_data[6]
+                                          .','.$raddar_data[5].','.$raddar_data[4].','.$raddar_data[3].','
+                                          .$raddar_data[2].','.$raddar_data[1].','.$raddar_data[0];
+                                  ?>],
+                                  name : '得分区间'
+                              }
+                          ]
+                      }
+                  ]
+              };
+
+              myChart_6.setOption(option_6);
+            </script>
+
+
+
+
+
+
+          </div>
+        </div>
         <?php
           }
           else
@@ -248,21 +478,4 @@
       include_once("footer.php")
     ?>
   </body>
-  <script type="text/javascript">
-    $().ready(function(){
-      $("#menu").load(function () {
-          var mainheight = $(this).contents().find("body").height() + 100;
-          $(this).height(mainheight);
-      });
-      $("#main").load(function () {
-          // var mainheight = $(this).contents().find("body").offsetHeight;
-          // $(this).height(mainheight);
-          var iframe = document.getElementById("main");
-          var bHeight = iframe.contentWindow.document.body.scrollHeight;
-          var dHeight = iframe.contentWindow.document.documentElement.scrollHeight;
-          var height = Math.max(bHeight, dHeight);
-          iframe.height = height;
-      });
-    });
-  </script>
 </html>

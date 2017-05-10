@@ -60,7 +60,16 @@
         </ul>
       </div>
     <!-- main nav end -->
-
+    <?php
+    if($user->get_user_info()->can_fullreading==0)
+    {
+      echo '<div class="container mt20 mb20">';
+      $common->tips("没有访问权限");
+      echo '</div>';
+      include("footer.php");
+      exit();
+    }
+    ?>
 
 
 

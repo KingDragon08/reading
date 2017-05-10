@@ -97,6 +97,25 @@
         </div>
       </div>
     <!-- division panel end -->
+
+    <?php
+    if($user->get_user_info()->can_fullreading==0)
+    {
+    ?>
+    <center>
+      <img src="img/gongchengshi.jpeg" style="margin-top:20px;"/>
+      <br>
+      <p class="gray" id="tips">
+        没有访问权限...
+      </p>
+    </center>
+    <?php
+      include("footer.php");
+      exit();
+    }
+    ?>
+
+
     <!-- book panel start -->
     <div class="container mt20">
         <div class="col-lg-12">
@@ -111,12 +130,12 @@
                   <h4><?php echo $book_info->name; ?></h4>
                   <p class="f12 gray">权威版本、收藏经典</p>
                   <span class="single_book_info">
-                    <font>作者：<?php echo $book_info->author; ?></font>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <font>出版社：<?php echo $book_info->press; ?></font>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <font>出版时间：<?php echo date("Y-m-d",$book_info->presstime); ?></font>
+                    <font>作者：<?php echo $book_info->author; ?></font><br>
+                    <font>出版社：<?php echo $book_info->press; ?></font><br>
+                    <font>出版时间：<?php echo $book_info->presstime ?></font>
                   </span>
                 </div>
-                <div class="col-lg-12 mt10" style="padding:0;">
+                <div class="col-lg-12 mt10 mb10" style="padding:0;">
                   <a href="#comment" class="label label-lg label-default label-circle mr10">&nbsp;写书评&nbsp;</a>
                   <?php
                     //检测是否已经答过本书的读书笔记

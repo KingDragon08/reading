@@ -775,6 +775,36 @@
       }
 
       /**
+      *教师用
+      *获取单个学生语音成绩按得分分十档报告
+      **/
+      function get_single_student_report_3($user_id,$type)
+      {
+        global $db;
+        $sql = "select scores from rd_speech_exam_results where user_id=$user_id and type='$type'";
+        $scores = $db->get_results($sql);
+        $ret = [0,0,0,0,0,0,0,0,0,0];
+        if(count($scores))
+        {
+          foreach ($scores as $score)
+          {
+            $temp = json_decode($score->scores);
+            for($i=0; $i<count($temp); $i++)
+            {
+              $index = intval($temp[$i]/10);
+              if($index>9)
+              {
+                $index = 9;
+              }
+              $ret[$index]++;
+            }
+          }
+        }
+        return $ret;
+      }
+
+
+      /**
       *学校级别
       *获取语音测评的排行
       **/
@@ -1219,6 +1249,37 @@
 
       /**
       *教师用
+      *获取单个学生的阅读结构报告
+      **/
+      function get_single_student_report_1($user_id)
+      {
+        global $db;
+        //取出所有的书的类型
+        $sql = "select id,name from rd_book_type";
+        $book_types = $db->get_results($sql);
+        //取出学生看过的所有的书
+        $sql = "select count(id) as total,type from rd_book where id in(".
+                "select book_id from rd_user_exam_scores where user_id=$user_id and hege=1) group by type";
+        $datas = $db->get_results($sql);
+        foreach($book_types as $type)
+        {
+          $type->num = 0;
+          if(count($datas))
+          {
+            foreach($datas as $data)
+            {
+              if($data->type == $type->id)
+              {
+                $type->num = $data->total;
+              }
+            }
+          }
+        }
+        return $book_types;
+      }
+
+      /**
+      *教师用
       *获取教师测评中心的第三个图数据
       **/
       function get_class_report_score_3($class_id)
@@ -1234,6 +1295,30 @@
           foreach($datas as $data)
           {
             $ret[$data->level-1] = $data->total;
+          }
+        }
+        return $ret;
+      }
+
+      /**
+      *教师用
+      *获取单个学生的阅读难度等级报告
+      **/
+      function get_single_student_report_2($user_id)
+      {
+        global $db;
+        global $db;
+        $sql = "select count(id) as total,level from rd_book where id in(".
+                "select DISTINCT(book_id) from rd_user_exam_scores where user_id=$user_id and hege=1)group by level";
+        $datas = $db->get_results($sql);
+        $ret = [0,0,0,0,0,0,0,0,0,0];
+        if(count($datas)>0)
+        {
+          foreach($datas as $data)
+          {
+            $index = $data->level-1;
+            $num = $data->total;
+            $ret[$index] = $num;
           }
         }
         return $ret;

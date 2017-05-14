@@ -28,6 +28,7 @@
             }
             echo '<a href="home.php" class="noline">你好,'.$user->get_user_info()->name.$role_type.
                 '&nbsp;&nbsp;&nbsp;&nbsp;<img class="headimg" src="'.$user->get_user_info()->headimg.'"/></a>';
+            echo "<i class='glyphicon glyphicon-envelope'>未读消息(". $user->get_unread_msg_number() .")</i>";
             echo '&nbsp;&nbsp;&nbsp;&nbsp;<a href="controller/logout.php">退出</a>';
           }
         ?>

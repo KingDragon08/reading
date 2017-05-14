@@ -723,6 +723,27 @@
       }
 
       /**
+      *获取学生读书合格的本数和字数
+      **/
+      function get_read_book_number_and_wordcount()
+      {
+        global $db;
+        $user_id = $this->get_user_id();
+        $sql = "select wordcount from rd_book where id in(select DISTINCT(book_id) from ".
+                "rd_user_exam_scores where user_id=1 and hege=1)";
+        $result = $db->get_results($sql);
+        $ret = [];
+        $ret['num'] = count($result);
+        $wordcount = 0;
+        for($i=0; $i<count($result); $i++)
+        {
+          $wordcount += $result[$i]->wordcount;
+        }
+        $ret['wordcount'] = $wordcount;
+        return $ret;
+      }
+
+      /**
       *学校级别
       *获取5类题型的得分比例
       *0:细节认知,1:信息提取,2:意义建构,3:直接推论,4:组织概括

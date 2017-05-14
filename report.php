@@ -95,7 +95,8 @@
             var myChart_1 = echarts.init(document.getElementById('graph1'),'default');
             var option_1 = {
             title : {
-                text: '<?php echo $user_info->name?>的阅读－图书项测评结果'
+                text: '<?php echo $user_info->name?>的阅读－图书项测评结果',
+                subtext: '共读<?php $kd_data = $user->get_read_book_number_and_wordcount(); echo $kd_data['num']; ?>本  <?php echo $kd_data['wordcount']; ?>字'
             },
             tooltip : {
                 trigger: 'axis'

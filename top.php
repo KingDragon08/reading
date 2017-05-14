@@ -30,7 +30,7 @@
                 '&nbsp;&nbsp;&nbsp;&nbsp;<img class="headimg" src="'.$user->get_user_info()->headimg.'"/></a>';
             if($user->get_unread_msg_number()>0)
             {
-                echo "&nbsp;&nbsp;<i class='glyphicon glyphicon-envelope'>&nbsp;</i>未读消息(". $user->get_unread_msg_number() .")";
+                echo "&nbsp;&nbsp;<a href='home.php'><i class='glyphicon glyphicon-envelope red f12'>未读消息(". $user->get_unread_msg_number() .")</i></a>";
             }
             echo '&nbsp;&nbsp;&nbsp;&nbsp;<a href="controller/logout.php">退出</a>';
           }

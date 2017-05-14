@@ -195,7 +195,13 @@
                 foreach($endtimes as $endtime)
                 {
             ?>
-                <li><a href="javascript:void(0);" onclick="endtime_change(<?php echo $endtime->endtime?>)"><?php echo date('Y-m-d',$endtime->endtime)?></a></li>
+                <li><a href="javascript:void(0);" onclick="endtime_change(<?php echo $endtime->endtime?>)">
+                  <?php
+                    $time_string = date('Y-m-d',$endtime->endtime);
+                    $time_string = $time_string=="1970-01-01" ? "自选书单" : $time_string;
+                    echo $time_string;
+                  ?>
+                </a></li>
             <?php
                 }
               }

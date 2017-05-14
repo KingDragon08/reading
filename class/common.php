@@ -534,7 +534,7 @@ class Common
     function get_books_task_endtimes()
     {
       global $db;
-      $sql = "select endtime from rd_user_read_book group by endtime order by endtime asc";
+      $sql = "select endtime from rd_user_read_book group by endtime order by endtime desc";
       return $db->get_results($sql);
     }
 

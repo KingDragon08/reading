@@ -281,70 +281,7 @@
             <div class="col-lg-12 box_head mt20">
               语音朗读
             </div>
-            <div class="col-lg-12 box_graph">
-
-
-
-
-              
-
-              <div class="col-lg-6 box_graph_item">
-                <div class="box_graph_item_title">朗读单项平均值</div>
-                <div class="box_graph_graph" id="box_graph5"></div>
-              </div>
-
-              <script type="text/javascript">
-
-              var myChart_5 = echarts.init(document.getElementById('box_graph5'),'default');
-              var option_5 = {
-                tooltip : {
-                    trigger: 'axis'
-                },
-                toolbox: {
-                    show : true,
-                    feature : {
-                        dataView : {show: true, readOnly: false},
-                        saveAsImage : {show: true}
-                    }
-                },
-                calculable : true,
-                xAxis : [
-                    {
-                      type : 'category',
-                      data : ['单字','词语','短文']
-                    }
-                ],
-                yAxis : [
-                    {
-                      type : 'value',
-                      min:0,
-                      max:100
-                    }
-                ],
-                series : [
-                    {
-                        type:'bar',
-                        barCategoryGap:'50%',
-                        data:[<?php
-                              // $score_percent_by_item = $user->get_speech_percent_by_item_school_teacher($id);
-                              // $out_string = "";
-                              // foreach($score_percent_by_item as $score)
-                              // {
-                              //     $out_string .= $score;
-                              //     $out_string .= ',';
-                              // }
-                              // $out_string = substr($out_string,0,-1);
-                              echo $out_string;
-                        ?>]
-                    }
-                ]
-                };
-                myChart_5.setOption(option_5);
-              </script>
-
-
-
-          </div>
+            
         </div>
         <?php
           }

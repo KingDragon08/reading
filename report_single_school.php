@@ -285,7 +285,7 @@
 
 
               <div class="col-lg-6 box_graph_item">
-                <div class="box_graph_item_title">朗读均衡值</div>
+                <div class="box_graph_item_title" style="top:10px;">朗读均衡值</div>
                 <div class="box_graph_graph" id="box_graph4"></div>
               </div>
 
@@ -305,7 +305,7 @@
                   tooltip: {
                       trigger: 'axis'
                   },
-                  radar: [
+                  polar: [
                       {
                           indicator: [
                               {text: '单字', max: 100},
@@ -337,7 +337,7 @@
               </script>
 
               <div class="col-lg-6 box_graph_item">
-                <div class="box_graph_item_title">朗读单项平均值</div>
+                <div class="box_graph_item_title" style="top:10px;">朗读单项平均值</div>
                 <div class="box_graph_graph" id="box_graph5"></div>
               </div>
 
@@ -347,13 +347,6 @@
               var option_5 = {
                 tooltip : {
                     trigger: 'axis'
-                },
-                toolbox: {
-                    show : true,
-                    feature : {
-                        dataView : {show: true, readOnly: false},
-                        saveAsImage : {show: true}
-                    }
                 },
                 calculable : true,
                 xAxis : [

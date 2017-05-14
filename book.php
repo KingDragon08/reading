@@ -132,7 +132,10 @@
                   <span class="single_book_info">
                     <font>作者：<?php echo $book_info->author; ?></font><br>
                     <font>出版社：<?php echo $book_info->press; ?></font><br>
-                    <font>出版时间：<?php echo $book_info->presstime ?></font>
+                    <font>出版时间：<?php echo $book_info->presstime ?></font><br>
+                    <font>难度等级：<?php echo $book_info->level ?></font><br>
+                    <font>字数：<?php echo $book_info->wordcount ?></font><br>
+                    <font>积分：<?php echo $book_info->score ?></font>
                   </span>
                 </div>
                 <div class="col-lg-12 mt10 mb10" style="padding:0;">

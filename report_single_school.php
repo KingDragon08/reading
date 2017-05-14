@@ -123,12 +123,12 @@
                 calculable : true,
                 xAxis : [
                     {
-                        type : 'value'
+                        type : 'value',
+                        max:3
                     },
                     axisLabel:{
                       rotate:-90
-                    },
-                    max:3
+                    }
                 ],
                 yAxis : [
                     {

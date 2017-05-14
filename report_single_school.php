@@ -302,33 +302,35 @@
               <script type="text/javascript">
               var myChart_4 = echarts.init(document.getElementById('box_graph4'),'default');
               var option_4 = {
-                    tooltip : {
-                        trigger: 'axis'
-                    },
-                    radar : [
-                       {
-                           radius:80,
-                           indicator : [
-                               { text: '单字',max:100},
-                               { text: '词语',max:100},
-                               { text: '短文',max:100}
-                            ]
-                        }
-                    ],
-                    calculable : true,
-                    series : [
-                        {
-                            name: '朗读均衡值',
-                            type: 'radar',
-                            itemStyle: {normal: {areaStyle: {type: 'default'}}},
-                            data : [
-                                {
-                                    value : [<?php echo $out_string; ?>],
-                                    name : '朗读均衡值'
-                                }
-                            ]
-                        }
-                    ]
+                  tooltip: {
+                      trigger: 'axis'
+                  },
+                  radar: [
+                      {
+                          indicator: [
+                              {text: '单字', max: 100},
+                              {text: '词语', max: 100},
+                              {text: '短文', max: 100}
+                          ],
+                          center: ['25%','40%'],
+                          radius: 80
+                      }
+                  ],
+                  series: [
+                      {
+                          type: 'radar',
+                           tooltip: {
+                              trigger: 'item'
+                          },
+                          itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                          data: [
+                              {
+                                  value: [<?php echo $out_string; ?>],
+                                  name: '朗读均衡值'
+                              }
+                          ]
+                      }
+                  ]
                 };
 
                 myChart_4.setOption(option_4);

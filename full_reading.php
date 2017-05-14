@@ -179,21 +179,21 @@
             {
               $counter++;
         ?>
-          <div class="col-lg-4 mb20" style="height:210px;<?php if($counter%3==1 && $counter!=1) echo "clear:both;"?>">
+          <div class="col-lg-4 mb20" style="height:220px;<?php if($counter%3==1 && $counter!=1) echo "clear:both;"?>">
             <div class="col-lg-6 book_img">
               <a href="book.php?book=<?php echo $book->id;?>" target="_blank">
-                <img src="<?php echo $book->coverimg;?>" style="width:120px; height:160px;"/>
+                <img src="<?php echo $book->coverimg;?>" style="width:120px; height:160px; margin-top:30px;"/>
               </a>
             </div>
             <div class="col-lg-6 book_info" style="display:table; height:100%;">
               <div style="display:table-cell;">
                 <p>名字：<?php echo $book->name;?></p>
-                <p class="gray f12">作者：<?php echo $book->author;?></p>
-                <p class="gray f12">学段：<?php echo $book->grade;?></p>
-                <p class="gray f12">类型：<?php echo $book->type;?></p>
-                <p class="gray f12">难度等级：<?php echo $book->level;?></p>
-                <p class="gray f12">字数：<?php echo $book->wordcount;?></p>
-                <p class="gray f12">积分：<?php echo $book->score;?></p>
+                <p class="gray f12" style="margin-bottom:5px;">作者：<?php echo $book->author;?></p>
+                <p class="gray f12" style="margin-bottom:5px;">学段：<?php echo $book->grade;?></p>
+                <p class="gray f12" style="margin-bottom:5px;">类型：<?php echo $book->type;?></p>
+                <p class="gray f12" style="margin-bottom:5px;">难度等级：<?php echo $book->level;?></p>
+                <p class="gray f12" style="margin-bottom:5px;">字数：<?php echo $book->wordcount;?></p>
+                <p class="gray f12" style="margin-bottom:5px;">积分：<?php echo $book->score;?></p>
                 <?php
                   if($book->status == 1)
                   {

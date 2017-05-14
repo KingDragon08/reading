@@ -282,21 +282,24 @@
               语音朗读
             </div>
             <div class="col-lg-12 box_graph">
-              <div class="col-lg-4 box_graph_item">
-                <div class="box_graph_item_title">单字</div>
+
+
+
+
+              <div class="col-lg-6 box_graph_item">
+                <div class="box_graph_item_title">朗读均衡值</div>
                 <div class="box_graph_graph" id="box_graph4"></div>
               </div>
 
               <?php
-              $raddar_data = $user->get_single_student_report_3($id,'zi');
-              $max = 1;
-              foreach($raddar_data as $data)
-              {
-                if($data>$max)
+                $score_percent_by_item = $user->get_speech_percent_by_item_school_teacher($id);
+                $out_string = "";
+                foreach($score_percent_by_item as $score)
                 {
-                  $max = $data;
+                    $out_string .= $score;
+                    $out_string .= ',';
                 }
-              }
+                $out_string = substr($out_string,0,-1);
             ?>
               <script type="text/javascript">
               var myChart_4 = echarts.init(document.getElementById('box_graph4'),'default');
@@ -308,32 +311,22 @@
                        {
                            radius:80,
                            indicator : [
-                               { text: '100分档',max:<?php echo $max;?>},
-                               { text: '90分档',max:<?php echo $max;?>},
-                               { text: '80分档',max:<?php echo $max;?>},
-                               { text: '70分档',max:<?php echo $max;?>},
-                               { text: '60分档',max:<?php echo $max;?>},
-                               { text: '50分档',max:<?php echo $max;?>},
-                               { text: '40分档',max:<?php echo $max;?>},
-                               { text: '30分档',max:<?php echo $max;?>},
-                               { text: '20分档',max:<?php echo $max;?>},
-                               { text: '10分档',max:<?php echo $max;?>}
+                               { text: '单字',max:100},
+                               { text: '词语',max:100},
+                               { text: '短文',max:100}
                             ]
                         }
                     ],
+                    itemStyle: {normal: {areaStyle: {type: 'default'}}},
                     calculable : true,
                     series : [
                         {
-                            name: '得分区间',
+                            name: '朗读均衡值',
                             type: 'radar',
                             data : [
                                 {
-                                    value : [<?php
-                                      echo $raddar_data[9].','.$raddar_data[8].','.$raddar_data[7].','.$raddar_data[6]
-                                            .','.$raddar_data[5].','.$raddar_data[4].','.$raddar_data[3].','
-                                            .$raddar_data[2].','.$raddar_data[1].','.$raddar_data[0];
-                                    ?>],
-                                    name : '得分区间'
+                                    value : [<?php echo $out_string; ?>],
+                                    name : '朗读均衡值'
                                 }
                             ]
                         }
@@ -343,133 +336,59 @@
                 myChart_4.setOption(option_4);
               </script>
 
-              <div class="col-lg-4 box_graph_item">
-                <div class="box_graph_item_title">词语</div>
+              <div class="col-lg-6 box_graph_item">
+                <div class="box_graph_item_title">朗读单项平均值</div>
                 <div class="box_graph_graph" id="box_graph5"></div>
               </div>
 
-
-              <?php
-              $raddar_data = $user->get_single_student_report_3($id,'ci');
-              $max = 1;
-              foreach($raddar_data as $data)
-              {
-                if($data>$max)
-                {
-                  $max = $data;
-                }
-              }
-            ?>
               <script type="text/javascript">
+
               var myChart_5 = echarts.init(document.getElementById('box_graph5'),'default');
               var option_5 = {
-                    tooltip : {
-                        trigger: 'axis'
-                    },
-                    polar : [
-                       {
-                           radius:80,
-                           indicator : [
-                             { text: '100分档',max:<?php echo $max;?>},
-                             { text: '90分档',max:<?php echo $max;?>},
-                             { text: '80分档',max:<?php echo $max;?>},
-                             { text: '70分档',max:<?php echo $max;?>},
-                             { text: '60分档',max:<?php echo $max;?>},
-                             { text: '50分档',max:<?php echo $max;?>},
-                             { text: '40分档',max:<?php echo $max;?>},
-                             { text: '30分档',max:<?php echo $max;?>},
-                             { text: '20分档',max:<?php echo $max;?>},
-                             { text: '10分档',max:<?php echo $max;?>}
-                            ]
-                        }
-                    ],
-                    calculable : true,
-                    series : [
-                        {
-                            name: '得分区间',
-                            type: 'radar',
-                            data : [
-                                {
-                                    value : [<?php
-                                      echo $raddar_data[9].','.$raddar_data[8].','.$raddar_data[7].','.$raddar_data[6]
-                                            .','.$raddar_data[5].','.$raddar_data[4].','.$raddar_data[3].','
-                                            .$raddar_data[2].','.$raddar_data[1].','.$raddar_data[0];
-                                    ?>],
-                                    name : '得分区间'
-                                }
-                            ]
-                        }
-                    ]
+                tooltip : {
+                    trigger: 'axis'
+                },
+                toolbox: {
+                    show : true,
+                    feature : {
+                        dataView : {show: true, readOnly: false},
+                        saveAsImage : {show: true}
+                    }
+                },
+                calculable : true,
+                xAxis : [
+                    {
+                      type : 'category',
+                      data : ['单字','词语','短文']
+                    }
+                ],
+                yAxis : [
+                    {
+                      type : 'value',
+                      min:0,
+                      max:100
+                    }
+                ],
+                series : [
+                    {
+                        type:'bar',
+                        barCategoryGap:'50%',
+                        data:[<?php
+                              // $score_percent_by_item = $user->get_speech_percent_by_item_school_teacher($id);
+                              // $out_string = "";
+                              // foreach($score_percent_by_item as $score)
+                              // {
+                              //     $out_string .= $score;
+                              //     $out_string .= ',';
+                              // }
+                              // $out_string = substr($out_string,0,-1);
+                              echo $out_string;
+                        ?>]
+                    }
+                ]
                 };
-
                 myChart_5.setOption(option_5);
               </script>
-
-
-              <div class="col-lg-4 box_graph_item">
-                <div class="box_graph_item_title">短文</div>
-                <div class="box_graph_graph" id="box_graph6"></div>
-              </div>
-            </div>
-
-            <?php
-            $raddar_data = $user->get_single_student_report_3($id,'ju');
-            $max = 1;
-            foreach($raddar_data as $data)
-            {
-              if($data>$max)
-              {
-                $max = $data;
-              }
-            }
-          ?>
-            <script type="text/javascript">
-            var myChart_6 = echarts.init(document.getElementById('box_graph6'),'default');
-            var option_6 = {
-                  tooltip : {
-                      trigger: 'axis'
-                  },
-                  polar : [
-                     {
-                         radius:80,
-                         indicator : [
-                           { text: '100分档',max:<?php echo $max;?>},
-                           { text: '90分档',max:<?php echo $max;?>},
-                           { text: '80分档',max:<?php echo $max;?>},
-                           { text: '70分档',max:<?php echo $max;?>},
-                           { text: '60分档',max:<?php echo $max;?>},
-                           { text: '50分档',max:<?php echo $max;?>},
-                           { text: '40分档',max:<?php echo $max;?>},
-                           { text: '30分档',max:<?php echo $max;?>},
-                           { text: '20分档',max:<?php echo $max;?>},
-                           { text: '10分档',max:<?php echo $max;?>}
-                          ]
-                      }
-                  ],
-                  calculable : true,
-                  series : [
-                      {
-                          name: '得分区间',
-                          type: 'radar',
-                          data : [
-                              {
-                                  value : [<?php
-                                    echo $raddar_data[9].','.$raddar_data[8].','.$raddar_data[7].','.$raddar_data[6]
-                                          .','.$raddar_data[5].','.$raddar_data[4].','.$raddar_data[3].','
-                                          .$raddar_data[2].','.$raddar_data[1].','.$raddar_data[0];
-                                  ?>],
-                                  name : '得分区间'
-                              }
-                          ]
-                      }
-                  ]
-              };
-
-              myChart_6.setOption(option_6);
-            </script>
-
-
-
 
 
 

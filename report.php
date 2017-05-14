@@ -333,12 +333,13 @@
                 $class_score->item4 = 0;
                 $class_score->item5 = 0;
               }
+              $kd_nums = $user->get_students_read_num_and_wordcount();
             ?>
             <script type="text/javascript">
                 var myChart_1 = echarts.init(document.getElementById('graph1'),'default');
                 var option_1 = {
                 title:{
-                  text:"总平均分:<?php echo $class_score->avg_score;?>"
+                  text:"<?php echo "总平均分:".$class_score->avg_score."  共".$kd_nums['num1']."本  ".$kd_nums['num2']."字";?>"
                 },
                 tooltip : {
                     trigger: 'axis'

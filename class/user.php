@@ -730,7 +730,7 @@
         global $db;
         $user_id = $this->get_user_id();
         $sql = "select wordcount from rd_book where id in(select DISTINCT(book_id) from ".
-                "rd_user_exam_scores where user_id=1 and hege=1)";
+                "rd_user_exam_scores where user_id='$user_id' and hege=1)";
         $result = $db->get_results($sql);
         $ret = [];
         $ret['num'] = count($result);
@@ -1567,6 +1567,31 @@
             }
           }
         }
+        return $ret;
+      }
+
+      /**
+      *教师测评中心学生读书总数和字数
+      **/
+      function get_students_read_num_and_wordcount()
+      {
+        global $db;
+        $user_id = $this->get_user_id();
+        $ret = [];
+        $students = $this->get_students();
+        $num1 = 0;
+        $num2 = 0;
+        for($i=0; $i<count($students); $i++)
+        {
+          $id = $students[$i]->id;
+          $sql = "select count(id) as num1,sum(wordcount) as num2 from rd_book where id in(select DISTINCT(book_id) from ".
+                  "rd_user_exam_scores where user_id='$id' and hege=1)";
+          $row = $db->get_row($sql);
+          $num1 += $row->num1;
+          $num2 += $row->num2;
+        }
+        $ret['num1'] = $num1;
+        $ret['num2'] = $num2;
         return $ret;
       }
 

@@ -124,7 +124,11 @@
                 xAxis : [
                     {
                         type : 'value'
-                    }
+                    },
+                    axisLabel:{
+                      rotate:-90
+                    },
+                    max:3
                 ],
                 yAxis : [
                     {
@@ -272,7 +276,7 @@
               myChart_3.setOption(option_3);
             </script>
 
-            
+
             <div class="col-lg-12 box_head mt20">
               语音朗读
             </div>

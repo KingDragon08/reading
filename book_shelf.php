@@ -262,10 +262,12 @@
       }
       if($books)
       {
+        $counter=0;
       foreach($books as $book)
       {
+        $counter++;
     ?>
-    <div class="col-lg-4 mb20">
+    <div class="col-lg-4 mb20" <?php if($counter%3==1 && $counter!=1) echo "style='clear:both;'"?>>
       <div class="col-lg-6 book_img">
         <a href="task.php?task=<?php echo $book->id;?>">
           <img src="<?php echo $book->coverimg; ?>" width="100%"/>
@@ -278,7 +280,7 @@
           <p class="gray f12">剩余时间：<?php echo $book->restime;?></p>
         </div>
       </div>
-      <div class="col-lg-12">
+      <div class="col-lg-12" style="margin-top:8px;">
         <table width="100%">
           <tr>
             <td align="center" width="50%">

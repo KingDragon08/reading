@@ -313,7 +313,7 @@
                               {text: '短文', max: 100}
                           ],
                           center: ['50%','50%'],
-                          radius: 80
+                          radius: 100
                       }
                   ],
                   series: [
@@ -365,7 +365,7 @@
                 series : [
                     {
                         type:'bar',
-                        barCategoryGap:'50%',
+                        barCategoryGap:'80%',
                         data:[<?php
                               // $score_percent_by_item = $user->get_speech_percent_by_item_school_teacher($id);
                               // $out_string = "";

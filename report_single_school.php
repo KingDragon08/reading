@@ -305,7 +305,7 @@
                     tooltip : {
                         trigger: 'axis'
                     },
-                    polar : [
+                    radar : [
                        {
                            radius:80,
                            indicator : [
@@ -315,12 +315,12 @@
                             ]
                         }
                     ],
-                    itemStyle: {normal: {areaStyle: {type: 'default'}}},
                     calculable : true,
                     series : [
                         {
                             name: '朗读均衡值',
                             type: 'radar',
+                            itemStyle: {normal: {areaStyle: {type: 'default'}}},
                             data : [
                                 {
                                     value : [<?php echo $out_string; ?>],

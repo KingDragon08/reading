@@ -185,8 +185,8 @@
                 <img src="<?php echo $book->coverimg;?>" style="width:120px; height:160px;"/>
               </a>
             </div>
-            <div class="col-lg-6 book_info" style="display:table;">
-              <div style="display:table-cell; vertical-align:middle;">
+            <div class="col-lg-6 book_info" style="display:table; height:100%;">
+              <div style="display:table-cell;">
                 <p>名字：<?php echo $book->name;?></p>
                 <p class="gray f12">作者：<?php echo $book->author;?></p>
                 <p class="gray f12">学段：<?php echo $book->grade;?></p>
@@ -194,11 +194,11 @@
                 <?php
                   if($book->status == 1)
                   {
-                    echo "<label class=\"label label-info\">在任务里</label>";
+                    echo "<label class=\"label label-info\" style='position:absolute; bottom:0;'>在任务里</label>";
                   }
                   else
                   {
-                    echo "<label class=\"label label-success\" style='cursor:pointer;' onclick='add2_book_shelf($book->id)'>加入任务</label>";
+                    echo "<label class=\"label label-success\" style='cursor:pointer; position:absolute; bottom:0;' onclick='add2_book_shelf($book->id)'>加入任务</label>";
                   }
                 ?>
 

@@ -339,7 +339,7 @@
                 var myChart_1 = echarts.init(document.getElementById('graph1'),'default');
                 var option_1 = {
                 title:{
-                  text:"<?php echo "总平均分:".$class_score->avg_score."  共".$kd_nums['num1']."本  ".$kd_nums['num2']."字";?>"
+                  text:"<?php echo "总平均分:".$class_score->avg_score."  共读".$kd_nums['num1']."本  ".$kd_nums['num2']."字";?>"
                 },
                 tooltip : {
                     trigger: 'axis'

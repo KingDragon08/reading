@@ -103,8 +103,49 @@
               全本阅读
             </div>
             <div class="col-lg-12 box_graph">
+
+
+
               <div class="col-lg-4 box_graph_item">
-                <div class="box_graph_item_title">阅读结构</div>
+                <div class="box_graph_item_title">阅读能力</div>
+                <div class="box_graph_graph" id="box_graph2"></div>
+              </div>
+              <?php
+                $score_percent_by_item = $user->get_score_percent_by_item_school2($id);
+              ?>
+              <script type="text/javascript">
+
+              var myChart_2 = echarts.init(document.getElementById('box_graph2'),'default');
+              var option_2 = {
+                tooltip : {
+                    trigger: 'axis'
+                },
+                calculable : true,
+                xAxis : [
+                    {
+                        type : 'value'
+                    }
+                ],
+                yAxis : [
+                    {
+                      type : 'category',
+                      data : ['细节认知','信息获取','直接推论','组织概括','批判思考']
+                    }
+                ],
+                series : [
+                    {
+                        type:'bar',
+                        barCategoryGap:'50%',
+                        data:[<?php echo implode(",",$score_percent_by_item)?>]
+                    }
+                ]
+              };
+              myChart_2.setOption(option_2);
+              </script>
+
+
+              <div class="col-lg-4 box_graph_item">
+                <div class="box_graph_item_title">阅读范围</div>
                 <div class="box_graph_graph" id="box_graph1"></div>
               </div>
               <?php
@@ -142,7 +183,7 @@
                           },
                           series : [
                               {
-                                  name: '读书类别',
+                                  name: '阅读范围',
                                   type: 'pie',
                                   radius : '50%',
                                   center: ['50%', '60%'],
@@ -166,47 +207,10 @@
                     echo "暂时没有数据";
                   }
               ?>
-              <div class="col-lg-4 box_graph_item">
-                <div class="box_graph_item_title">阅读能力</div>
-                <div class="box_graph_graph" id="box_graph2"></div>
-              </div>
-              <?php
-                $score_percent_by_item = $user->get_score_percent_by_item_school2($id);
-              ?>
-              <script type="text/javascript">
-              var myChart_2 = echarts.init(document.getElementById('box_graph2'),'default');
-              var option_2 = {
-                    tooltip : {
-                        trigger: 'axis'
-                    },
-                    polar : [
-                       {
-                           radius:80,
-                           indicator : [
-                               { text: '细节认知',max:3},
-                               { text: '信息获取',max:3},
-                               { text: '直接推论',max:3},
-                               { text: '组织概括',max:3},
-                               { text: '批判思考',max:3}
-                            ]
-                        }
-                    ],
-                    calculable : true,
-                    series : [
-                        {
-                            name: '阅读能力',
-                            type: 'radar',
-                            data : [
-                                {
-                                    value : [<?php echo implode(",",$score_percent_by_item)?>],
-                                    name : '阅读能力'
-                                }
-                            ]
-                        }
-                    ]
-                };
-                myChart_2.setOption(option_2);
-              </script>
+
+
+
+
               <div class="col-lg-4 box_graph_item">
                 <div class="box_graph_item_title">阅读难度</div>
                 <div class="box_graph_graph" id="box_graph3"></div>
@@ -267,6 +271,8 @@
 
               myChart_3.setOption(option_3);
             </script>
+
+            
             <div class="col-lg-12 box_head mt20">
               语音朗读
             </div>

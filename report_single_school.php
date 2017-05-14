@@ -124,10 +124,11 @@
                 xAxis : [
                     {
                         type : 'value',
-                        max:3
-                    },
-                    axisLabel:{
-                      rotate:-90
+                        min:0,
+                        max:3,
+                        axisLabel:{
+                          rotate:-90
+                        }
                     }
                 ],
                 yAxis : [

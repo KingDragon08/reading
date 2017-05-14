@@ -286,6 +286,9 @@
         <div style="display:table-cell; vertical-align:middle;">
           <p>名字：<?php echo $book->name;?></p>
           <p class="gray f12">作者：<?php echo $book->author;?></p>
+          <p class="gray f12">难度等级：<?php echo $book->level;?></p>
+          <p class="gray f12">字数：<?php echo $book->wordcount;?></p>
+          <p class="gray f12">积分：<?php echo $book->score;?></p>
           <p class="gray f12">剩余时间：<?php echo $book->restime;?></p>
         </div>
       </div>

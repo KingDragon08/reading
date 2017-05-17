@@ -555,7 +555,7 @@
                             {text : '词语', max  : 100},
                             {text : '短文', max  : 100}
                         ],
-                        radius : 130
+                        radius : 150
                     }
                 ],
                 series : [

@@ -333,7 +333,7 @@
                 $class_score->item4 = 0;
                 $class_score->item5 = 0;
               }
-              $kd_nums = $user->get_students_read_num_and_wordcount();
+              $kd_nums = $user->get_students_read_num_and_wordcount($class_id);
             ?>
             <script type="text/javascript">
                 var myChart_1 = echarts.init(document.getElementById('graph1'),'default');

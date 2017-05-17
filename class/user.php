@@ -1573,12 +1573,12 @@
       /**
       *教师测评中心学生读书总数和字数
       **/
-      function get_students_read_num_and_wordcount()
+      function get_students_read_num_and_wordcount($class)
       {
         global $db;
         $user_id = $this->get_user_id();
         $ret = [];
-        $students = $this->get_students();
+        $students = $this->get_students_by_class($class);
         $num1 = 0;
         $num2 = 0;
         for($i=0; $i<count($students); $i++)

@@ -387,7 +387,8 @@
               myChart_1.setOption(option_1);
             </script>
           </div>
-          <div class="col-lg-4" style="height:400px;">
+          <div class="col-lg-1">&nbsp;</div>
+          <div class="col-lg-3" style="height:400px;">
             <div class="row" id="graph2" style="height:50%; text-align:center;">
             <?php
               $pie_data = "";
@@ -535,7 +536,7 @@
 
 
         <div class="container mt20 mb20">
-          <div class="col-lg-6" id="yuyin_graph1" style="height:400px; padding:0;">
+          <div class="col-lg-8" id="yuyin_graph1" style="height:400px; padding:0;">
             <?php
               $students = $user->get_students_by_class($class_id);
               if($students)
@@ -591,7 +592,8 @@
               }
             ?>
           </div>
-          <div class="col-lg-6" style="height:400px;">
+          <div class="col-lg-1">&nbsp;</div>
+          <div class="col-lg-3" style="height:400px;">
             <div class="row" id="yuyin_graph2" style="height:100%; text-align:center;">
               <script type="text/javascript">
               var myChart_yuyin_2 = echarts.init(document.getElementById('yuyin_graph2'),'default');
@@ -706,9 +708,6 @@
                   <script type="text/javascript">
                   var myChart_4 = echarts.init(document.getElementById('graph4'),'default');
                   var option_4 = {
-                    title: {
-                        text: '阅读数量'
-                    },
                     tooltip: {
                         trigger: 'axis'
                     },
@@ -774,9 +773,6 @@
                   <script type="text/javascript">
                   var myChart_6 = echarts.init(document.getElementById('graph6'),'default');
                   var option_6 = {
-                    title: {
-                        text: '阅读评分'
-                    },
                     tooltip: {
                         trigger: 'axis'
                     },
@@ -858,9 +854,6 @@
               <script type="text/javascript">
               var myChart_5_1 = echarts.init(document.getElementById('graph5_1'),'default');
               var option_5_1 = {
-                title: {
-                    text: '朗读评分'
-                },
                 tooltip: {
                     trigger: 'axis'
                 },
@@ -1047,7 +1040,9 @@
 
 
 
-        <div class="container mt20 mb20" id="graph7" style="height:300px;">
+        <div class="container mt20 mb20">
+          <div class="col-lg-1">语文成绩</div>
+          <div class="col-lg-11" id="graph7" style="height:300px;padding-right:0;"></div>
           <?php
           if($students)
           {
@@ -1072,10 +1067,6 @@
           <script type="text/javascript">
             var myChart_7 = echarts.init(document.getElementById('graph7'),'default');
             var option_7 = {
-              title: {
-                  text: '语文成绩',
-                  x:'center'
-              },
               tooltip: {
                   trigger: 'axis'
               },

@@ -387,8 +387,7 @@
               myChart_1.setOption(option_1);
             </script>
           </div>
-          <div class="col-lg-1">&nbsp;</div>
-          <div class="col-lg-3" style="height:400px;">
+          <div class="col-lg-4" style="height:400px;">
             <div class="row" id="graph2" style="height:50%; text-align:center;">
             <?php
               $pie_data = "";

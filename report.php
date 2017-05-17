@@ -592,9 +592,8 @@
               }
             ?>
           </div>
-          <div class="col-lg-1">&nbsp;</div>
-          <div class="col-lg-3" style="height:400px;">
-            <div class="row" id="yuyin_graph2" style="height:300px; margin-top:50px; text-align:center;">
+          <div class="col-lg-4" style="height:400px;">
+            <div class="row" id="yuyin_graph2" style="height:280px; margin-top:60px; text-align:center;">
               <script type="text/javascript">
               var myChart_yuyin_2 = echarts.init(document.getElementById('yuyin_graph2'),'default');
               var option_yuyin_2 = {
@@ -1041,7 +1040,7 @@
 
 
         <div class="container mt20 mb20">
-          <div class="col-lg-1">语文成绩</div>
+          <div class="col-lg-1" style="padding-top:140px;">语文成绩</div>
           <div class="col-lg-11" id="graph7" style="height:300px;padding-right:0;"></div>
           <?php
           if($students)

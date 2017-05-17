@@ -429,7 +429,7 @@
                               {
                                   name: '读书类别',
                                   type: 'pie',
-                                  radius : '80%',
+                                  radius : '60%',
                                   center: ['50%', '60%'],
                                   data:[<?php echo $s_string;?>],
                                   itemStyle: {
@@ -482,7 +482,7 @@
                       },
                       polar : [
                          {
-                             radius:80,
+                             radius:60,
                              indicator : [
                                  { text: '10级',max:<?php echo $max;?>},
                                  { text: '9级',max:<?php echo $max;?>},
@@ -594,7 +594,7 @@
           </div>
           <div class="col-lg-1">&nbsp;</div>
           <div class="col-lg-3" style="height:400px;">
-            <div class="row" id="yuyin_graph2" style="height:100%; text-align:center;">
+            <div class="row" id="yuyin_graph2" style="height:200px; margin-top:100px; text-align:center;">
               <script type="text/javascript">
               var myChart_yuyin_2 = echarts.init(document.getElementById('yuyin_graph2'),'default');
               var option_yuyin_2 = {

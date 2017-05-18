@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="css/index.css" media="screen">
     <script type="text/javascript" src="js/jquery.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="jqueryui/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="jqueryui/jquery-ui.css">
     <title>乐智悦读-推送书单</title>
   </head>
   <body>
@@ -160,8 +162,33 @@
                 }
               ?>
                 选择截止日期：(2017-01-01)
-                <input type="date" name="endtime" value="" id="endtime" min="" class="form-control" required>
+                <input type="text" name="endtime" value="" id="endtime" min="" class="form-control" required>
                 <br/>
+                <script type="text/javascript">
+                $(function() {
+                  $("#endtime").datepicker({
+                      /* 区域化周名为中文 */
+                      dayNamesMin : ["日", "一", "二", "三", "四", "五", "六"],
+                      /* 每周从周一开始 */
+                      firstDay : 1,
+                      /* 区域化月名为中文习惯 */
+                      monthNames : ["01", "02", "03", "04", "05", "06",
+                                  "07", "08", "09", "10", "11", "12"],
+                      /* 月份显示在年后面 */
+                      showMonthAfterYear : true,
+                      /* 年份后缀字符 */
+                      yearSuffix : "年",
+                      /* 格式化中文日期
+                      （因为月份中已经包含“月”字，所以这里省略） */
+                      dateFormat : "yy-MM-dd"
+                  });
+                });
+                </script>
+
+
+
+
+
                 <input type="submit" name="submit" value="确认推送" class="btn btn-danger form-control">
               <?php
               }

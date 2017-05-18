@@ -45,7 +45,7 @@
             else
             {
               $book_info = $book->get_book_info();
-
+              $can_note = $book->check_note($user_id);
               //处理表单
               if(isset($_POST['comment']))
               {
@@ -143,7 +143,7 @@
                   <?php
                     //检测是否已经答过本书的读书笔记
                     //若答过则不允许再次答题
-                    if(!$book->check_note($user_id))
+                    if(!$can_note)
                     {
                   ?>
                       <a href="javascript:void(0);" class="label label-lg label-default label-circle mr10" onclick="show_note()">&nbsp;读书笔记&nbsp;</a>
@@ -259,14 +259,14 @@
             <div class="Div1_main">
                 <div>
                   <?php
-                    foreach($rec_books as $book)
+                    foreach($rec_books as $rec_book)
                     {
                   ?>
                     <span class="Div1_main_span1">
-                        <a href="book.php?book=<?php echo $book->id;?>" class="Div1_main_a1">
-                          <img src="<?php echo $book->coverimg;?>" />
+                        <a href="book.php?book=<?php echo $rec_book->id;?>" class="Div1_main_a1">
+                          <img src="<?php echo $rec_book->coverimg;?>" />
                         </a>
-                        <a href="book.php?book=<?php echo $book->id;?>" class="Div1_main_a2">了解更多</a>
+                        <a href="book.php?book=<?php echo $rec_book->id;?>" class="Div1_main_a2">了解更多</a>
                     </span>
                   <?php
                     }
@@ -352,7 +352,7 @@
     }
   </script>
   <?php
-    if(!$book->check_note($user_id))
+    if(!$can_note)
     {
   ?>
       <style media="screen">
@@ -375,19 +375,49 @@
                   <div class="col-lg-12 mb20" style="white-space:normal;">
                     <?php echo $count.":".$question->question?>
                   </div>
+                  <?php
+                  if($role == "学生")
+                  {
+                  ?>
                   <div class="cl-lg-12 mb20">
                     <textarea class="form-control" id="t" name="question_<?php echo $count;?>" rows="6" placeholder="请在此处填写答案"></textarea>
                   </div>
+                  <?php
+                  }
+                  else
+                  {
+                  ?>
+                  <div class="cl-lg-12 mb20">
+                    <textarea class="form-control" id="t" name="question_<?php echo $count;?>" rows="6" placeholder="请在此处填写答案" disabled="disabled"></textarea>
+                  </div>
+                  <?php
+                  }
+                  ?>
             <?php
                   $count++;
                 }
             ?>
               <input type="hidden" name="num" value="<?php echo $count-1;?>" />
               <input type="hidden" name="book" value="<?php echo intval($_GET['book']);?>" />
+              <?php
+              if($role == "学生")
+              {
+              ?>
               <div class="col-lg-12" style="text-align:center;">
                 <input type="submit" name="s_note" value="提交" class="btn btn-danger">
                 <input type="button" name="s_cancel" value="取消" class="btn btn-default" onclick="cancel_note()">
               </div>
+              <?php
+              }
+              else
+              {
+              ?>
+              <div class="col-lg-12" style="text-align:center;">
+                <input type="button" name="s_cancel" value="关闭" class="btn btn-default" onclick="cancel_note()">
+              </div>
+              <?php
+              }
+              ?>
             <?php
               }
               else

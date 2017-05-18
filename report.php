@@ -751,7 +751,7 @@
               </div>
 
               <!--阅读评分-->
-              <div class="container" id="graph6" style="height:300px; width:100%; padding-right:0;">
+              <div class="container" id="graph6" style="height:300px; width:100%; padding-right:1px;">
                 <?php
                   $students = $user->get_students_by_class($class_id);
                   if($students)
@@ -896,97 +896,6 @@
           </div>
         </div>
 
-
-        <!-- <div class="container mt20 mb20" style="height:300px;" id="graph5_2">
-          <?php
-            $data = $user->get_class_report_score_5_2($class_id);
-            $students = $data[0];
-            $scores = $data[1];
-            $name_string = "";
-            $data_string = "";
-            if($students)
-            {
-              for($i=0; $i<count($students); $i++)
-              {
-                $name_string .= "'".$students[$i]->name."'";
-                $name_string .= ",";
-                $data_string .= $scores[$i]->average;
-                $data_string .= ",";
-              }
-              $name_string = substr($name_string,0,-1);
-              $data_string = substr($data_string,0,-1);
-            }
-            else
-            {
-                $name_string = "无";
-                $data_string = "0";
-            }
-          ?>
-        <script type="text/javascript">
-          var myChart_5_2 = echarts.init(document.getElementById('graph5_2'),'default');
-          var option_5_2 = {
-          title:{
-            text:"语音评分(词语)",
-            x:'center'
-          },
-          tooltip : {
-              trigger: 'axis'
-          },
-          toolbox: {
-              show : false
-          },
-          calculable : true,
-          xAxis : [
-              {
-                  type : 'category',
-                  axisLabel:{
-                    rotate:-90
-                  },
-                  data:[<?php echo $name_string;?>]
-              }
-          ],
-          yAxis : [
-              {
-                type : 'value'
-              }
-          ],
-          series : [
-              {
-                  type:'bar',
-                  barCategoryGap:'50%',
-                  data:[<?php echo $data_string;?>]
-              }
-          ]
-        };
-        myChart_5_2.setOption(option_5_2);
-        </script>
-      </div>
-
-      <div class="container mt20 mb20" style="height:300px;" id="graph5_3">
-        <?php
-          $data = $user->get_class_report_score_5_3($class_id);
-          $students = $data[0];
-          $scores = $data[1];
-          $name_string = "";
-          $data_string = "";
-          if($students)
-          {
-            for($i=0; $i<count($students); $i++)
-            {
-              $name_string .= "'".$students[$i]->name."'";
-              $name_string .= ",";
-              $data_string .= $scores[$i]->average;
-              $data_string .= ",";
-            }
-            $name_string = substr($name_string,0,-1);
-            $data_string = substr($data_string,0,-1);
-          }
-          else
-          {
-              $name_string = "无";
-              $data_string = "0";
-          }
-        ?>
       <script type="text/javascript">
         var myChart_5_3 = echarts.init(document.getElementById('graph5_3'),'default');
         var option_5_3 = {
@@ -1025,7 +934,6 @@
       };
       myChart_5_3.setOption(option_5_3);
       </script>
-    </div> -->
 
 
 
@@ -1039,7 +947,9 @@
 
 
         <div class="container mt20 mb20">
-          <div class="col-lg-1" style="padding-top:140px;">语文成绩</div>
+          <div class="col-lg-1">
+            <button type="button" class="btn btn-success mb10" style="margin-top:140px;">语文成绩</button>
+          </div>
           <div class="col-lg-11" id="graph7" style="height:300px;padding-right:0;"></div>
           <?php
           if($students)

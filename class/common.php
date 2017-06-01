@@ -269,6 +269,96 @@ class Common
     }
 
     /**
+    *增加筛选条件和逻辑后的获取所有的书
+    **/
+    function get_read_list_3($page,$user_id,$type,$grade,$list_type,$level_type,$score_type)
+    {
+      global $db;
+      $page_num = 6;
+      //获取所有书单的总数
+      $sql = "select count(*) from rd_book where ";
+      $sql_1 = "select * from rd_book where ";
+      if($type==0 && $grade==0 && $list_type==0 && $level_type==0 && $score_type==0)
+      {
+        $sql .= "1";
+        $sql_1 .= "1";
+      }
+      else
+      {
+        if($type!=0)
+        {
+          $sql .= "type='$type' ";
+          $sql_1 .= "type='$type' ";
+        }
+        if($grade!=0)
+        {
+          $and = $type==0?"":"and ";
+          $sql .= $and."grade='$grade' ";
+          $sql_1 .= $and."grade='$grade' ";
+        }
+        if($level_type!=0)
+        {
+          $and = ($grade==0 && $type==0)?"":"and ";
+          $sql .= $and."level='$level_type' ";
+          $sql_1 .= $and."level='$level_type' ";
+        }
+        if($score_type!=0)
+        {
+          $and = ($grade==0 && $type==0 && $level_type==0)?"":"and ";
+          $sql .= $and."score='$score_type' ";
+          $sql_1 .= $and."score='$score_type' ";
+        }
+        if($list_type!=0)
+        {
+          $and = ($grade==0 && $type==0 && $level_type==0 && $score_type==0)?"":"and ";
+          $sql .= $and."find_in_set($list_type,list_type) ";
+          $sql_1 .= $and."find_in_set($list_type,list_type) ";
+        }
+      }
+      // $now = time();
+      // $sql .= " and endtime>'$now'";
+      $total = $db->get_var($sql);
+      $this->read_list_pages = ceil($total/$page_num);
+      $start = ($page-1)*$page_num;
+      if($start < 1)
+      {
+        $start = 0;
+      }
+      $sql_1 .= " order by id desc limit $start,$page_num";
+      $read_list = $db->get_results($sql_1);
+      $ret = array();
+      if($read_list)
+      {
+        foreach($read_list as $item)
+        {
+          //获取学段名称
+          $sql = "select grade_name from rd_grade where id='$item->grade'";
+          $item->grade = $db->get_var($sql);
+          //获取是否在书架上的状态
+          // $sql = "select count(id) from rd_user_read_book where book_id='$item->id' and user_id='$user_id' and removed=0";
+          //查看是否在书单库里
+          $sql = "select count(id) from rd_user_read_book where book_id='$item->id' and user_id='$user_id' and removed=0";
+          if($db->get_var($sql)>0)
+          {
+            $item->status = 1;
+          }
+          else
+          {
+            $item->status = 0;
+          }
+          //获取书单类型名称
+          $sql = "select name from rd_book_type where id='$item->type'";
+          $item->type = $db->get_var($sql);
+          $ret[] = $item;
+        }
+      }
+      return $ret;
+    }
+
+
+
+
+    /**
     *获取所有书的总页数
     **/
     function get_read_list_pages()

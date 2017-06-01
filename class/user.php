@@ -535,9 +535,18 @@
         {
           return "";
         }
+        $list_name = "给";
+        foreach($classes as $class)
+        {
+          //获取班级名字
+          $list_name .= $db->get_var("select classname from rd_class where id=$class");
+          $list_name .= ",";
+        }
+        $list_name = substr($list_name,0,-1);
+        $list_name .= "截止于".date('Y-m-d', $endtime)."的书单";
         //创建书单
-        $sql = "insert into rd_read_list(user_id,type,endtime,addtime)values(".
-                "'$user_id','1','$endtime','$addtime')";
+        $sql = "insert into rd_read_list(user_id,type,endtime,addtime,name)values(".
+                "'$user_id','1','$endtime','$addtime','$list_name')";
         $db->query($sql);
         //获取创建书单的id
         $read_list_id = $db->get_var("select id from rd_read_list where addtime='$addtime'");
@@ -1487,7 +1496,7 @@
       {
         global $db;
         $user_id = $this->get_user_id();
-        $sql = "select id from rd_read_list where user_id='$user_id' order by endtime asc";
+        $sql = "select id,name from rd_read_list where user_id='$user_id' order by endtime asc";
         return $db->get_results($sql);
       }
 
@@ -1666,6 +1675,17 @@
         $sql = "select id,name,coverimg from rd_book where id in(select DISTINCT(book_id) from ".
                 "rd_read_note_answer where user_id=$id)";
         return $db->get_results($sql);
+      }
+
+      /**
+      *教师用
+      *获取学生的语文平均成绩
+      **/
+      function get_chinese_score($id)
+      {
+        global $db;
+        $sql = "select avg(score) as score from rd_chinese_score where user_id=$id";
+        return intval($db->get_var($sql));
       }
 
 

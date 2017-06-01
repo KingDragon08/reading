@@ -79,7 +79,7 @@
               //写入消息
               $sendtime = time();
               $title = $user->get_user_info()->name."完成了《".$book->get_book_info()->name."》的读书笔记";
-              $content = $title.",快来看看吧!";
+              $content = $title.",快去看看吧!";
               $sql = "insert into rd_msg(msg_from,msg_to,msg_title,msg_content,sendtime,msg_type,msg_status)".
                       "values('$user_id','$teacher_id','". $db->escape($title) ."','". $db->escape($content) .
                       "','$sendtime','4','0')";

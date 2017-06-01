@@ -535,64 +535,15 @@
 
 
         <div class="container mt20 mb20">
-          <div class="col-lg-8" id="yuyin_graph1" style="height:400px; padding:0;">
-            <?php
-              $students = $user->get_students_by_class($class_id);
-              if($students)
-              {
-            ?>
-            <script type="text/javascript">
-              var myChart_yuyin_1 = echarts.init(document.getElementById('yuyin_graph1'),'default');
-              var yuyin_option_1 = {
-                tooltip : {
-                    trigger: 'axis'
-                },
-                calculable : true,
-                polar : [
-                    {
-                        indicator : [
-                            {text : '单字', max  : 100},
-                            {text : '词语', max  : 100},
-                            {text : '短文', max  : 100}
-                        ],
-                        radius : 150
-                    }
-                ],
-                series : [
-                    {
-                        name: '发音得分',
-                        type: 'radar',
-                        itemStyle: {
-                            normal: {
-                                areaStyle: {
-                                    type: 'default'
-                                }
-                            }
-                        },
-                        data : [
-                            {
-                                value : [<?php
-                                  $speech_data = $user->get_class_report_score_5($class_id);
-                                  echo $speech_data[0].','.$speech_data[1].','.$speech_data[2];
-                                ?>],
-                                name : '发音得分'
-                            }
-                        ]
-                    }
-                ]
-            };
-            myChart_yuyin_1.setOption(yuyin_option_1);
-            </script>
-            <?php
-              }
-              else
-              {
-                echo "班内没有学生";
-              }
-            ?>
-          </div>
-          <div class="col-lg-4" style="height:400px;">
+
+          <div class="col-lg-8" style="height:400px;">
             <div class="row" id="yuyin_graph2" style="height:280px; margin-top:60px; text-align:center;">
+              <?php
+                $students = $user->get_students_by_class($class_id);
+                if($students)
+                {
+                  $speech_data = $user->get_class_report_score_5($class_id);
+              ?>
               <script type="text/javascript">
               var myChart_yuyin_2 = echarts.init(document.getElementById('yuyin_graph2'),'default');
               var option_yuyin_2 = {
@@ -625,8 +576,73 @@
               };
               myChart_yuyin_2.setOption(option_yuyin_2);
               </script>
+              <?php
+                }
+                else
+                {
+                  echo "班内没有学生";
+                }
+              ?>
             </div>
           </div>
+
+          <div class="col-lg-4" id="yuyin_graph1" style="height:400px; padding:0;">
+            <?php
+              if($students)
+              {
+            ?>
+            <script type="text/javascript">
+              var myChart_yuyin_1 = echarts.init(document.getElementById('yuyin_graph1'),'default');
+              var yuyin_option_1 = {
+                tooltip : {
+                    trigger: 'axis'
+                },
+                calculable : true,
+                polar : [
+                    {
+                        indicator : [
+                            {text : '单字', max  : 100},
+                            {text : '词语', max  : 100},
+                            {text : '短文', max  : 100}
+                        ],
+                        radius : 120
+                    }
+                ],
+                series : [
+                    {
+                        name: '发音得分',
+                        type: 'radar',
+                        itemStyle: {
+                            normal: {
+                                areaStyle: {
+                                    type: 'default'
+                                }
+                            }
+                        },
+                        data : [
+                            {
+                                value : [<?php
+                                  echo $speech_data[0].','.$speech_data[1].','.$speech_data[2];
+                                ?>],
+                                name : '发音得分'
+                            }
+                        ]
+                    }
+                ]
+            };
+            myChart_yuyin_1.setOption(yuyin_option_1);
+            </script>
+            <?php
+              }
+              else
+              {
+                echo "班内没有学生";
+              }
+            ?>
+          </div>
+
+
+
         </div>
 
 
@@ -959,14 +975,15 @@
             $chinese_score = array();
             foreach ($students as $student)
             {
-              $chinese_score[] = $student->chinese_score;
+              //$chinese_score[] = $student->chinese_score;
+              $chinese_score[] = $user->get_chinese_score($student->id);
             }
             array_multisort($chinese_score,SORT_ASC,$students);
-            foreach($students as $student)
+            foreach($students as $key=>$student)
             {
               $name_string .= "'".$student->name."'";
               $name_string .= ",";
-              $data_string .= $student->chinese_score;
+              $data_string .= $chinese_score[$key];
               $data_string .= ",";
             }
             $name_string = substr($name_string,0,-1);

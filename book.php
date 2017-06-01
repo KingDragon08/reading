@@ -130,23 +130,25 @@
                   <h4><?php echo $book_info->name; ?></h4>
                   <p class="f12 gray">权威版本、收藏经典</p>
                   <span class="single_book_info">
-                    <font>作者：<?php echo $book_info->author; ?></font><br>
-                    <font>出版社：<?php echo $book_info->press; ?></font><br>
-                    <font>出版时间：<?php echo $book_info->presstime ?></font><br>
-                    <font>难度等级：<?php echo $book_info->level ?></font><br>
-                    <font>字数：<?php echo $book_info->wordcount ?></font><br>
+                    <font style="width:200px; display:inline-block;">作者：<?php echo $book_info->author; ?></font>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <font>难度等级：<?php echo $book_info->level ?></font>
+                    <br>
+                    <font style="width:200px; display:inline-block;">出版社：<?php echo $book_info->press; ?></font>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <font>字数：<?php echo $book_info->wordcount ?></font>
+                    <br>
+                    <font style="width:200px; display:inline-block;">出版时间：<?php echo $book_info->presstime ?></font>&nbsp;&nbsp;&nbsp;&nbsp;
                     <font>积分：<?php echo $book_info->score ?></font>
                   </span>
                 </div>
                 <div class="col-lg-12 mt10 mb10" style="padding:0;">
-                  <a href="#comment" class="label label-lg label-default label-circle mr10">&nbsp;写书评&nbsp;</a>
+                  <a href="#comment" style="padding:0.5em 2em;" class="label label-lg label-default label-circle mr10">&nbsp;写书评&nbsp;</a>
                   <?php
                     //检测是否已经答过本书的读书笔记
                     //若答过则不允许再次答题
                     if(!$can_note)
                     {
                   ?>
-                      <a href="javascript:void(0);" class="label label-lg label-default label-circle mr10" onclick="show_note()">&nbsp;读书笔记&nbsp;</a>
+                      <a href="javascript:void(0);" style="padding:0.5em 2em;" class="label label-lg label-default label-circle mr10" onclick="show_note()">&nbsp;读书笔记&nbsp;</a>
                   <?php
                     }
                   ?>

@@ -38,6 +38,7 @@
             </a>
             <a href="../template/teacher_students.php" target="main" class="list-group-item">我的学生</a>
             <a href="../template/teacher_notes.php" target="main" class="list-group-item">读书笔记</a>
+            <!-- <a href="../template/teacher_chinese_score.php" target="main" class="list-group-item">语文成绩</a> -->
             <!-- <a href="../template/student_eval_school.php" target="main" class="list-group-item">测评结果</a> -->
             <!-- <a href="../template/student_book_shelf.php" target="main" class="list-group-item">我的书架</a> -->
             <!-- <a href="#" target="main" class="list-group-item">读书笔记</a> -->

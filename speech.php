@@ -592,7 +592,7 @@
           <style media="screen">
             .j_left_control{
               width:122px; height:auto; min-height: 60px; position: absolute;
-              left:-142px; border:1px solid #e5e5e5; border-radius: 5px;
+              left:-202px; border:1px solid #e5e5e5; border-radius: 5px;
             }
             .j_left_control div{
               float:left;width:60px; height:60px; line-height: 60px; text-align: center;
@@ -608,6 +608,13 @@
             .j_left_control div.ed{
               background:#aaa; color:#fff;
             }
+            .boyin{width:75px; height: 100px; position: relative; cursor: pointer;
+                float:left; margin-top: -40px; margin-right: 20px; color:#824399;
+            }
+            .boyin img{width: 75px; height: 100px;}
+            .boyin .qrcode{position: absolute; top: -75px; width: 75px; height: 75px; display: none;}
+            .boyin .qrcode img{width: 75px; height: 75px;}
+            .boyin:hover .qrcode{display: block;}
           </style>
                 <div class="col-lg-12 mt20">
                   <div class="col-lg-8">
@@ -701,6 +708,13 @@
                       提交成绩
                     </div>
                     <div style="position:absolute; right:20px; top:40px;">
+                      <div class="boyin">
+                        <img src="img/boyin.png">
+                        点我关注
+                        <div class="qrcode">
+                          <img src="img/qrcode.png">
+                        </div>
+                      </div>
                       <i class="glyphicon glyphicon-bullhorn" onclick="play_xiaoyan()" style="font-size:20px; cursor:pointer; color:#71cba4;">&nbsp;</i>
                       <img src="img/mic.png" alt="" style="cursor:pointer;" onclick="check_mic()">
                     </div>

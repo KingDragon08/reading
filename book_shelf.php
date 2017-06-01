@@ -94,8 +94,9 @@
 <br>
 <div class="row">
   <div class="container">
-    <div class="col-lg-8">
+    <div class="col-lg-9">
       选择书单类型:&nbsp;&nbsp;&nbsp;&nbsp;
+
       <div class="btn-group">
           <button type="button" class="btn btn-default" id="list_type">图书类型</button>
           <button type="button" class="btn btn-default dropdown-toggle"
@@ -218,7 +219,7 @@
 
 
     </div>
-    <div class="col-lg-4">
+    <div class="col-lg-3">
       <form action="search.php" method="get" target="_blank" name="search" id="search" onsubmit="return check_search()">
           <div class="input-group">
             <input type="text" name="s" class="form-control" id="search_keywords">
@@ -284,7 +285,7 @@
       </div>
       <div class="col-lg-6 book_info" style="display:table; height:166px;">
         <div style="display:table-cell; vertical-align:middle;">
-          <p>名字：<?php echo $book->name;?></p>
+          <p><?php echo $book->name;?></p>
           <p class="gray f12">作者：<?php echo $book->author;?></p>
           <p class="gray f12">难度等级：<?php echo $book->level;?></p>
           <p class="gray f12">字数：<?php echo $book->wordcount;?></p>
@@ -472,8 +473,6 @@
     location.href = "book_shelf.php?endtime="+endtime;
   }
 
-
-
 </script>
 
 <?php
@@ -561,7 +560,7 @@ if($role == "教师")
                 while($counter<count($lists))
                 {
               ?>
-                  <li><a href="book_shelf.php?id=<?php echo $lists[$counter]->id;?>">教师书单<?php echo $lists[$counter]->id;?></a></li>
+                  <li><a href="book_shelf.php?id=<?php echo $lists[$counter]->id;?>"><?php echo $lists[$counter]->name;?></a></li>
               <?php
                   if(isset($_GET['id']))
                   {

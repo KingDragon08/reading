@@ -87,7 +87,7 @@
         <div class="col-lg-8">
           选择书单类型:&nbsp;&nbsp;&nbsp;&nbsp;
           <div class="btn-group">
-              <button type="button" class="btn btn-default" id="list_type">图书类型</button>
+              <button type="button" class="btn btn-default" id="type" style="max-width:6em; overflow:hidden;">图书类型</button>
               <button type="button" class="btn btn-default dropdown-toggle"
                   data-toggle="dropdown">
                   <span class="caret"></span>
@@ -109,7 +109,7 @@
                             {
                               if($type->id==intval($_GET['type']))
                               {
-                                  echo '<script>$("#list_type").html("'.$type->name.'");</script>';
+                                  echo '<script>$("#type").html("'.$type->name.'");</script>';
                               }
                             }
                       ?>
@@ -121,7 +121,7 @@
           </div>
           &nbsp;&nbsp;
           <div class="btn-group">
-              <button type="button" class="btn btn-default" id="grade_type">学段</button>
+              <button type="button" class="btn btn-default" id="grade_type" style="max-width:6em; overflow:hidden;">学段</button>
               <button type="button" class="btn btn-default dropdown-toggle"
                   data-toggle="dropdown">
                   <span class="caret"></span>
@@ -150,6 +150,103 @@
               </ul>
           </div>
 
+          &nbsp;&nbsp;
+          <div class="btn-group">
+              <button type="button" class="btn btn-default" id="list_type" style="max-width:6em; overflow:hidden;">书单类型</button>
+              <button type="button" class="btn btn-default dropdown-toggle"
+                  data-toggle="dropdown">
+                  <span class="caret"></span>
+                  <span class="sr-only">选择</span>
+              </button>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="javascript:void(0);" onclick="list_type_change(0)">全部类型</a></li>
+                <?php
+                  $list_types = $common->get_list_type();
+                  foreach ($list_types as $list_type)
+                  {
+                ?>
+                    <li><a href="javascript:void(0);" onclick="list_type_change(<?php echo $list_type->id?>)"><?php echo $list_type->name?></a></li>
+                    <?php
+                          if(isset($_GET['list_type']))
+                          {
+                            if($list_type->id==intval($_GET['list_type']))
+                            {
+                                echo '<script>$("#list_type").html("'.$list_type->name.'");</script>';
+                            }
+                          }
+                    ?>
+                <?php
+                  }
+                ?>
+              </ul>
+          </div>
+
+
+          &nbsp;&nbsp;
+          <div class="btn-group">
+              <button type="button" class="btn btn-default" id="level_type">难度等级</button>
+              <button type="button" class="btn btn-default dropdown-toggle"
+                  data-toggle="dropdown">
+                  <span class="caret"></span>
+                  <span class="sr-only">选择</span>
+              </button>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="javascript:void(0);" onclick="level_type_change(0)">全部等级</a></li>
+                <?php
+                  $i = 0;
+                  while($i++<10)
+                  {
+                ?>
+                    <li><a href="javascript:void(0);" onclick="level_type_change(<?php echo $i?>)"><?php echo $i?></a></li>
+                    <?php
+                          if(isset($_GET['level_type']))
+                          {
+                            if($i==intval($_GET['level_type']))
+                            {
+                                echo '<script>$("#level_type").html("'.$i.'");</script>';
+                            }
+                          }
+                    ?>
+                <?php
+                  }
+                ?>
+              </ul>
+          </div>
+
+
+          &nbsp;&nbsp;
+          <div class="btn-group">
+              <button type="button" class="btn btn-default" id="score_type">积分</button>
+              <button type="button" class="btn btn-default dropdown-toggle"
+                  data-toggle="dropdown">
+                  <span class="caret"></span>
+                  <span class="sr-only">选择</span>
+              </button>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="javascript:void(0);" onclick="score_type_change(0)">全部积分</a></li>
+                <?php
+                  $i = 0;
+                  while($i++<10)
+                  {
+                ?>
+                    <li><a href="javascript:void(0);" onclick="score_type_change(<?php echo $i?>)"><?php echo $i?></a></li>
+                    <?php
+                          if(isset($_GET['score_type']))
+                          {
+                            if($i==intval($_GET['score_type']))
+                            {
+                                echo '<script>$("#score_type").html("'.$i.'");</script>';
+                            }
+                          }
+                    ?>
+                <?php
+                  }
+                ?>
+              </ul>
+          </div>
+
+
+
         </div>
         <div class="col-lg-4">
           <form action="search.php" method="get" target="_blank" name="search" id="search" onsubmit="return check_search()">
@@ -168,10 +265,14 @@
     <div class="container mt20">
       <div class="col-lg-12">
         <?php
-          $grade = isset($_GET['grade'])?intval($_GET['grade']):0;
-          $type = isset($_GET['type'])?intval($_GET['type']):0;
-          $page =isset($_GET['page'])?intval($_GET['page']):1;
-          $books = $common->get_read_list_2($page,$user_id,$type,$grade);
+          $grade = isset($_GET['grade'])?intval($_GET['grade']):0;//年级
+          $type = isset($_GET['type'])?intval($_GET['type']):0;//图书类型
+          $page = isset($_GET['page'])?intval($_GET['page']):1;//页数
+          $list_type = isset($_GET['list_type'])?intval($_GET['list_type']):0;//书单类型
+          $level_type = isset($_GET['level_type'])?intval($_GET['level_type']):0;//难度等级
+          $score_type = isset($_GET['score_type'])?intval($_GET['score_type']):0;//积分数量
+          // $books = $common->get_read_list_2($page,$user_id,$type,$grade);
+          $books = $common->get_read_list_3($page,$user_id,$type,$grade,$list_type,$level_type,$score_type);
           if($books)
           {
             $counter=0;
@@ -187,7 +288,7 @@
             </div>
             <div class="col-lg-6 book_info" style="display:table; height:100%;">
               <div style="display:table-cell;">
-                <p>名字：<?php echo $book->name;?></p>
+                <p><?php echo $book->name;?></p>
                 <p class="gray f12" style="margin-bottom:5px;">作者：<?php echo $book->author;?></p>
                 <p class="gray f12" style="margin-bottom:5px;">学段：<?php echo $book->grade;?></p>
                 <p class="gray f12" style="margin-bottom:5px;">类型：<?php echo $book->type;?></p>
@@ -275,28 +376,43 @@
     <script type="text/javascript">
       var grade = <?php echo isset($_GET['grade'])?intval($_GET['grade']):0 ?>;
       var type = <?php echo isset($_GET['type'])?intval($_GET['type']):0 ?>;
+      var list_type = <?php echo $list_type; ?>;
+      var level_type = <?php echo $level_type; ?>;
+      var score_type = <?php echo $score_type; ?>;
+
       function grade_change(id)
       {
-        if(type == 0)
-        {
-          location.href = "full_reading.php?grade="+id;
-        }
-        else
-        {
-          location.href = "full_reading.php?grade="+id+"&type="+type;
-        }
+        location.href = "full_reading.php?grade="+id+"&type="+type+
+                        "&list_type="+list_type+"&level_type="+level_type+
+                        "&score_type="+score_type;
       }
 
       function type_change(id)
       {
-        if(grade == 0)
-        {
-          location.href = "full_reading.php?type="+id;
-        }
-        else
-        {
-          location.href = "full_reading.php?type="+id+"&grade="+grade;
-        }
+        location.href = "full_reading.php?grade="+grade+"&type="+id+
+                        "&list_type="+list_type+"&level_type="+level_type+
+                        "&score_type="+score_type;
+      }
+
+      function list_type_change(id)
+      {
+        location.href = "full_reading.php?grade="+grade+"&type="+type+
+                        "&list_type="+id+"&level_type="+level_type+
+                        "&score_type="+score_type;
+      }
+
+      function level_type_change(id)
+      {
+        location.href = "full_reading.php?grade="+grade+"&type="+type+
+                        "&list_type="+list_type+"&level_type="+id+
+                        "&score_type="+score_type;
+      }
+
+      function score_type_change(id)
+      {
+        location.href = "full_reading.php?grade="+grade+"&type="+type+
+                        "&list_type="+list_type+"&level_type="+level_type+
+                        "&score_type="+id;
       }
 
       function add2_book_shelf(book)

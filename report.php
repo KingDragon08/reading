@@ -972,11 +972,14 @@
           {
             $name_string = "";
             $data_string = "";
+            $data_string_recently = "";
             $chinese_score = array();
+            $chinese_score_recently = array();
             foreach ($students as $student)
             {
               //$chinese_score[] = $student->chinese_score;
               $chinese_score[] = $user->get_chinese_score($student->id);
+              $chinese_score_recently[] = $user->get_chinese_score_recently($student->id);
             }
             array_multisort($chinese_score,SORT_ASC,$students);
             foreach($students as $key=>$student)
@@ -985,9 +988,12 @@
               $name_string .= ",";
               $data_string .= $chinese_score[$key];
               $data_string .= ",";
+              $data_string_recently .= $chinese_score_recently[$key];
+              $data_string_recently .= ",";
             }
             $name_string = substr($name_string,0,-1);
             $data_string = substr($data_string,0,-1);
+            $data_string_recently = substr($data_string_recently,0,-1);
           ?>
           <script type="text/javascript">
             var myChart_7 = echarts.init(document.getElementById('graph7'),'default');
@@ -995,6 +1001,9 @@
               tooltip: {
                   trigger: 'axis'
               },
+              legend:{
+                data:['平均成绩','最近一次成绩']
+              }
               grid: {
                   left: '3%',
                   right: '4%',
@@ -1014,9 +1023,14 @@
               },
               series: [
                   {
-                      name:'语文成绩',
+                      name:'平均成绩',
                       type:'line',
                       data:[<?php echo $data_string;?>]
+                  },
+                  {
+                    name:'最近一次成绩',
+                    type:'line',
+                    data:[<?php echo $data_string_recently;?>]
                   }
               ]
             };

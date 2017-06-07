@@ -1688,6 +1688,17 @@
         return intval($db->get_var($sql));
       }
 
+      /**
+      *教师用
+      *获取学生的语文最近一次成绩
+      **/
+      function get_chinese_score_recently($id)
+      {
+        global $db;
+        $sql = "select score from rd_chinese_score where user_id=$id order by id desc limit 1";
+        return intval($db->get_var($sql));
+      }
+
 
   }
 ?>

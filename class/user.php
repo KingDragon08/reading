@@ -1175,6 +1175,23 @@
       }
 
       /**
+      *校长用
+      *获取教师所管理的班级信息
+      **/
+      function get_classes_president($id)
+      {
+        global $db;
+        $user_id = $id;
+        $role = $this->get_user_info()->role;
+        if($role!="3")
+        {
+          return NULL;
+        }
+        $sql = "select * from rd_class where teacher_id='$user_id'";
+        return $db->get_results($sql);
+      }
+
+      /**
       *教师用
       *获取班级下的所有学生
       **/
@@ -1232,6 +1249,17 @@
         global $db;
         $user_id = $this->get_user_id();
         return $db->get_var("select count(id) from rd_class where id='$class_id' and teacher_id='$user_id'");
+      }
+
+      /**
+      *校长用
+      *检查校长和班级是否存在管辖权
+      **/
+      function check_class_president($class_id)
+      {
+        global $db;
+        $school = $this->get_school_id();
+        return $db->get_var("select count(id) from rd_class where id='$class_id' and school='$school'");
       }
 
       /**
@@ -1470,6 +1498,19 @@
       }
 
       /**
+      *学校用
+      *检查学生是否是学校的学生
+      **/
+      function check_is_student_president($id)
+      {
+        global $db;
+        $school = $this->get_school_id();
+        $sql = "select count(id) from rd_user where school='$school' and id='$id'";
+        return $db->get_var($sql);
+      }
+
+
+      /**
       *教师用
       *获取学生的姓名
       **/
@@ -1697,6 +1738,61 @@
         global $db;
         $sql = "select score from rd_chinese_score where user_id=$id order by id desc limit 1";
         return intval($db->get_var($sql));
+      }
+
+      /**
+      *校长用
+      *更改学校名字
+      **/
+      function change_school($name)
+      {
+        global $db;
+        $school = $this->get_user_info()->school;
+        $sql = "update rd_school set schoolname='".$db->escape($name)."' where id='$school'";
+        $db->query($sql);
+      }
+
+      /**
+      *校长用
+      *获取学校内所有教师
+      **/
+      function get_teachers()
+      {
+        global $db;
+        $school = $this->get_user_info()->school;
+        $sql = "select id,name,headimg from rd_user where school='$school' and role=2";
+        $results = $db->get_results($sql);
+        for($i=0; $i<count($results); $i++)
+        {
+          if($results[$i]->headimg=="")
+          {
+            $results[$i]->headimg = "https://placeholdit.imgix.net/~text?txtsize=60&txt=暂无头像&w=200&h=200";
+          }
+          if($results[$i]->name=="")
+          {
+            $results[$i]->name="新人";
+          }
+        }
+        return $results;
+      }
+
+      /**
+      *校长用
+      *检查校长对目标教师是否有管辖权
+      **/
+      function check_president_teacher($id)
+      {
+        global $db;
+        $school = $this->get_school_id();
+        $sql = "select count(id) from rd_user where id='$id' and school='$school' and role=2 ";
+        if($db->get_var($sql)==1)
+        {
+          return true;
+        }
+        else
+        {
+          return false;
+        }
       }
 
 

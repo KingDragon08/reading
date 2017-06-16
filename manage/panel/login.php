@@ -1,5 +1,7 @@
 <?php
 require ('../include/init.inc.php');
+// echo 'str';
+// exit();
 $user_name = $password = $remember = $verify_code = '';
 // var_dump($user_name);
 // exit();

@@ -134,19 +134,36 @@ class User extends Base{
 
 	public static function checkLogin() {
 		$user_info = UserSession::getSessionInfo ();
+		// var_dump($user_info);
+		// exit();
 		if (empty ( $user_info )) {
 			Common::jumpUrl("panel/login.php");
+			// Common::exitWithMessage ('您需要先进行登录','panel/login.php' );
+        // echo "he";
+        // exit();
 			return true;
 		}
 	}
 
 	public static function checkActionAccess() {
+
 		$action_url = Common::getActionUrl();
 
 
 		$user_info = UserSession::getSessionInfo();
+		// if (empty($user_info)) {
+		// 	// Common::exitWithMessage ('您需要先进行登录','panel/login.php' );
+		// 	return true;
+		// }
 
 		$role_menu_url = MenuUrl::getMenuByRole ( $user_info['user_role']);
+		// echo "he";
+		// exit();
+		// if ($action_url == '') {
+		// 	# code...
+		// }
+		// var_dump($action_url);
+		// exit();
 
 		$search_result = in_array ( $action_url, $role_menu_url );
 		if (! $search_result) {

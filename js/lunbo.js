@@ -9,10 +9,10 @@ $(function(){
 
 	var
 		 index = 0 ;
-		 Swidth = 650 ;
+		 Swidth = 1000 ;
 		 timer = null ;
-		 len = $(".Div1_title span a").length ;
-		 maxPage = $(".Div1_main span").length/4;
+		 len = $(".Div1_main span").length ;
+		 maxPage = $(".Div1_main span").length/6;
 
 		function NextPage()
 		{

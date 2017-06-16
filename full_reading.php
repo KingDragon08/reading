@@ -170,7 +170,7 @@
         ?>
           <div class="col-lg-4 mb20">
             <div class="col-lg-6 book_img">
-              <a href="book_list.php?list_id=<?php echo $book->id;?>" target="_blank">
+              <a href="book.php?book=<?php echo $book->id;?>" target="_blank">
                 <img src="<?php echo $book->coverimg;?>" width="100%"/>
               </a>
             </div>

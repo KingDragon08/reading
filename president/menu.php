@@ -33,6 +33,7 @@
             <a href="main.php" target="main" class="list-group-item active">基本资料</a>
             <a href="school.php" target="main" class="list-group-item">学校信息</a>
             <a href="teacher.php" target="main" class="list-group-item">教师信息</a>
+            <a href="push.php" target="_blank" class="list-group-item">推送书单</a>
         </ul>
     <?php
       }

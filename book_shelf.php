@@ -566,7 +566,7 @@ if($role == "教师")
                   {
                     if($lists[$counter]->id==$_GET['id'])
                     {
-                      echo "<script>$('#list_type').html('教师书单".$lists[$counter]->id."')</script>";
+                      echo "<script>$('#list_type').html('".$lists[$counter]->name."')</script>";
                     }
                   }
                   $counter++;
@@ -671,10 +671,10 @@ if($role == "教师")
       $prior_url = '';
       $next_url = '';
       $page = isset($_GET['page'])?intval($_GET['page']):1;
-      $grade = isset($_GET['grade'])?intval($_GET['grade']):-1;
-      if($grade != -1)
+      $id = isset($_GET['id'])?intval($_GET['id']):-1;
+      if($id != -1)
       {
-        $url .= "grade=$grade&";
+        $url .= "id=$id&";
       }
   ?>
       <center>

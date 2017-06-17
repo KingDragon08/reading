@@ -370,6 +370,44 @@
       }
 
       /**
+      *校长用
+      *获取学校内的所有班级
+      **/
+      function get_school_classes()
+      {
+        global $db;
+        $role = $this->user_info->role;
+        if($role == "3")
+        {
+          $user_id = $this->get_user_id();
+          $school_id = $this->get_school_id();
+          $sql = "select * from rd_class where school='$school_id'";
+          $ret = array();
+          $results = $db->get_results($sql);
+          if($results)
+          {
+            foreach($results as $result)
+            {
+              $result->school = $db->get_var("select schoolname from rd_school where id='$result->school'");
+              $result->num = $db->get_var("select count(*) from rd_user where class='$result->id'");
+              //除去老师自己
+              if($result->num-1 > 0)
+              {
+                $result->num--;
+              }
+              $ret[] = $result;
+            }
+          }
+          return $ret;
+        }
+        else
+        {
+          return "";
+        }
+      }
+
+
+      /**
       *回复信息
       **/
       function reply_msg($msg_id,$title,$reply)
@@ -531,7 +569,7 @@
         $user_id = $this->get_user_id();
         $addtime = time();
         $endtime = strtotime($endtime);
-        if($role != "教师")
+        if($role!="教师" && $role!="3")
         {
           return "";
         }
@@ -1574,6 +1612,38 @@
       }
 
       /**
+      *获取学校名下所有的学生
+      **/
+      function get_students_by_school()
+      {
+        global $db;
+        $school_id = $this->get_school_id();
+        //获取教师所管理的班级
+        $sql = "select id from rd_class where school='$school_id'";
+        $classes = $db->get_results($sql);
+        $ret = [];
+        if(count($classes)>0)
+        {
+          foreach($classes as $class)
+          {
+            $students = $db->get_results("select id,name from rd_user where class='$class->id' and role=1");
+            if(count($students)>0)
+            {
+              foreach($students as $student)
+              {
+                if(strlen($student->name)<1)
+                {
+                  $student->name = "暂无姓名";
+                }
+                $ret[] = $student;
+              }
+            }
+          }
+        }
+        return $ret;
+      }
+
+      /**
       *获取书单管理的阅读完成记录板
       **/
       function get_num_data($id)
@@ -1619,6 +1689,55 @@
         }
         return $ret;
       }
+
+      /**
+      *校长用
+      *获取书单管理的阅读完成记录板
+      **/
+      function get_num_data_president($id)
+      {
+        global $db;
+        $user_id = $this->get_user_id();
+        $ret = [];
+        if($id!=0)//获取特定书单的阅读完成情况
+        {
+          //首先获取该书单对应的学生
+          $students = $db->get_results("select user_id from rd_user_read_list where book_list_id='$id'");
+          if(count($students)>0)
+          {
+            foreach ($students as $student)
+            {
+                $temp = [];
+                $name = $db->get_var("select name from rd_user where id='$student->user_id'");
+                if(strlen($name)<1)
+                {
+                  $name = "暂无姓名";
+                }
+                $temp['name'] = $name;
+                $sql = "select count(*) from rd_user_exam_scores where user_id='$student->user_id' ".
+                        "and hege=1 and book_id in(select book_id from rd_book_list where list_id='$id')";
+                $temp['num'] = $db->get_var($sql);
+                $ret[] = $temp;
+            }
+          }
+        }
+        else//获取总的情况
+        {
+          $students = $this->get_students_by_school();
+          if(count($students)>0)
+          {
+            foreach($students as $student)
+            {
+                $temp = [];
+                $temp['name'] = $student->name;
+                $temp['num'] = $db->get_var("select count(*) from rd_user_exam_scores where user_id='$student->id' and hege=1");
+                $ret[] = $temp;
+            }
+          }
+        }
+        return $ret;
+      }
+
 
       /**
       *教师测评中心学生读书总数和字数

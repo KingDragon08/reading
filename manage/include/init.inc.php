@@ -1,4 +1,7 @@
 <?php
+// echo 'str';
+// exit();
+
 error_reporting(E_ALL);
 require 'config/config.inc.php';
 session_start();
@@ -50,7 +53,9 @@ $no_need_login_page=array("/block.php","/panel/login.php","/panel/logout.php",);
 
 // 如果不需要登录就可以访问的话
 $action_url = Common::getActionUrl();
+// var_dump($_SERVER);
 if( OSAdmin::checkNoNeedLogin($action_url,$no_need_login_page) ){
+	// $current_user_info = UserSession::getSessionInfo();
 	// for login.php, logout.php, etc . . .
 	// ;
 } else {
@@ -61,10 +66,11 @@ if( OSAdmin::checkNoNeedLogin($action_url,$no_need_login_page) ){
 			User::loginDoSomething($user_id);
 		}
 	}
-
+	// echo "string";
+	// exit();
 	User::checkLogin();
-
 	User::checkActionAccess();
+
 	$current_user_info = UserSession::getSessionInfo();
 	// 如果非 AJAX 请求
 	if (stripos($_SERVER['SCRIPT_NAME'],"/ajax") === false) {

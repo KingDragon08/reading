@@ -1,6 +1,6 @@
 <?php
 require('../include/init.inc.php');
- // echo "string";
+// echo "string";
 // exit();
 $user_info = UserSession::getSessionInfo();
 // var_dump($user_info);

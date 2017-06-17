@@ -15,6 +15,10 @@ class MenuUrl extends Base
 
 	public static function getMenuByRole($user_role, $online = 1)
 	{
+		if (empty($user_role)) {
+			return array();
+		}
+
 		$url_array = array();
 		$db = self::__instance();
 
@@ -199,7 +203,7 @@ class MenuUrl extends Base
 		$num = $db->count(self::getTableName(), $condition);
 		return $num;
 	}
-	
+
 	public static function delMenu($menu_id)
 	{
 		if (!$menu_id || !is_numeric($menu_id)) return false;

@@ -5,15 +5,17 @@ class Common {
 	//获取OSAdmin的action_url，用于权限验证
 	public static function getActionUrl(){
 		$action_script=$_SERVER['SCRIPT_NAME'];
+		// var_dump($action_script);
 		$admin_url = strtolower(ADMIN_URL);
 		if($admin_url{strlen($admin_url)-1}=="/"){
 			$admin_url = substr($admin_url,0,strlen($admin_url)-1);
 		}
 
-		$http_pos = strpos($admin_url,'http://');
+		$http_pos = strpos($admin_url,'https://');
+		// var_dump($http_pos);
 
 		if($http_pos !== false){
-			$admin_url_no_http = substr($admin_url,7);
+			$admin_url_no_http = substr($admin_url,8);
 		}else{
 			$admin_url_no_http=$admin_url;
 		}

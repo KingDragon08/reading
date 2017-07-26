@@ -46,8 +46,9 @@
         <ul class="navigator">
           <li><a href="index.php">首页</a></li>
           <li><a href="full_reading.php" class="active">全本阅读</a></li>
+          <li><a href="page_reading.php">短篇阅读</a></li>
           <li><a href="ing.php">语音朗读</a></li>
-          <li><a href="＃">测评中心</a></li>
+          <li><a href="report.php">测评中心</a></li>
         </ul>
       </div>
     <!-- main nav end -->

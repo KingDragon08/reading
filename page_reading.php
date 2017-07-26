@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="css/index.css" media="screen">
     <script type="text/javascript" src="js/jquery.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
-    <title>乐智悦读-全本阅读</title>
+    <title>乐智悦读-短篇阅读</title>
     <style media="screen">
       .label{border-radius: 20px; padding: 4px 12px;}
       .purple{color:#824399;}
@@ -41,8 +41,8 @@
         </div>
         <ul class="navigator">
           <li><a href="index.php">首页</a></li>
-          <li><a href="full_reading.php" class="active">全本阅读</a></li>
-          <li><a href="page_reading.php">短篇阅读</a></li>
+          <li><a href="full_reading.php">全本阅读</a></li>
+          <li><a href="page_reading.php" class="active">短篇阅读</a></li>
           <li><a href="ing.php">语音朗读</a></li>
           <li><a href="report.php">测评中心</a></li>
         </ul>
@@ -73,10 +73,10 @@
     <!-- division panel start -->
       <div class="w100 forget">
         <div class="forget_cover">
-          全本阅读
+          短篇阅读
           <div class="float_right" style="margin-right:5.8em;">
-            <button class="btn btn-success active" onclick="location.href='full_reading.php'">全部书单</button>
-            <button class="btn btn-success" onclick="location.href='book_shelf.php'">我的任务</button>
+            <button class="btn btn-success active" onclick="location.href='full_reading.php'">全部短篇书单</button>
+            <button class="btn btn-success" onclick="location.href='book_short_shelf.php'">我的短篇任务</button>
           </div>
         </div>
       </div>
@@ -86,7 +86,7 @@
     <div class="row">
       <div class="container">
         <div class="col-lg-8">
-          选择书单类型:&nbsp;&nbsp;&nbsp;&nbsp;
+          选择短篇类型:&nbsp;&nbsp;&nbsp;&nbsp;
           <div class="btn-group">
               <button type="button" class="btn btn-default" id="type" style="max-width:6em; overflow:hidden;">图书类型</button>
               <button type="button" class="btn btn-default dropdown-toggle"
@@ -253,7 +253,7 @@
           <form action="search.php" method="get" target="_blank" name="search" id="search" onsubmit="return check_search()">
               <div class="input-group">
                 <input type="text" class="form-control" name="s" id="search_keywords">
-                <input type="hidden" name="type" value="full">
+                <input type="hidden" name="type" value="short">
                 <span class="input-group-addon">
                   <i class="glyphicon glyphicon-search" style="cursor:pointer;" onclick="$('#search').submit()"></i>
                 </span>
@@ -274,7 +274,7 @@
           $level_type = isset($_GET['level_type'])?intval($_GET['level_type']):0;//难度等级
           $score_type = isset($_GET['score_type'])?intval($_GET['score_type']):0;//积分数量
           // $books = $common->get_read_list_2($page,$user_id,$type,$grade);
-          $books = $common->get_read_list_3($page,$user_id,$type,$grade,$list_type,$level_type,$score_type);
+          $books = $common->get_read_list_3_short($page,$user_id,$type,$grade,$list_type,$level_type,$score_type);
           if($books)
           {
             $counter=0;
@@ -284,7 +284,7 @@
         ?>
           <div class="col-lg-4 mb20" style="height:220px;<?php if($counter%3==1 && $counter!=1) echo "clear:both;"?>">
             <div class="col-lg-6 book_img">
-              <a href="book.php?book=<?php echo $book->id;?>" target="_blank">
+              <a href="book_short.php?book=<?php echo $book->id;?>" target="_blank">
                 <img src="<?php echo $book->coverimg;?>" style="width:120px; height:160px; margin-top:30px;"/>
               </a>
             </div>
@@ -352,7 +352,7 @@
                 }
               }
             ?>
-            <li><a href="full_reading.php?page=<?php echo $page-1>0?$page-1:1; echo '&'; echo $url;  ?>">上一页</a></li>
+            <li><a href="page_reading.php?page=<?php echo $page-1>0?$page-1:1; echo '&'; echo $url;  ?>">上一页</a></li>
             <?php
               $pages = $common->get_read_list_pages();
               // echo $pages;
@@ -361,16 +361,16 @@
               {
                 if($index == $page)
                 {
-                  echo "<li class=\"active\"><a href=\"full_reading.php?page=$index&$url\">$index</a></li>";
+                  echo "<li class=\"active\"><a href=\"page_reading.php?page=$index&$url\">$index</a></li>";
                 }
                 else
                 {
-                  echo "<li><a href=\"full_reading.php?page=$index&$url\">$index</a></li>";
+                  echo "<li><a href=\"page_reading.php?page=$index&$url\">$index</a></li>";
                 }
                 $index++;
               }
             ?>
-            <li><a href="full_reading.php?page=<?php echo $page+1>$pages?$pages:$page+1; echo '&'; echo $url;  ?>">下一页</a></li>
+            <li><a href="page_reading.php?page=<?php echo $page+1>$pages?$pages:$page+1; echo '&'; echo $url;  ?>">下一页</a></li>
         </ul>
       </center>
     </div>
@@ -419,7 +419,7 @@
 
       function add2_book_shelf(book)
       {
-        location.href = "controller/book_shelf.php?action=add2shelf&book="+book;
+        location.href = "controller/book_shelf_short.php?action=add2shelf&book="+book;
       }
 
     </script>
@@ -449,10 +449,10 @@
     <!-- division panel start -->
       <div class="w100 forget">
         <div class="forget_cover">
-          全本阅读
+          短篇阅读
           <div class="float_right" style="margin-right:5.8em;">
-            <button class="btn btn-success active" onclick="location.href='full_reading.php'">书单定制</button>
-            <button class="btn btn-success" onclick="location.href='book_shelf.php'">书单管理</button>
+            <button class="btn btn-success active" onclick="location.href='page_reading.php'">短篇书单定制</button>
+            <button class="btn btn-success" onclick="location.href='book_short_shelf.php'">短篇书单管理</button>
           </div>
         </div>
       </div>
@@ -462,7 +462,7 @@
     <div class="row">
       <div class="container">
         <div class="col-lg-8">
-          选择书单类型:&nbsp;&nbsp;&nbsp;&nbsp;
+          选择短篇书单类型:&nbsp;&nbsp;&nbsp;&nbsp;
           <div class="btn-group">
               <button type="button" class="btn btn-default" id="list_type">书单类型</button>
               <button type="button" class="btn btn-default dropdown-toggle"
@@ -525,7 +525,7 @@
             </span>
           </div>
           &nbsp;&nbsp;&nbsp;&nbsp;
-          <div class="btn-group" onclick="javascript:del_cookie('books'); alert('删除成功');">
+          <div class="btn-group" onclick="javascript:del_cookie('books_short'); alert('删除成功');">
             <span class="btn btn-default">
               删除所有已选图书
             </span>
@@ -555,7 +555,7 @@
         // $books = $common->get_read_list($page,$user_id,$type,$grade);
         if(isset($_GET['s']))
         {
-          $books = $common->search_books($_GET['s'],$user_id);
+          $books = $common->search_books_short($_GET['s'],$user_id);
         }
         if($books)
         {
@@ -564,7 +564,7 @@
       ?>
             <div class="col-lg-12 mylist mt20">
               <div class="col-lg-2">
-                <a href="book.php?book=<?php echo $book->id;?>">
+                <a href="book_short.php?book=<?php echo $book->id;?>">
                   <img src="<?php echo $book->coverimg?>" class="img-responsive"/>
                 </a>
               </div>
@@ -579,7 +579,7 @@
                   已被推荐<?php echo $book->recommend_times;?>次
                 </div>
                 <div class="float_right">
-                      <a href="javascript:void(0);" class="btn btn-info ml20" id="book<?php echo $book->id;?>" onclick="add2_book_list(<?php echo $book->id;?>)">
+                      <a href="javascript:void(0);" class="btn btn-info ml20" id="book<?php echo $book->id;?>" onclick="add2_book_list_short(<?php echo $book->id;?>)">
                           加入书单
                       </a>
                 </div>
@@ -685,10 +685,10 @@
 
       function go()
       {
-        books = get_cookie('books');
+        books = get_cookie('books_short');
         if(books)
         {
-          location.href = "push_booklist.php";
+          location.href = "push_booklist_short.php";
         }
         else
         {
@@ -702,7 +702,7 @@
     <script type="text/javascript">
       $().ready(function(){
         //初始化已经加入当前书单的书的按钮
-        var b = get_cookie('books');
+        var b = get_cookie('books_short');
         if(b)
         {
           $(b.split(',')).each(function(index,val){
@@ -713,12 +713,12 @@
           });
         }
       });
-      function add2_book_list(book)
+      function add2_book_list_short(book)
       {
         books = "";
-        if(get_cookie('books'))
+        if(get_cookie('books_short'))
         {
-          books = get_cookie('books');
+          books = get_cookie('books_short');
         }
         if(books)
         {
@@ -728,7 +728,7 @@
         {
           books = book;
         }
-        set_cookie("books",books);
+        set_cookie("books_short",books);
         $("#book"+book).html("加入成功");
         $("#book"+book).removeClass("btn-info");
         $("#book"+book).addClass("btn-default");

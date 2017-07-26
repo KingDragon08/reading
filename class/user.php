@@ -632,6 +632,79 @@
       }
 
       /**
+      *推送短篇书单
+      **/
+      function push_booklist_short($books,$classes,$endtime)
+      {
+        global $db;
+        $role = $this->user_info->role;
+        $user_id = $this->get_user_id();
+        $addtime = time();
+        $endtime = strtotime($endtime);
+        if($role!="教师" && $role!="3")
+        {
+          return "";
+        }
+        $list_name = "给";
+        foreach($classes as $class)
+        {
+          //获取班级名字
+          $list_name .= $db->get_var("select classname from rd_class where id=$class");
+          $list_name .= ",";
+        }
+        $list_name = substr($list_name,0,-1);
+        $list_name .= "截止于".date('Y-m-d', $endtime)."的书单";
+        //创建书单
+        $sql = "insert into rd_read_list_short(user_id,type,endtime,addtime,name)values(".
+                "'$user_id','1','$endtime','$addtime','$list_name')";
+        $db->query($sql);
+        //获取创建书单的id
+        $read_list_id = $db->get_var("select id from rd_read_list_short where addtime='$addtime'");
+        //写入书单的书列表
+        //更新每本书的推荐次数
+        foreach($books as $book)
+        {
+          $sql = "insert into rd_book_list_short(book_id,list_id)values(".
+                  "'$book','$read_list_id')";
+          $db->query($sql);
+          $sql = "update rd_book_short set recommend_times=recommend_times+1 where id='$book'";
+          $db->query($sql);
+        }
+        //推送给对应班级的学生
+        foreach($classes as $class)
+        {
+          //获取班级里的所有学生
+          $sql = "select id from rd_user where class='$class' and role=1";
+          $students = $db->get_results($sql);
+          if($students)
+          {
+            foreach($students as $student)
+            {
+              //写入学生的书架
+              $sql = "insert into rd_user_read_list_short(user_id,book_list_id)values(".
+                      "'$student->id','$read_list_id')";
+              $db->query($sql);
+              //写入rd_user_read_book
+              foreach($books as $book)
+              {
+                $sql = "insert into rd_user_read_book_short(user_id,book_id,removed,addtime,endtime,type)value(".
+                      "'$student->id','$book',0,'$addtime','$endtime',1)";
+                $db->query($sql);
+              }
+              //给学生发邮件
+              if($student->id != $user_id)
+              {
+                $sql = "insert into rd_msg(msg_from,msg_to,msg_content,sendtime,msg_type,msg_status,msg_title)values(".
+                        "'$user_id','$student->id','老师给你推送短篇书单啦,快去全本阅读－我的任务下边查看吧!','$addtime','1','0','新书单来啦')";
+                $db->query($sql);
+              }
+            }
+          }
+        }
+      }
+
+
+      /**
       *获取用户所在学校的id
       **/
       function get_school_id()
@@ -1580,6 +1653,18 @@
       }
 
       /**
+      *教师用
+      *获取发布的所有短篇书单
+      **/
+      function get_history_list_short()
+      {
+        global $db;
+        $user_id = $this->get_user_id();
+        $sql = "select id,name from rd_read_list_short where user_id='$user_id' order by endtime asc";
+        return $db->get_results($sql);
+      }
+
+      /**
       *获取教师名下所有的学生
       **/
       function get_students()
@@ -1683,6 +1768,53 @@
                 $temp = [];
                 $temp['name'] = $student->name;
                 $temp['num'] = $db->get_var("select count(*) from rd_user_exam_scores where user_id='$student->id' and hege=1");
+                $ret[] = $temp;
+            }
+          }
+        }
+        return $ret;
+      }
+
+      /**
+      *获取短篇书单管理的阅读完成记录板
+      **/
+      function get_num_data_short($id)
+      {
+        global $db;
+        $user_id = $this->get_user_id();
+        $ret = [];
+        if($id!=0)//获取特定书单的阅读完成情况
+        {
+          //首先获取该书单对应的学生
+          $students = $db->get_results("select user_id from rd_user_read_list_short where book_list_id='$id'");
+          if(count($students)>0)
+          {
+            foreach ($students as $student)
+            {
+                $temp = [];
+                $name = $db->get_var("select name from rd_user where id='$student->user_id'");
+                if(strlen($name)<1)
+                {
+                  $name = "暂无姓名";
+                }
+                $temp['name'] = $name;
+                $sql = "select count(*) from rd_user_exam_scores_short where user_id='$student->user_id' ".
+                        "and hege=1 and book_id in(select book_id from rd_book_list_short where list_id='$id')";
+                $temp['num'] = $db->get_var($sql);
+                $ret[] = $temp;
+            }
+          }
+        }
+        else//获取总的情况
+        {
+          $students = $this->get_students();
+          if(count($students)>0)
+          {
+            foreach($students as $student)
+            {
+                $temp = [];
+                $temp['name'] = $student->name;
+                $temp['num'] = $db->get_var("select count(*) from rd_user_exam_scores_short where user_id='$student->id' and hege=1");
                 $ret[] = $temp;
             }
           }

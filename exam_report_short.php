@@ -36,7 +36,7 @@
     <!-- top nav start-->
       <?php
         include_once("top.php");
-        include_once("class/exam.php");
+        include_once("class/exam_short.php");
         if(!isLogin())//如果没有登录则跳转到首页
         {
           header("Location:login.php");
@@ -56,8 +56,8 @@
         </div>
         <ul class="navigator">
           <li><a href="index.php">首页</a></li>
-          <li><a href="full_reading.php" class="active">全本阅读</a></li>
-          <li><a href="page_reading.php">短篇阅读</a></li>
+          <li><a href="full_reading.php">全本阅读</a></li>
+          <li><a href="page_reading.php" class="active">短篇阅读</a></li>
           <li><a href="ing.php">语音朗读</a></li>
           <li><a href="report.php">测评中心</a></li>
         </ul>
@@ -108,7 +108,7 @@
       <?php
           exit();
         }
-        $exam = new Exam(1);
+        $exam = new Exam_short(1);
         $exam_report = $exam->get_exam_report($user_id,$exam_id);
         // var_dump($exam_report);
         if($exam_report)

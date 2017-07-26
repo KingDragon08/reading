@@ -54,10 +54,7 @@
         <div class="forget_cover">
             语音朗读
             <div class="float_right" id="ctr_btn" style="margin-right:5.8em;">
-              <button class="btn btn-success" style="margin-right:10px;" onclick="location.href='ing.php'">单字测评</button>
-              <button class="btn btn-success" style="margin-right:10px;" onclick="location.href='ing_c.php'">词语测评</button>
-              <button class="btn btn-success active">短文测评</button>
-              <button class="btn btn-danger" onclick="location.href='super.php'">明星领读</button>
+              <button class="btn btn-danger">明星领读</button>
             </div>
         </div>
      </div>
@@ -164,7 +161,7 @@
                   ?>
                         <div class="col-lg-2">
                           <a href="?textbook=<?php echo $textbook;?>&grade=<?php echo $grade;?>&unit=<?php echo $unit;?>&page=<?php echo $item->id;?>" target="_self"
-                              class="textbook <?php if($page==$item->id){echo 'active';$url="speech.php?type=ju&textbook=$textbook&grade=$grade&unit=$unit&page=".$item->id;}?>">
+                              class="textbook <?php if($page==$item->id){echo 'active';$url="super_go.php?textbook=$textbook&grade=$grade&unit=$unit&page=".$item->id;}?>">
                             <?php echo $item->name ?>
                           </a>
                         </div>
@@ -187,11 +184,11 @@
               font-size: 16px; cursor: pointer;
             }
     </style>
-    <div class="start" onclick="speech_start()">
-      开始测评
+    <div class="start" onclick="super_go()">
+      开始领读
     </div>
     <script type="text/javascript">
-      function speech_start()
+      function super_go()
       {
         var speech_time = new Date().getTime();
         location.href = "<?php echo $url;?>&speech_time="+speech_time;

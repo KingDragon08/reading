@@ -41,6 +41,7 @@
         <ul class="navigator">
           <li><a href="index.php">首页</a></li>
           <li><a href="full_reading.php">全本阅读</a></li>
+          <li><a href="page_reading.php">短篇阅读</a></li>
           <li><a href="ing.php">语音朗读</a></li>
           <li><a href="report.php" class="active">测评中心</a></li>
         </ul>
@@ -339,7 +340,7 @@
                 var myChart_1 = echarts.init(document.getElementById('graph1'),'default');
                 var option_1 = {
                 title:{
-                  text:"<?php echo "总平均分:".$class_score->avg_score."  共读".$kd_nums['num1']."本  ".$kd_nums['num2']."字";?>"
+                  text:"<?php echo "全本阅读－总平均分:".$class_score->avg_score."  共读".$kd_nums['num1']."本  ".$kd_nums['num2']."字";?>"
                 },
                 tooltip : {
                     trigger: 'axis'
@@ -476,6 +477,9 @@
                 <script type="text/javascript">
                 var myChart_3 = echarts.init(document.getElementById('graph3'),'default');
                 var option_3 = {
+                      title: {
+                        text:'难度等级'
+                      },
                       tooltip : {
                           trigger: 'axis'
                       },
@@ -547,6 +551,9 @@
               <script type="text/javascript">
               var myChart_yuyin_2 = echarts.init(document.getElementById('yuyin_graph2'),'default');
               var option_yuyin_2 = {
+                title: {
+                  text:'语音朗读报告'
+                },
                 tooltip : {
                     trigger: 'axis'
                 },
@@ -594,6 +601,10 @@
             <script type="text/javascript">
               var myChart_yuyin_1 = echarts.init(document.getElementById('yuyin_graph1'),'default');
               var yuyin_option_1 = {
+                title: {
+                  text:'语音朗读报告',
+                  position: 'center'
+                },
                 tooltip : {
                     trigger: 'axis'
                 },
@@ -722,6 +733,9 @@
                   <script type="text/javascript">
                   var myChart_4 = echarts.init(document.getElementById('graph4'),'default');
                   var option_4 = {
+                    title: {
+                      text:'阅读数量'
+                    },
                     tooltip: {
                         trigger: 'axis'
                     },
@@ -787,6 +801,9 @@
                   <script type="text/javascript">
                   var myChart_6 = echarts.init(document.getElementById('graph6'),'default');
                   var option_6 = {
+                    title: {
+                      text:'阅读评分'
+                    },
                     tooltip: {
                         trigger: 'axis'
                     },
@@ -868,6 +885,12 @@
               <script type="text/javascript">
               var myChart_5_1 = echarts.init(document.getElementById('graph5_1'),'default');
               var option_5_1 = {
+                title: {
+                  text:'朗读评分
+              title: {
+                text:'语文成绩'
+              },'
+                },
                 tooltip: {
                     trigger: 'axis'
                 },
@@ -998,6 +1021,9 @@
           <script type="text/javascript">
             var myChart_7 = echarts.init(document.getElementById('graph7'),'default');
             var option_7 = {
+              title: {
+                text:'语文成绩'
+              },
               tooltip: {
                   trigger: 'axis'
               },

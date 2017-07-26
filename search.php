@@ -41,8 +41,9 @@
         <ul class="navigator">
           <li><a href="index.php">首页</a></li>
           <li><a href="full_reading.php">全本阅读</a></li>
+          <li><a href="page_reading.php">短篇阅读</a></li>
           <li><a href="ing.php">语音朗读</a></li>
-          <li><a href="＃">测评中心</a></li>
+          <li><a href="report.php">测评中心</a></li>
         </ul>
       </div>
     <!-- main nav end -->
@@ -77,9 +78,20 @@
       <div class="col-lg-12">
         <?php
           $keywords = isset($_GET['s'])?$_GET['s']:-1;
+          $type = isset($_GET['type'])?$_GET['type']:'full';
+          if($type!='full' && $type!='short'){
+            $type = 'full';
+          }
           if($keywords != -1)
           {
-            $books = $common->search_books($keywords,$user_id);
+            if($type=='full')
+            {
+              $books = $common->search_books($keywords,$user_id);
+            }
+            else
+            {
+              $books = $common->search_books_short($keywords,$user_id); 
+            }
             if($books)
             {
               foreach($books as $book)
@@ -101,7 +113,14 @@
                     }
                     else
                     {
-                      echo "<label class=\"label label-success\" style='cursor:pointer;' onclick='add2_book_shelf($book->id)'>加入书架</label>";
+                      if($type=='short')
+                      {
+                        echo "<label class=\"label label-success\" style='cursor:pointer;' onclick='add2_book_shelf_short($book->id)'>加入书架</label>";  
+                      }
+                      i($type=='full')
+                      {
+                        echo "<label class=\"label label-success\" style='cursor:pointer;' onclick='add2_book_shelf($book->id)'>加入书架</label>";
+                      }
                     }
                   ?>
 
@@ -150,9 +169,9 @@
   </body>
   <script type="text/javascript" src="js/full_reading.js"></script>
   <script type="text/javascript">
-    function add2_book_shelf(book)
+    function add2_book_shelf_short(book)
     {
-      location.href = "controller/book_shelf.php?action=add2shelf&book="+book;
+      location.href = "controller/book_shelf_short.php?action=add2shelf&book="+book;
     }
   </script>
 </html>

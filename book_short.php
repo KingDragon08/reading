@@ -16,7 +16,7 @@
     <!-- top nav start-->
       <?php
         include_once("top.php");
-        include_once("class/book.php");
+        include_once("class/book_short.php");
         if(!isLogin())//如果没有登录则跳转到首页
         {
           header("Location:login.php");
@@ -28,7 +28,7 @@
           $user_id = $user->get_user_id();
           if(isset($_GET['book']))
           {
-            $book = new Book(intval($_GET['book']));
+            $book = new Book_short(intval($_GET['book']));
             if($book->get_book_id() == -1)
             {
       ?>
@@ -36,7 +36,7 @@
                 <img src="img/gongchengshi.jpeg" style="margin-top:20px;"/>
                 <br>
                 <p class="gray" id="tips">
-                  找不到该书...
+                  找不到该短篇阅读...
                 </p>
               </center>
       <?php
@@ -64,7 +64,7 @@
               <img src="img/gongchengshi.jpeg" style="margin-top:20px;"/>
               <br>
               <p class="gray" id="tips">
-                找不到该书...
+                找不到该短篇阅读...
               </p>
             </center>
       <?php
@@ -80,8 +80,8 @@
         </div>
         <ul class="navigator">
           <li><a href="index.php">首页</a></li>
-          <li><a href="full_reading.php" class="active">全本阅读</a></li>
-          <li><a href="page_reading.php">短篇阅读</a></li>
+          <li><a href="full_reading.php">全本阅读</a></li>
+          <li><a href="page_reading.php" class="active">短篇阅读</a></li>
           <li><a href="ing.php">语音朗读</a></li>
           <li><a href="＃">测评中心</a></li>
         </ul>
@@ -422,7 +422,7 @@
                   <img src="img/gongchengshi.jpeg" style="margin-top:20px;"/>
                   <br>
                   <p class="gray" id="tips">
-                    该书暂不支持读书笔记...
+                    该短篇阅读暂不支持读书笔记...
                   </p>
                   <input type="button" name="s_cancel" value="关闭" class="btn btn-default" onclick="cancel_note()">
                 </center>

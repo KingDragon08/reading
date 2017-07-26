@@ -12,7 +12,7 @@
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="jqueryui/jquery-ui.min.js"></script>
     <link rel="stylesheet" href="jqueryui/jquery-ui.css">
-    <title>乐智悦读-推送书单</title>
+    <title>乐智悦读-推送短篇书单</title>
   </head>
   <body>
     <!-- top nav start-->
@@ -36,8 +36,8 @@
         </div>
         <ul class="navigator">
           <li><a href="index.php">首页</a></li>
-          <li><a href="full_reading.php" class="active">全本阅读</a></li>
-          <li><a href="page_reading.php">短篇阅读</a></li>
+          <li><a href="full_reading.php">全本阅读</a></li>
+          <li><a href="page_reading.php" class="active">短篇阅读</a></li>
           <li><a href="ing.php">语音朗读</a></li>
           <li><a href="＃">测评中心</a></li>
         </ul>
@@ -46,10 +46,10 @@
     <!-- forget panel start -->
       <div class="w100 forget">
         <div class="forget_cover">
-            推送书单
+            推送短篇书单
         <div class="float_right" style="margin-right:5.8em;">
-          <button class="btn btn-success active" onclick="location.href='full_reading.php'">书单定制</button>
-          <button class="btn btn-success" onclick="location.href='book_shelf.php'">书单管理</button>
+          <button class="btn btn-success active" onclick="location.href='page_reading.php'">短篇书单定制</button>
+          <button class="btn btn-success" onclick="location.href='book_short_shelf.php'">短篇书单管理</button>
         </div>
       </div>
     </div>
@@ -69,7 +69,7 @@
       }
       else
       {
-        if(!isset($_COOKIE['books']))
+        if(!isset($_COOKIE['books_short']))
         {
     ?>
         <center>
@@ -82,7 +82,7 @@
     <?php
           exit();
         }
-        $books = explode(",",$_COOKIE['books']);
+        $books = explode(",",$_COOKIE['books_short']);
         //处理表单提交
         if(isset($_POST['book']) && isset($_POST['class']) && isset($_POST['endtime']))
         {
@@ -91,7 +91,7 @@
           $endtime = $_POST['endtime'];
           if(count($books)>0 && count($classes)>0)
           {
-            $user->push_booklist($books,$classes,$endtime);
+            $user->push_booklist_short($books,$classes,$endtime);
     ?>
           <center>
             <img src="img/gongchengshi.jpeg" style="margin-top:20px;"/>
@@ -102,7 +102,7 @@
           </center>
           <script type="text/javascript" src="js/cookie.js"></script>
           <script type="text/javascript">
-            del_cookie('books');
+            del_cookie('books_short');
           </script>
     <?php
             exit();
@@ -119,7 +119,7 @@
               <?php
                 foreach($books as $book)
                 {
-                  $book = $db->get_row("select * from rd_book where id='$book'");
+                  $book = $db->get_row("select * from rd_book_short where id='$book'");
               ?>
               <div class="col-lg-12" style="border-bottom:1px dashed #eee;">
                 <div class="col-lg-1">

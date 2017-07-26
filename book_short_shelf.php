@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="css/index.css" media="screen">
     <script type="text/javascript" src="js/jquery.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
-    <title>乐智悦读-全本阅读</title>
+    <title>乐智悦读-短篇阅读</title>
     <style media="screen">
       .btn-small{font-size: 12px; border-radius: 20px;}
       .purple{color:#824399;}
@@ -54,8 +54,8 @@
         </div>
         <ul class="navigator">
           <li><a href="index.php">首页</a></li>
-          <li><a href="full_reading.php" class="active">全本阅读</a></li>
-          <li><a href="page_reading.php">短篇阅读</a></li>
+          <li><a href="full_reading.php">全本阅读</a></li>
+          <li><a href="page_reading.php" class="active">短篇阅读</a></li>
           <li><a href="ing.php">语音朗读</a></li>
           <li><a href="report.php">测评中心</a></li>
         </ul>
@@ -85,8 +85,8 @@
     <div class="forget_cover">
       全本阅读
       <div class="float_right" style="margin-right:5.8em;">
-        <button class="btn btn-success" onclick="location.href='full_reading.php'">全部书单</button>
-        <button class="btn btn-success active" onclick="location.href='book_shelf.php'">我的任务</button>
+        <button class="btn btn-success" onclick="location.href='page_reading.php'">全部短篇书单</button>
+        <button class="btn btn-success active" onclick="location.href='book_short_shelf.php'">我的短篇任务</button>
       </div>
     </div>
   </div>
@@ -96,7 +96,7 @@
 <div class="row">
   <div class="container">
     <div class="col-lg-9">
-      选择书单类型:&nbsp;&nbsp;&nbsp;&nbsp;
+      选择短篇类型:&nbsp;&nbsp;&nbsp;&nbsp;
 
       <div class="btn-group">
           <button type="button" class="btn btn-default" id="list_type">图书类型</button>
@@ -191,7 +191,7 @@
           </button>
           <ul class="dropdown-menu" role="menu">
             <?php
-              $endtimes = $common->get_books_task_endtimes($user_id);
+              $endtimes = $common->get_books_task_endtimes_short($user_id);
               if(count($endtimes))
               {
                 foreach($endtimes as $endtime)
@@ -224,6 +224,7 @@
       <form action="search.php" method="get" target="_blank" name="search" id="search" onsubmit="return check_search()">
           <div class="input-group">
             <input type="text" name="s" class="form-control" id="search_keywords">
+            <input type="hidden" name="type" value="short">
             <span class="input-group-addon">
               <i class="glyphicon glyphicon-search" style="cursor:pointer;" onclick="$('#search').submit()"></i>
             </span>
@@ -265,11 +266,11 @@
       // $books = $common->get_lists_task($user_id,$grade,$type,$status,$page);
       if($endtime!=0)
       {
-          $books = $common->get_books_task($user_id,0,0,-1,1,$endtime);
+          $books = $common->get_books_task_short($user_id,0,0,-1,1,$endtime);
       }
       else
       {
-          $books = $common->get_books_task($user_id,$grade,$type,$status,$page,$endtime);
+          $books = $common->get_books_task_short($user_id,$grade,$type,$status,$page,$endtime);
       }
       if($books)
       {
@@ -280,7 +281,7 @@
     ?>
     <div class="col-lg-4 mb20" <?php if($counter%3==1 && $counter!=1) echo "style='clear:both;'"?>>
       <div class="col-lg-6 book_img">
-        <a href="task.php?task=<?php echo $book->id;?>">
+        <a href="book_short.php?book=<?php echo $book->id;?>">
           <img src="<?php echo $book->coverimg; ?>" width="100%"/>
         </a>
       </div>
@@ -302,25 +303,34 @@
               if($book->status==2)
               {
               ?>
-                <a class="btn btn-small btn-success" style="padding:4px 12px;" href="exam<?php if($book->grade>2){echo 2;}?>.php?book=<?php echo $book->id;?>">
+                <a class="btn btn-small btn-success" style="padding:4px 12px;" href="exam<?php if($book->grade>2){echo 2;}?>_short.php?book=<?php echo $book->id;?>">
                   <i class="glyphicon glyphicon-file">我要测评</i>
                 </a>
+                <!-- <a class="btn btn-small btn-success" style="padding:4px 12px;" href="temp.php">
+                  <i class="glyphicon glyphicon-file">我要测评</i>
+                </a> -->
               <?php
               }
               if($book->status==1)
               {
               ?>
-                <span class="btn btn-small btn-success" style="padding:4px 12px;" onclick="openwin('exam_report_history.php?book=<?php echo $book->id;?>');">
+                <span class="btn btn-small btn-success" style="padding:4px 12px;" onclick="openwin('exam_report_history_short.php?book=<?php echo $book->id;?>');">
                   <i class="glyphicon glyphicon-file">测评结果</i>
                 </span>
+                <!-- <span class="btn btn-small btn-success" style="padding:4px 12px;" onclick="openwin('temp.php');">
+                  <i class="glyphicon glyphicon-file">测评结果</i>
+                 --></span>
               <?php
               }
               if($book->status==0)
               {
               ?>
-                <a class="btn btn-small btn-success" style="padding:4px 12px;" href="exam<?php if($book->grade>2){echo 2;}?>.php?book=<?php echo $book->id;?>">
+                <a class="btn btn-small btn-success" style="padding:4px 12px;" href="exam<?php if($book->grade>2){echo 2;}?>_short.php?book=<?php echo $book->id;?>">
                   <i class="glyphicon glyphicon-file">再次测评</i>
                 </a>
+                <!-- <a class="btn btn-small btn-success" style="padding:4px 12px;" href="temp.php">
+                  <i class="glyphicon glyphicon-file">再次测评</i>
+                </a> -->
               <?php
               }
               ?>
@@ -330,7 +340,7 @@
                 if($book->shelf_type==0)
                 {
               ?>
-                <a class="btn btn-small btn-success" style="padding:4px 12px;" href="controller/book_shelf.php?action=remove&book=<?php echo $book->id;?>">
+                <a class="btn btn-small btn-success" style="padding:4px 12px;" href="controller/book_shelf_short.php?action=remove&book=<?php echo $book->id;?>">
                   <i class="glyphicon glyphicon-trash"></i>移除
                 </a>
               <?php
@@ -364,7 +374,7 @@
   <center>
     <ul class="pagination">
         <?php
-          $url = "book_shelf.php?grade=".$grade."&type=".$type."&status=".$status."&page=";
+          $url = "book_short_shelf.php?grade=".$grade."&type=".$type."&status=".$status."&page=";
           $prior_page = $page-1>0?$page-1:1;
           $next_page = $page+1>$common->get_pages()?$common->get_pages():$page+1;
         ?>
@@ -397,22 +407,22 @@
     {
       if(status == -1)
       {
-        location.href = "book_shelf.php?grade="+id;
+        location.href = "book_short_shelf.php?grade="+id;
       }
       else
       {
-        location.href = "book_shelf.php?grade="+id+"&status="+status;
+        location.href = "book_short_shelf.php?grade="+id+"&status="+status;
       }
     }
     else
     {
       if(status == -1)
       {
-        location.href = "book_shelf.php?grade="+id+"&type="+type;
+        location.href = "book_short_shelf.php?grade="+id+"&type="+type;
       }
       else
       {
-        location.href = "book_shelf.php?grade="+id+"&type="+type+"&status="+status;
+        location.href = "book_short_shelf.php?grade="+id+"&type="+type+"&status="+status;
       }
     }
   }
@@ -423,22 +433,22 @@
     {
       if(status == -1)
       {
-        location.href = "book_shelf.php?type="+id;
+        location.href = "book_short_shelf.php?type="+id;
       }
       else
       {
-        location.href = "book_shelf.php?type="+id+"&status="+status;
+        location.href = "book_short_shelf.php?type="+id+"&status="+status;
       }
     }
     else
     {
       if(status == -1)
       {
-        location.href = "book_shelf.php?type="+id+"&grade="+grade;
+        location.href = "book_short_shelf.php?type="+id+"&grade="+grade;
       }
       else
       {
-        location.href = "book_shelf.php?type="+id+"&grade="+grade+"&status="+status;
+        location.href = "book_short_shelf.php?type="+id+"&grade="+grade+"&status="+status;
       }
     }
   }
@@ -449,29 +459,29 @@
     {
       if(type == 0)
       {
-        location.href = "book_shelf.php?status="+id;
+        location.href = "book_short_shelf.php?status="+id;
       }
       else
       {
-        location.href = "book_shelf.php?status="+id+"&type="+type;
+        location.href = "book_short_shelf.php?status="+id+"&type="+type;
       }
     }
     else
     {
       if(type == 0)
       {
-        location.href = "book_shelf.php?status="+id+"&grade="+grade;
+        location.href = "book_short_shelf.php?status="+id+"&grade="+grade;
       }
       else
       {
-        location.href = "book_shelf.php?status="+id+"&grade="+grade+"&type="+type;
+        location.href = "book_short_shelf.php?status="+id+"&grade="+grade+"&type="+type;
       }
     }
   }
 
   function endtime_change(endtime)
   {
-    location.href = "book_shelf.php?endtime="+endtime;
+    location.href = "book_short_shelf.php?endtime="+endtime;
   }
 
 </script>
@@ -499,10 +509,10 @@ if($role == "教师")
   <!-- division panel start -->
     <div class="w100 forget">
       <div class="forget_cover">
-        全本阅读
+        短篇阅读
         <div class="float_right" style="margin-right:5.8em;">
-          <button class="btn btn-success" onclick="location.href='full_reading.php'">书单定制</button>
-          <button class="btn btn-success active" onclick="location.href='book_shelf.php'">书单管理</button>
+          <button class="btn btn-success" onclick="location.href='page_reading.php'">短篇书单定制</button>
+          <button class="btn btn-success active" onclick="location.href='book_short_shelf.php'">短篇书单管理</button>
         </div>
       </div>
     </div>
@@ -524,7 +534,7 @@ if($role == "教师")
         {
           $id = 0;
         }
-        $num_data = $user->get_num_data($id);
+        $num_data = $user->get_num_data_short($id);
         if(count($num_data)>0)
         {
           foreach($num_data as $data)
@@ -553,15 +563,15 @@ if($role == "教师")
                 <span class="sr-only">选择</span>
             </button>
             <ul class="dropdown-menu" role="menu">
-              <li><a href="book_shelf.php?id=0">全部历史书单</a></li>
+              <li><a href="book_short_shelf.php?id=0">全部历史书单</a></li>
               <?php
                 $grades = $common->get_grade();
-                $lists = $user->get_history_list();
+                $lists = $user->get_history_list_short();
                 $counter = 0;
                 while($counter<count($lists))
                 {
               ?>
-                  <li><a href="book_shelf.php?id=<?php echo $lists[$counter]->id;?>"><?php echo $lists[$counter]->name;?></a></li>
+                  <li><a href="book_short_shelf.php?id=<?php echo $lists[$counter]->id;?>"><?php echo $lists[$counter]->name;?></a></li>
               <?php
                   if(isset($_GET['id']))
                   {
@@ -580,6 +590,7 @@ if($role == "教师")
         <form action="" method="get" name="search" id="search" onsubmit="return check_search()">
             <div class="input-group">
               <input type="text" name="s" class="form-control" id="search_keywords">
+              <input type="hidden" name="type" value="short">
               <span class="input-group-addon">
                 <i class="glyphicon glyphicon-search" style="cursor:pointer;" onclick="$('#search').submit()"></i>
               </span>
@@ -606,11 +617,11 @@ if($role == "教师")
       $id = intval($_GET['id']);
       if($id!=0)
       {
-        $books = $common->get_teacher_list_by_id($user_id,$id,$page);
+        $books = $common->get_teacher_list_by_id_short($user_id,$id,$page);
       }
       else
       {
-        $books = $common->get_teacher_book_list($user_id,$page);
+        $books = $common->get_teacher_book_list_short($user_id,$page);
       }
     }
     else
@@ -618,11 +629,11 @@ if($role == "教师")
       if(isset($_GET['s']))
       {
         $keywords = $_GET['s'];
-        $books = $common->get_teacher_books_by_keywords($user_id,$keywords);
+        $books = $common->get_teacher_books_by_keywords_short($user_id,$keywords);
       }
       else
       {
-        $books = $common->get_teacher_book_list($user_id,$page);
+        $books = $common->get_teacher_book_list_short($user_id,$page);
       }
     }
   ?>
@@ -635,7 +646,7 @@ if($role == "教师")
     ?>
           <div class="col-lg-6 mb20">
             <div class="col-lg-6 book_img">
-              <a href="book.php?book=<?php echo $book->id;?>">
+              <a href="book_short.php?book=<?php echo $book->id;?>">
                 <img src="<?php echo $book->coverimg; ?>" width="100%"/>
               </a>
             </div>
@@ -657,7 +668,7 @@ if($role == "教师")
           <img src="img/gongchengshi.jpeg" style="margin-top:20px;"/>
           <br>
           <p class="gray" id="tips">
-            暂无满足条件的书单...
+            暂无满足条件的短篇书单...
           </p>
         </center>
     <?php
@@ -680,16 +691,16 @@ if($role == "教师")
   ?>
       <center>
         <ul class="pagination">
-            <li><a href="book_shelf.php?<?php echo $url;?>page=<?php echo $page-1>0?$page-1:1;?>">上一页</a></li>
+            <li><a href="book_short_shelf.php?<?php echo $url;?>page=<?php echo $page-1>0?$page-1:1;?>">上一页</a></li>
             <?php
               for($i=1;$i<=$common->get_pages();$i++)
               {
             ?>
-                <li class="<?php if($i==$page) echo 'active';?>"><a href="book_shelf.php?<?php echo $url;?>page=<?php echo $i;?>"><?php echo $i;?></a></li>
+                <li class="<?php if($i==$page) echo 'active';?>"><a href="book_short_shelf.php?<?php echo $url;?>page=<?php echo $i;?>"><?php echo $i;?></a></li>
             <?php
               }
             ?>
-            <li><a href="book_shelf.php?<?php echo $url;?>page=<?php echo $page+1>$common->get_pages()?$common->get_pages():$page+1;?>">下一页</a></li>
+            <li><a href="book_short_shelf.php?<?php echo $url;?>page=<?php echo $page+1>$common->get_pages()?$common->get_pages():$page+1;?>">下一页</a></li>
         </ul>
       </center>
   </div>

@@ -43,6 +43,7 @@
         <ul class="navigator">
           <li><a href="index.php">首页</a></li>
           <li><a href="full_reading.php">全本阅读</a></li>
+          <li><a href="page_reading.php">短篇阅读</a></li>
           <li><a href="ing.php" class="active">语音朗读</a></li>
           <li><a href="report.php">测评中心</a></li>
         </ul>
@@ -56,6 +57,7 @@
               <button class="btn btn-success active" style="margin-right:10px;">单字测评</button>
               <button class="btn btn-success" style="margin-right:10px;" onclick="location.href='ing_c.php'">词语测评</button>
               <button class="btn btn-success" onclick="location.href='ing_j.php'">短文测评</button>
+              <button class="btn btn-danger" onclick="location.href='super.php'">明星领读</button>
             </div>
         </div>
      </div>

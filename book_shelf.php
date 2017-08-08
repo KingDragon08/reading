@@ -280,7 +280,7 @@
     ?>
     <div class="col-lg-4 mb20" <?php if($counter%3==1 && $counter!=1) echo "style='clear:both;'"?>>
       <div class="col-lg-6 book_img">
-        <a href="task.php?task=<?php echo $book->id;?>">
+        <a href="book.php?book=<?php echo $book->id;?>">
           <img src="<?php echo $book->coverimg; ?>" width="100%"/>
         </a>
       </div>

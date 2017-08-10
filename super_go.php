@@ -379,28 +379,7 @@
                 }
                 function go()
                 {
-                  for(var i=0; i<scores.length; i++)
-                  {
-                    if(scores[i]==0)
-                    {
-                      alert("未完成测评,不能提交!");
-                      return;
-                    }
-                  }
-                  $.ajax({
-                    url:'controller/speech.php',
-                    type:'post',
-                    dataType:'json',
-                    data:{type:'ju',scores:JSON.stringify(scores),sk:'<?php echo md5($user->get_user_id());?>',page:<?php echo $page;?>,size:<?php echo count($words);?>},
-                    success:function(data){
-                      alert("成绩提交成功");
-                      //console.log(data);
-                      location.href = "ing_j.php";
-                    },
-                    error:function(){
-                      alert("网络不畅");
-                    }
-                  });
+                  
                 }
 
                 //检测麦克风是否可用
@@ -451,42 +430,5 @@
     <?php
       include_once("footer.php");
     ?>
-    <style media="screen">
-      .tips_cover{position:fixed; left:0; right:0; top:0; bottom:0; background:rgba(0,0,0,0.5); z-index: 1000;}
-      .tips{width:560px; height:400px; position:fixed;
-            left:50%; top:50%; margin-left:-280px; margin-top:-200px;
-            background:#fff; border-radius: 5px;
-      }
-    </style>
-    <div class="tips_cover" id="tips_cover">
-      <div class="tips">
-        <div class="mt20" style="width:560px; text-align:center; font-size:18px; color:#824399;">测试注意事项</div>
-        <div style="padding:30px;">
-          <h5>为保证您的测试顺利进行,确保测试结果的准确性,请确认：</h5><br>
-          <p class="gray">（1）保持测试现场相对比较安静，避免环境噪声的干扰</p>
-          <p class="gray">（2）正确佩戴麦克风，在测试过程中不要随意调整麦克风</p>
-          <p class="gray">（3）按照计算机提示进行操作</p>
-          <p class="gray">（4）在正式开始测试时，请不要说与试题内容无关的话，注意试卷内容应该<br>
-                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                          横向朗读，避免错行，漏行</p>
-        </div>
-        <div class="mt20" style="text-align:center;">
-          <span class="btn btn-success active" onclick="$('#tips_cover').fadeOut();">我已经准备好了</span>
-          <span class="btn btn-success">我还未准备好</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="tips_cover" id="loading" style="display:none;">
-      <div class="loading">
-           <span></span>
-           <span></span>
-           <span></span>
-           <span></span>
-           <span></span>
-      </div>
-    </div>
-
-
   </body>
 </html>

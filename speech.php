@@ -661,6 +661,7 @@
                                 echo '<div class="speech_container_ju item">';
                             }
                             echo "<input type=\"hidden\" id=\"words_".$i."\" value=\"".$words[$i]->name."\">";
+                            echo "<input type=\"hidden\" id=\"url_".$i."\" value=\"".$words[$i]->url."\">";
                             if($i==0)
                             {
                               echo "<input type=\"radio\" name=\"ju\" id=\"j_words_$i\" onclick=\"choose_ju($i)\" checked=\"checked\" style=\"float:right; display:none;\"/>";
@@ -681,6 +682,7 @@
                           }
                       ?>
                           <input type="hidden" name="selected_ju" id="selected_ju" value="0">
+                          <input type="hidden" name="selected_url" id="selected_url" value="">
                     </div>
                   </div>
                   <script type="text/javascript">
@@ -742,6 +744,7 @@
                       </div>
                       <div class="label label-info" style="margin:0 auto; margin-top:20px; display:block;"></div>
                     </center>
+                    <audio id="myAudio" src=""></audio>
                   </div>
                 </div>
                 <script type="text/javascript" src="js/pydic.js"></script>
@@ -781,6 +784,17 @@
                     var val = $("#words_"+id).val();
                     $("#selected_ju").val(id);
                     $("#score").html(scores[id]);
+                    var url = $("#url_"+id).val();
+                    $("#selected_url").val(url);
+                  }
+
+                  function play_xiaoyan(){
+                    var url = $("#selected_url").val();
+                    if(url){
+                      var x = $("#myAudio");
+                      x.attr("src",url);
+                      x.play();
+                    }
                   }
 
                 //提交成绩

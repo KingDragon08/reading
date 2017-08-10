@@ -682,7 +682,7 @@
                           }
                       ?>
                           <input type="hidden" name="selected_ju" id="selected_ju" value="0">
-                          <input type="hidden" name="selected_url" id="selected_url" value="<?php echo $words[0]->url;?>">
+                          <input type="hidden" name="selected_url" id="selected_url" value="">
                     </div>
                   </div>
                   <script type="text/javascript">
@@ -790,11 +790,12 @@
 
                   function play_xiaoyan(){
                     var url = $("#selected_url").val();
-                    if(url){
-                      var x = $("#myAudio");
-                      x.attr("src",url);
-                      x.play();
+                    if(url.length<1){
+                      url = $("#url_0").val();
                     }
+                    var x = $("#myAudio");
+                    x.attr("src",url);
+                    x.play();
                   }
 
                 //提交成绩

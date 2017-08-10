@@ -794,7 +794,7 @@
                       url = $("#url_0").val();
                     }
                     var x = document.getElementById("myAudio");
-                    x.attr("src",url);
+                    $("#myAudio").attr("src",url);
                     x.play();
                   }
 

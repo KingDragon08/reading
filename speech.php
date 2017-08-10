@@ -793,7 +793,7 @@
                     if(url.length<1){
                       url = $("#url_0").val();
                     }
-                    var x = $("#myAudio");
+                    var x = document.getElementById("myAudio");
                     x.attr("src",url);
                     x.play();
                   }

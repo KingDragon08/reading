@@ -682,7 +682,7 @@
                           }
                       ?>
                           <input type="hidden" name="selected_ju" id="selected_ju" value="0">
-                          <input type="hidden" name="selected_url" id="selected_url" value="">
+                          <input type="hidden" name="selected_url" id="selected_url" value="<?php echo $words[0]->url;?>">
                     </div>
                   </div>
                   <script type="text/javascript">

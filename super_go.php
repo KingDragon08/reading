@@ -116,15 +116,6 @@
         $unit = 0;
         $page = 0;
         $type = 0;
-        if(isset($_GET['type']))
-        {
-          $type = $_GET['type'];
-        }
-        else
-        {
-            $common->tips("路径不合法1");
-            exit();
-        }
         if(isset($_GET['textbook']))
         {
             $textbook = intval($_GET['textbook']);

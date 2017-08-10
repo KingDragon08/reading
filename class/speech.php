@@ -48,6 +48,17 @@ class Speech
   }
 
   /**
+  *获取单元下边所有的课文列表
+  *新版本
+  **/
+  function get_pages_ju($unit)
+  {
+    global $db;
+    $sql = "select * from rd_speech_page_ju where unit_id=$unit";
+    return $db->get_results($sql);
+  }
+
+  /**
   *检查语音测评页的路径是否合法
   **/
   function check_path($textbook,$grade,$unit,$page)

@@ -156,7 +156,7 @@
                 <h5 class="mt20"><?php echo $item->name;?></h5>
                 <div class="row mt20">
                   <?php
-                    $pages = $speech->get_pages($item->id);
+                    $pages = $speech->get_pages_ju($item->id);
                     if(count($pages))
                     {
                       foreach($pages as $item)

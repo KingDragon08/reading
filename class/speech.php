@@ -106,7 +106,8 @@ class Speech
       $corum .= ">";
       $corum .= $db->get_var("select name from rd_speech_unit where id=$unit");
       $corum .= ">";
-      $corum .= $db->get_var("select name from rd_speech_page where id=$page");
+      // $corum .= $db->get_var("select name from rd_speech_page where id=$page");
+      $corum .= $db->get_var("select name from rd_speech_page_ju where id=$page");
     }
     else
     {

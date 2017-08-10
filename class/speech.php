@@ -120,6 +120,15 @@ class Speech
       // $corum .= $db->get_var("select name from rd_speech_page where id=$page");
       $corum .= $db->get_var("select name from rd_speech_page_ju where id=$page");
     }
+    elseif($type=='du'){
+      $corum .= $db->get_var("select name from rd_speech_textbook_version where id=$textbook");
+      $corum .= ">";
+      $corum .= $db->get_var("select name from rd_speech_grade where id=$grade");
+      $corum .= ">";
+      $corum .= $db->get_var("select name from rd_speech_unit where id=$unit");
+      $corum .= ">";
+      $corum .= $db->get_var("select name from rd_speech_page_du where id=$page"); 
+    }
     else
     {
       $corum .= $db->get_var("select name from rd_speech_textbook_version where id=$textbook");

@@ -115,7 +115,7 @@
         $grade = 0;
         $unit = 0;
         $page = 0;
-        $type = 0;
+        $type = 'du';
         if(isset($_GET['textbook']))
         {
             $textbook = intval($_GET['textbook']);
@@ -169,7 +169,7 @@
         <div style="width:800px; height:515px; margin:0 auto; box-shadow:0 0 5px #999; border-radius:5px;">
           <div class="col-lg-12 mt20">
             <img src="img/book_icon.png" alt="">
-            跟读文本：<?php if($type=='ju'){echo explode(">",$corum)[3];}else{echo explode(">",$corum)[2];}?>
+            跟读文本：<?php if($type=='ju' || $type=='du'){echo explode(">",$corum)[3];}else{echo explode(">",$corum)[2];}?>
           </div>
 
 

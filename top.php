@@ -30,7 +30,7 @@
                 '&nbsp;&nbsp;&nbsp;&nbsp;<img class="headimg" src="'.$user->get_user_info()->headimg.'"/></a>';
             if($user->get_unread_msg_number()>0)
             {
-                echo "&nbsp;&nbsp;<a href='home.php'><i class='glyphicon glyphicon-envelope red f12'>未读消息(". $user->get_unread_msg_number() .")</i></a>";
+                echo "&nbsp;&nbsp;<a href='home.php?type=unread'><i class='glyphicon glyphicon-envelope red f12'>未读消息(". $user->get_unread_msg_number() .")</i></a>";
             }
             echo '&nbsp;&nbsp;&nbsp;&nbsp;<a href="controller/logout.php">退出</a>';
           }
@@ -54,7 +54,7 @@
             <i class="glyphicon glyphicon-user gray f20"></i>
           </td>
           <td width="60%" align="left" valign="bottom">
-            <input type="text" placeholder="请输入您的手机号码" name="username" class="login_input" id="username">
+            <input type="text" placeholder="请输入您的手机号码" name="username" class="login_input" id="username" maxlength="11">
           </td>
           <td width="20%" height="50" align="center" valign="bottom">&nbsp;</td>
         </tr>
@@ -63,18 +63,23 @@
             <i class="glyphicon glyphicon-lock gray f20"></i>
           </td>
           <td width="60%" align="left" valign="bottom">
-            <input type="password" placeholder="请输入密码" name="password" class="login_input" id="password">
+            <input type="password" placeholder="请输入密码" name="password" class="login_input" id="password" maxlength="20">
           </td>
           <td width="20%" height="50" align="center" valign="bottom">
             <a href="forget.html" class="forget_btn">忘记密码</a>
           </td>
         </tr>
         <tr>
-          <td height="120" align="center" valign="middle" style="border:none;">
+          <td height="80" align="center" valign="bottom" style="border:none;">
             <input type="checkbox" name="remeber">&nbsp;&nbsp;记住我
           </td>
-          <td colspan="2" align="right" valign="middle" style="border:none;">
+          <td colspan="2" align="right" valign="bottom" style="border:none;">
             <input type="submit" name="submit" class="btn btn-success lear_more" value="登录" style="width:60%;">
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3" height="40px" style="border-bottom: 0; color:#f00;" align="left" valign="bottom" id="kd_tips">
+            
           </td>
         </tr>
       </table>

@@ -19,6 +19,7 @@
         include_once("../class/user.php");
         $user = new User($_SESSION['username'],$_SESSION['password']);
         $id =  isset($_GET['id']) ? intval($_GET['id']):1;
+        $role = $user->user_info->role;
         if($id<1)
         {
           $id=1;
@@ -33,10 +34,14 @@
           $title = $_POST['title'];
           $content = $_POST['content'];
           $result = $user->send_email($id,$title,$content);
-          // var_dump($result);
           if($result['error'] == 0)
           {
-            echo '<script>alert("发送成功");location.href="classmate.php"</script>';
+            if($role=="学生"){
+              echo '<script>alert("发送成功");location.href="classmate.php"</script>';
+            }
+            else{
+              echo '<script>alert("发送成功");location.href="teacher_students.php"</script>';
+            }
           }
           else
           {

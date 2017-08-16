@@ -217,8 +217,18 @@
               <ul class="pagination" style="margin-top:0;">
                   <?php
                     $pages = $book->get_book_comment_pages();
-                    $index = 1;
-                    while($index <= $pages)
+                    $index = $page;
+                    $end = $index + 4;
+                    if($index!=1){
+                  ?>
+                    <li>
+                          <a href="book.php?book=<?php echo $_GET['book']?>&page=1">
+                            1
+                          </a>
+                      </li>
+                  <?php
+                    }
+                    while($index<=$end && $index<=$pages)
                     {
                   ?>
                       <li <?php if($index==$page) echo "class='active'"?>>
@@ -228,6 +238,15 @@
                       </li>
                   <?php
                       $index++;
+                    }
+                    if($end<$pages){
+                  ?>
+                    <li>
+                        <a href="book.php?book=<?php echo $_GET['book']?>&page=<?php echo $pages;?>">
+                          1
+                        </a>
+                    </li>
+                  <?php
                     }
                   ?>
               </ul>

@@ -3,11 +3,13 @@
  **/
 function login_check() {
     if ($("#username").val().length != 11 || isNaN($("#username").val())) {
-        alert("手机号码格式错误");
+        // alert("手机号码格式错误");
+        $("#kd_tips").html("手机号码格式错误");
         return false;
     }
     if ($("#password").val().length < 6) {
-        alert("密码错误");
+        // alert("密码错误");
+        $("#kd_tips").html("密码错误");
         return false;
     }
     return true;
@@ -61,34 +63,52 @@ function check_search() {
     return true;
 }
 
+t_i = 0;
+r = 60;
+
 /**
  *发送验证码
  **/
 function get_verify_code() {
-    var phone = $("#f_username").val();
-    if ($("#f_username").val().length != 11 || isNaN($("#f_username").val())) {
-        alert("手机号码格式错误");
-        return false;
-    }
-    console.log("send sms");
-    $.ajax({
-        url: 'sms/sendSMS.php',
-        type: 'POST',
-        data: {
-            phone: phone
-        },
-        dataType: "json",
-        success: function(data) {
-            //console.log(data);
-            if (data.status == 'true') {
-                sms = true;
-                code = data.code;
-                $("#get_verify_code").html("验证码已发送");
-            } else {
-                alert("短信发送失败");
-            }
+    if($("#get_verify_code").html() == "获取验证码"){
+        var phone = $("#f_username").val();
+        if ($("#f_username").val().length != 11 || isNaN($("#f_username").val())) {
+            alert("手机号码格式错误");
+            return false;
         }
-    });
+        $.ajax({
+            url: 'sms/sendSMS.php',
+            type: 'POST',
+            data: {
+                phone: phone
+            },
+            dataType: "json",
+            success: function(data) {
+                //console.log(data);
+                if (data.status == 'true') {
+                    sms = true;
+                    code = data.code;
+                    t_i = setInterval(count_down,1000);
+                }
+            }
+        });
+    }
+}
+
+
+/**
+*注册时发送短信的倒计时
+**/
+function count_down(){
+    if(r>0){
+        $("#get_verify_code").html("已发送("+r+"s)");
+        r--;
+    }
+    else{
+        $("#get_verify_code").html("获取验证码");
+        clearInterval(t_i);
+        r=60;
+    }
 }
 
 /**
@@ -110,6 +130,7 @@ function check_register() {
     }
     if ($("#f_new_password").val().length < 6) {
         alert("密码设置不能少于6位");
+
         return false;
     }
     if ($("#f_new_password_repeat").val() != $("#f_new_password").val()) {

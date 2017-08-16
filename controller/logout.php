@@ -1,5 +1,6 @@
 <?php
   session_start();
+  //来源页面
   $from_url =  $_SERVER['HTTP_REFERER'];
   foreach($_COOKIE as $key=>$value)
   {
@@ -8,5 +9,5 @@
   }
   session_unset();
   session_destroy();
-  header("Location:$from_url");
+  header("Location:/index.php");
 ?>

@@ -61,9 +61,9 @@
       <div class="container">
         <div class="col-lg-8"></div>
         <div class="col-lg-4">
-          <form action="search.php" method="get" name="search" id="search" onsubmit="return check_search()">
+          <form action="search.php" method="get" name="search" id="search" onsubmit="return check_search();">
               <div class="input-group">
-                <input type="text" class="form-control" name="s" id="search_keywords">
+                <input type="text" class="form-control" name="s" id="search_keywords" value="<?php if(isset($_GET['s'])){echo $_GET['s'];}?>">
                 <span class="input-group-addon">
                   <i class="glyphicon glyphicon-search" style="cursor:pointer;" onclick="$('#search').submit()"></i>
                 </span>
@@ -117,7 +117,7 @@
                       {
                         echo "<label class=\"label label-success\" style='cursor:pointer;' onclick='add2_book_shelf_short($book->id)'>加入书架</label>";  
                       }
-                      i($type=='full')
+                      if($type=='full')
                       {
                         echo "<label class=\"label label-success\" style='cursor:pointer;' onclick='add2_book_shelf($book->id)'>加入书架</label>";
                       }

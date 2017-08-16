@@ -43,7 +43,7 @@
                   $ret = $user->create_class($class_school,$class_grade,$class_name);
                   if($ret==-1)
                   {
-                    $common->tips("创建失败,班级个数已达上限");
+                    $common->tips("创建失败,班级个数已达上限");
                     exit();
                   }
                   else
@@ -122,7 +122,7 @@
         <tr>
           <td width="100" height="50" align="center" valign="middle">名字</td>
           <td width="200" height="50" align="left" valign="middle">
-            <input type="text" id="class_name" name="class_name" class="form-control" required="required">
+            <input type="text" id="class_name" name="class_name" class="form-control" required="required" maxlength="20">
           </td>
         </tr>
         <tr>

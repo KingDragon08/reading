@@ -23,7 +23,7 @@
         include_once("class/common.php");
         if(!isLogin())//如果没有登录则跳转到首页
         {
-          header("Location:login.php");
+          header("Location:login.php?from=page_reading");
         }
         else
         {

@@ -53,11 +53,11 @@
             </div>
             <div class="input_group_div">
               <i class="glyphicon glyphicon-lock f20 gray">&nbsp;</i>
-              <input type="password" name="password" class="input" id="f_new_password" placeholder="请输入密码">
+              <input type="password" name="password" class="input" id="f_new_password" placeholder="请输入密码" maxlength="20">
             </div>
             <div class="input_group_div">
               <i class="glyphicon glyphicon-lock f20 gray">&nbsp;</i>
-              <input type="password" class="input" name="re_password" id="f_new_password_repeat" placeholder="请再次输入新密码">
+              <input type="password" class="input" name="re_password" id="f_new_password_repeat" placeholder="请再次输入新密码" maxlength="20">
             </div>
             <input type="submit" name="f_submit" id="f_submit" class="btn btn-success lear_more" value="立即注册" style="width:350px; height:40px;">
         </form>

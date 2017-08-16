@@ -52,13 +52,25 @@
         <?php
           if($role == "学生")
           {
-            echo '<iframe src="template/student_left.php" id="menu" width="20%" height="auto" style="float:left;" frameborder="0"></iframe>';
-            echo '<iframe src="template/student_right.php" width="80%" height="auto" id="main" name="main" style="float:left; padding-left:10px; margin-top:2em;" frameborder="0"></iframe>';
+            if(isset($_GET['type']) && $_GET['type']=='unread'){
+              echo '<iframe src="template/student_left.php?type=unread" id="menu" width="20%" height="auto" style="float:left;" frameborder="0"></iframe>';
+              echo '<iframe src="template/msg.php" width="80%" height="auto" id="main" name="main" style="float:left; padding-left:10px; margin-top:2em;" frameborder="0"></iframe>';  
+            }
+            else{
+              echo '<iframe src="template/student_left.php" id="menu" width="20%" height="auto" style="float:left;" frameborder="0"></iframe>';
+              echo '<iframe src="template/student_right.php" width="80%" height="auto" id="main" name="main" style="float:left; padding-left:10px; margin-top:2em;" frameborder="0"></iframe>';
+            }
           }
           else
           {
-            echo '<iframe src="template/teacher_left.php" width="20%" height="auto" id="menu" style="float:left;" frameborder="0"></iframe>';
-            echo '<iframe src="template/teacher_right.php" width="80%" height="auto" id="main" name="main" style="float:left; padding-left:10px; margin-top:2em;" frameborder="0"></iframe>';
+            if(isset($_GET['type']) && $_GET['type']=='unread'){
+               echo '<iframe src="template/teacher_left.php?type=unread" width="20%" height="auto" id="menu" style="float:left;" frameborder="0"></iframe>';
+               echo '<iframe src="template/msg.php" width="80%" height="auto"  id="main" name="main" style="float:left; padding-left:10px; margin-top:2em;" frameborder="0"></iframe>'; 
+            }
+            else{
+              echo '<iframe src="template/teacher_left.php" width="20%" height="auto" id="menu" style="float:left;" frameborder="0"></iframe>';
+              echo '<iframe src="template/teacher_right.php" width="80%" height="auto" id="main" name="main" style="float:left; padding-left:10px; margin-top:2em;" frameborder="0"></iframe>';
+            }
           }
         ?>
       </div>

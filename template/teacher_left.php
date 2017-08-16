@@ -27,12 +27,18 @@
           </center>
         <br>
         <p class="pcenter">
-          <?php echo $user->get_user_info()->role .':'. $user->get_user_info()->name;?>
+          <?php 
+            echo $user->get_user_info()->role .':'. $user->get_user_info()->name;
+            $unread = -1;
+            if(isset($_GET['type']) && $_GET['type']=='unread'){
+              $unread = 1;
+            }
+          ?>
         </p>
         <ul class="list-group">
-            <a href="../template/teacher_right.php" target="main" class="list-group-item active">基本资料</a>
+            <a href="../template/teacher_right.php" target="main" class="list-group-item <?php if($unread==-1){echo 'active';}?>">基本资料</a>
             <a href="../template/teacher_school.php" target="main" class="list-group-item">学校信息</a>
-            <a href="../template/msg.php" target="main" class="list-group-item">
+            <a href="../template/msg.php" target="main" class="list-group-item <?php if($unread==1){echo 'active';}?>">
                 <span class="badge"><?php echo $user->get_unread_msg_number();?></span>
                 未读消息
             </a>

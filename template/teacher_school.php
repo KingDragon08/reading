@@ -178,6 +178,28 @@
                     </td>
                   </tr>
                 </table>
+                <p>&nbsp;</p><p>&nbsp;</p>
+                <table width="500" height="auto" class="table-bordered table-hover">
+                   <tr>
+                     <td height="40" align="center" valign="middle">班级名字</td>
+                     <td align="center" valign="middle">操作</td>
+                   </tr>
+                   <?php
+                    if(count($classes)>0){
+                      foreach ($classes as $class){
+                    ?>
+                      <tr id="tr_<?php echo $class->id;?>">
+                         <td height="40" align="center" valign="middle"><?php echo $class->classname;?></td>
+                         <td align="center" valign="middle">
+                           <span class="btn btn-sm btn-danger" onclick="del_class('<?php echo $class->id;?>')">删除</span>
+                         </td>
+                       </tr>
+                    <?php
+                      }
+                    }
+                   ?>
+                </table>
+
               </div>
             </form>
             <script type="text/javascript">
@@ -199,4 +221,25 @@
         }
       ?>
   </body>
+  <script type="text/javascript">
+    function del_class(id){
+      if(confirm("确认删除班级？")){
+        $.ajax({
+          url:"../controller/del_class.php",
+          method:'POST',
+          data:{
+            id:id,
+            username:'<?php echo $user->username;?>',
+            password:'<?php echo $user->password;?>'
+          },
+          success:function(data){
+            $("#tr_"+id).remove();
+          },
+          error:function(data){
+            console.log("error" + JSON.stringify(data));
+          }
+        });
+      }
+    }
+  </script>
 </html>

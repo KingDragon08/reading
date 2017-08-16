@@ -36,7 +36,23 @@
             $_COOKIE['password'] = $password;
             $_SESSION['username'] = $username;
             $_SESSION['password'] = $password;
-            header("Location:home.php");
+            $from = $_GET['from'];
+            $backUrl = "home.php";
+            switch ($from) {
+              case 'full_reading':
+                $backUrl = "full_reading.php";
+                break;
+              case 'page_reading':
+                $backUrl = "page_reading.php";
+                break;
+              case 'ing':
+                $backUrl = "ing.php";
+                break;
+              case 'report':
+                $backUrl = "report.php";
+                break;
+            }
+            header("Location:$backUrl");
           }
           else//登录失败
           {
@@ -70,11 +86,11 @@
         <form action="" method="post" onsubmit="return login_register();">
             <div class="input_group_div">
               <i class="glyphicon glyphicon-user f20 gray">&nbsp;</i>
-              <input type="tel" name="username" class="input" id="f_username" placeholder="请输入你的手机号">
+              <input type="tel" name="username" class="input" id="f_username" placeholder="请输入你的手机号" maxlength="20">
             </div>
             <div class="input_group_div">
               <i class="glyphicon glyphicon-lock f20 gray">&nbsp;</i>
-              <input type="password" name="password" class="input" id="f_new_password" placeholder="请输入密码">
+              <input type="password" name="password" class="input" id="f_new_password" placeholder="请输入密码" maxlength="20">
             </div>
             <input type="submit" name="f_submit" id="f_submit" class="btn btn-success lear_more" value="立即登录" style="width:350px; height:40px;">
         </form>

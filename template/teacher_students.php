@@ -82,7 +82,7 @@
     function send_email(id,name)
     {
       id = parseInt(id);
-      location.href = "send_email.php?id=id&name="+name;
+      location.href = "send_email.php?id="+id+"&name="+name;
     }
   </script>
 </html>

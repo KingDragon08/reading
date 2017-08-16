@@ -519,12 +519,35 @@
       }
 
       /**
+      *教师用发送邮件
+      **/
+      function send_email_teacher($id,$title,$content){
+        global $db;
+        $user_id = $this->get_user_id();
+        $id = intval($id);
+        $ret = array();
+        $sendtime = time();
+        $sql = "insert into rd_msg(msg_from,msg_to,msg_title,msg_content,sendtime,msg_type,msg_status)".
+                "values('$user_id','$id','". $db->escape($title) ."','". $db->escape($content) .
+                "','$sendtime','2','0')";
+        $db->query($sql);
+        $ret['error'] = 0;
+        $ret['msg'] = '发送成功';
+        return $ret;
+      }
+
+      /**
       *发送邮件
       **/
       function send_email($id,$title,$content)
       {
         global $db;
         $user_id = $this->get_user_id();
+        $role = $this->get_user_info()->role;
+        if($role!="学生"){
+          $this->send_email_teacher($id,$title,$content);
+          return;
+        }
         $id = intval($id);
         $ret = array();
         //验证是否为同班同学关系

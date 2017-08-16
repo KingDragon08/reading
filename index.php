@@ -23,7 +23,7 @@
         <img src="img/nav-brand.png" alt="">
     </div>
     <ul class="navigator">
-      <li><a href="＃" class="active">首页</a></li>
+      <li><a href="javascript:;" class="active">首页</a></li>
       <li><a href="full_reading.php">全本阅读</a></li>
       <li><a href="page_reading.php">短篇阅读</a></li>
       <li><a href="ing.php">语音朗读</a></li>

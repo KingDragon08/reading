@@ -23,7 +23,7 @@
         include_once("class/common.php");
         if(!isLogin())//如果没有登录则跳转到首页
         {
-          header("Location:login.php");
+          header("Location:login.php?from=full_reading");
         }
         else
         {
@@ -252,7 +252,7 @@
         <div class="col-lg-4">
           <form action="search.php" method="get" target="_blank" name="search" id="search" onsubmit="return check_search()">
               <div class="input-group">
-                <input type="text" class="form-control" name="s" id="search_keywords">
+                <input type="text" class="form-control" name="s" id="search_keywords"value="<?php if(isset($_GET['s'])){echo $_GET['s'];}?>">
                 <input type="hidden" name="type" value="full">
                 <span class="input-group-addon">
                   <i class="glyphicon glyphicon-search" style="cursor:pointer;" onclick="$('#search').submit()"></i>
@@ -464,7 +464,7 @@
         <div class="col-lg-8">
           选择书单类型:&nbsp;&nbsp;&nbsp;&nbsp;
           <div class="btn-group">
-              <button type="button" class="btn btn-default" id="list_type">书单类型</button>
+              <button type="button" class="btn btn-default" id="list_type">图书类型</button>
               <button type="button" class="btn btn-default dropdown-toggle"
                   data-toggle="dropdown">
                   <span class="caret"></span>
@@ -525,7 +525,7 @@
             </span>
           </div>
           &nbsp;&nbsp;&nbsp;&nbsp;
-          <div class="btn-group" onclick="javascript:del_cookie('books'); alert('删除成功');">
+          <div class="btn-group" onclick="javascript:del_cookie('books'); alert('删除成功'); history.go(0);">
             <span class="btn btn-default">
               删除所有已选图书
             </span>
@@ -534,7 +534,7 @@
         <div class="col-lg-4">
           <form action="" method="get" name="search" id="search" onsubmit="return check_search()">
               <div class="input-group">
-                <input type="text" name="s" class="form-control" id="search_keywords">
+                <input type="text" name="s" class="form-control" id="search_keywords"value="<?php if(isset($_GET['s'])){echo $_GET['s'];}?>">
                 <span class="input-group-addon">
                   <i class="glyphicon glyphicon-search" style="cursor:pointer;" onclick="$('#search').submit()"></i>
                 </span>

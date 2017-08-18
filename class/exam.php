@@ -21,24 +21,39 @@ class Exam
     //获取第一类题
     $sql = "select * from rd_book_question_obj where book_id='$this->book_id' and view='1'";
     $question1 = $db->get_results($sql);
+    if(count($question1)<6){
+      return [];
+    }
     $rand1 = rand(0,5);
     $rand2 = $rand1>2?rand(0,$rand1-1):rand($rand1+1,5);
     $ret[] = $question1[$rand1];
     $ret[] = $question1[$rand2];
     $sql = "select * from rd_book_question_obj where book_id='$this->book_id' and view='2'";
     $question2 = $db->get_results($sql);
+    if(count($question1)<6){
+      return [];
+    }
     $ret[] = $question2[$rand1];
     $ret[] = $question2[$rand2];
     $sql = "select * from rd_book_question_obj where book_id='$this->book_id' and view='3'";
     $question3 = $db->get_results($sql);
+    if(count($question1)<6){
+      return [];
+    }
     $ret[] = $question3[$rand1];
     $ret[] = $question3[$rand2];
     $sql = "select * from rd_book_question_obj where book_id='$this->book_id' and view='4'";
     $question4 = $db->get_results($sql);
+    if(count($question4)<6){
+      return [];
+    }
     $ret[] = $question4[$rand1];
     $ret[] = $question4[$rand2];
     $sql = "select * from rd_book_question_obj where book_id='$this->book_id' and view='5'";
     $question5 = $db->get_results($sql);
+    if(count($question5)<6){
+      return [];
+    }
     $ret[] = $question5[$rand1];
     $ret[] = $question5[$rand2];
     //获取书的封面
@@ -67,26 +82,41 @@ class Exam
     //获取第一类题
     $sql = "select * from rd_book_question_obj where book_id='$this->book_id' and view='1'";
     $question1 = $db->get_results($sql);
+    if(count($question1)<9){
+      return [];
+    }
     $ret[] = $question1[$rand1];
     $ret[] = $question1[$rand2];
     $ret[] = $question1[$rand3];
     $sql = "select * from rd_book_question_obj where book_id='$this->book_id' and view='2'";
     $question2 = $db->get_results($sql);
+    if(count($question2)<9){
+      return [];
+    }
     $ret[] = $question2[$rand1];
     $ret[] = $question2[$rand2];
     $ret[] = $question2[$rand3];
     $sql = "select * from rd_book_question_obj where book_id='$this->book_id' and view='3'";
     $question3 = $db->get_results($sql);
+    if(count($question3)<9){
+      return [];
+    }
     $ret[] = $question3[$rand1];
     $ret[] = $question3[$rand2];
     $ret[] = $question3[$rand3];
     $sql = "select * from rd_book_question_obj where book_id='$this->book_id' and view='4'";
     $question4 = $db->get_results($sql);
+    if(count($question4)<9){
+      return [];
+    }
     $ret[] = $question4[$rand1];
     $ret[] = $question4[$rand2];
     $ret[] = $question4[$rand3];
     $sql = "select * from rd_book_question_obj where book_id='$this->book_id' and view='5'";
     $question5 = $db->get_results($sql);
+    if(count($question5)<9){
+      return [];
+    }
     $ret[] = $question5[$rand1];
     $ret[] = $question5[$rand2];
     $ret[] = $question5[$rand3];
@@ -157,7 +187,7 @@ class Exam
         $total_score++;
       }
     }
-    if($hege>=6)
+    if($hege>=intval(count($scores)*0.6))
     {
       $hege=1;
     }

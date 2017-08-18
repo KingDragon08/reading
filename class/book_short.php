@@ -38,7 +38,7 @@ class Book_short
     }
     else
     {
-      $sql = "select * from rd_book_short where id='$this->book_id'";
+      $sql = "select a.*,b.name as type_name,c.grade_name from rd_book_short a left join rd_book_short_type b on a.type=b.id left join rd_grade c on a.grade=c.id where a.id='$this->book_id'";
       return $db->get_row($sql);
     }
   }

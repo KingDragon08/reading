@@ -132,29 +132,17 @@
                   <p class="f12 gray">权威版本、收藏经典</p>
                   <span class="single_book_info">
                     <font style="width:200px; display:inline-block;">作者：<?php echo $book_info->author; ?></font>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <font>难度等级：<?php echo $book_info->level ?></font>
+                    <font>类型：<?php echo $book_info->type_name;?></font>
                     <br>
-                    <font style="width:200px; display:inline-block;">出版社：<?php echo $book_info->press; ?></font>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <font>字数：<?php echo $book_info->wordcount ?></font>
+                    <font style="width:200px; display:inline-block;">难度：<?php echo $book_info->level; ?></font>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <font>学段：<?php echo $book_info->grade_name; ?></font>
                     <br>
-                    <font style="width:200px; display:inline-block;">出版时间：<?php echo $book_info->presstime ?></font>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <font style="width:200px; display:inline-block;">字数：<?php echo $book_info->wordcount ?></font>&nbsp;&nbsp;&nbsp;&nbsp;
                     <font>积分：<?php echo $book_info->score ?></font>
                   </span>
                 </div>
                 <div class="col-lg-12 mt10 mb10" style="padding:0;">
-                  <a href="#comment" style="padding:0.5em 2em;" class="label label-lg label-default label-circle mr10">&nbsp;写书评&nbsp;</a>
-                  <?php
-                    //检测是否已经答过本书的读书笔记
-                    //若答过则不允许再次答题
-                    if(!$can_note)
-                    {
-                  ?>
-                      <a href="javascript:void(0);" style="padding:0.5em 2em;" class="label label-lg label-default label-circle mr10" onclick="show_note()">&nbsp;读书笔记&nbsp;</a>
-                  <?php
-                    }
-                  ?>
-
-                  <!-- <a href="javascript:void(0);" class="label label-lg label-default label-circle mr10" onclick="exam()">&nbsp;相关习题&nbsp;</a> -->
+                  
                 </div>
               </div>
             </div>
@@ -217,17 +205,36 @@
               <ul class="pagination" style="margin-top:0;">
                   <?php
                     $pages = $book->get_book_comment_pages();
-                    $index = 1;
-                    while($index <= $pages)
+                    $index = $page;
+                    $end = $index + 4;
+                    if($index!=1){
+                  ?>
+                    <li>
+                          <a href="book_short.php?book=<?php echo $_GET['book']?>&page=1">
+                            1
+                          </a>
+                      </li>
+                  <?php
+                    }
+                    while($index<=$end && $index<=$pages)
                     {
                   ?>
                       <li <?php if($index==$page) echo "class='active'"?>>
-                          <a href="book.php?book=<?php echo $_GET['book']?>&page=<?php echo $index;?>">
+                          <a href="book_short.php?book=<?php echo $_GET['book']?>&page=<?php echo $index;?>">
                             <?php echo $index; ?>
                           </a>
                       </li>
                   <?php
                       $index++;
+                    }
+                    if($end<$pages){
+                  ?>
+                    <li>
+                        <a href="book_short.php?book=<?php echo $_GET['book']?>&page=<?php echo $pages;?>">
+                          1
+                        </a>
+                    </li>
+                  <?php
                     }
                   ?>
               </ul>
@@ -354,102 +361,6 @@
       $("#note").fadeOut();
     }
   </script>
-  <?php
-    if(!$can_note)
-    {
-  ?>
-      <style media="screen">
-      .note_cover{position:fixed; left:0; top:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index: 10000;}
-      .note_container{width:800px; height:600px; overflow-x: hidden; overflow-y: scroll; border-radius:8px; box-shadow: 0 0 8px #ccc; padding:16px;}
-      .note_container{position:absolute; left:50%; top:50%; margin-left: -400px; margin-top:-300px; background:#fff;}
-      .mt10{margin-top:10px;}
-      </style>
-      <div class="note_cover" id="note" style="display:none;">
-        <form class="" action="add_note.php" method="post" name="note" onsubmit="return check_note();">
-          <div class="note_container" <?if($role!='学生'){echo 'style="height:300px; margin-top:-150px;"';}?>>
-            <?php
-              $questions = $book->get_book_note();
-              $count = 1;
-              if(count($questions))
-              {
-                foreach($questions as $question)
-                {
-            ?>
-                  <div class="col-lg-12 mb20" style="white-space:normal;">
-                    <?php echo $count.":".$question->question?>
-                  </div>
-                  <?php
-                  if($role == "学生")
-                  {
-                  ?>
-                  <div class="cl-lg-12 mb20">
-                    <textarea class="form-control" id="t" name="question_<?php echo $count;?>" rows="6" placeholder="请在此处填写答案"></textarea>
-                  </div>
-                  <?php
-                  }
-                  ?>
-            <?php
-                  $count++;
-                }
-            ?>
-              <input type="hidden" name="num" value="<?php echo $count-1;?>" />
-              <input type="hidden" name="book" value="<?php echo intval($_GET['book']);?>" />
-              <?php
-              if($role == "学生")
-              {
-              ?>
-              <div class="col-lg-12" style="text-align:center;">
-                <input type="submit" name="s_note" value="提交" class="btn btn-danger">
-                <input type="button" name="s_cancel" value="取消" class="btn btn-default" onclick="cancel_note()">
-              </div>
-              <?php
-              }
-              else
-              {
-              ?>
-              <div class="col-lg-12" style="text-align:center;">
-                <input type="button" name="s_cancel" value="关闭" class="btn btn-default" onclick="cancel_note()">
-              </div>
-              <?php
-              }
-              ?>
-            <?php
-              }
-              else
-              {
-            ?>
-                <center>
-                  <img src="img/gongchengshi.jpeg" style="margin-top:20px;"/>
-                  <br>
-                  <p class="gray" id="tips">
-                    该短篇阅读暂不支持读书笔记...
-                  </p>
-                  <input type="button" name="s_cancel" value="关闭" class="btn btn-default" onclick="cancel_note()">
-                </center>
-            <?php
-              }
-            ?>
-          </div>
-        </form>
-        <script type="text/javascript">
-          function check_note()
-          {
-            flag = true;
-            $("#note textarea").each(function(){
-              if($(this).val().length<6)
-              {
-                if(flag)
-                {
-                  alert("每个题的答案至少6个字哟");
-                  flag = false;
-                }
-              }
-            });
-            return flag;
-          }
-        </script>
-  <?php
-    }
-  ?>
+  
   </div>
 </html>

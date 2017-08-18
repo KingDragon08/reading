@@ -87,6 +87,8 @@
         <div class="forget_cover">
             语音朗读
             <font style="font-size:12px; margin-left:24px;" id="corum"></font>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="btn btn-success" onclick="history.go(-1);">返回</button>
             <div class="float_right" id="ctr_btn" style="margin-right:5.8em;">
               <button class="btn btn-success <?php if(isset($_GET['type'])&&$_GET['type']=='zi'){echo 'active';}?>" style="margin-right:10px;" onclick="location.href='ing.php'">单字测评</button>
               <button class="btn btn-success <?php if(isset($_GET['type'])&&$_GET['type']=='ci'){echo 'active';}?>" style="margin-right:10px;" onclick="location.href='ing_c.php'">词语测评</button>

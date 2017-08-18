@@ -86,7 +86,7 @@
     <div class="row">
       <div class="container">
         <div class="col-lg-8">
-          选择书单类型:&nbsp;&nbsp;&nbsp;&nbsp;
+          选择类型:&nbsp;&nbsp;&nbsp;&nbsp;
           <div class="btn-group">
               <button type="button" class="btn btn-default" id="type" style="max-width:6em; overflow:hidden;">图书类型</button>
               <button type="button" class="btn btn-default dropdown-toggle"

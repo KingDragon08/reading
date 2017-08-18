@@ -46,7 +46,8 @@
     <!-- forget panel start -->
       <div class="w100 forget">
         <div class="forget_cover">
-            推送书单
+            推送书单&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="btn btn-success" onclick="history.go(-1);">返回</button>
         <div class="float_right" style="margin-right:5.8em;">
           <button class="btn btn-success active" onclick="location.href='full_reading.php'">书单定制</button>
           <button class="btn btn-success" onclick="location.href='book_shelf.php'">书单管理</button>

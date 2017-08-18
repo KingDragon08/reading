@@ -31,6 +31,16 @@ class Common
     }
 
     /**
+    *获取所有短篇阅读的类型
+    **/
+    function get_all_book_type_short()
+    {
+      global $db;
+      $sql = "select id,name from rd_book_short_type";
+      return $db->get_results($sql);
+    }
+
+    /**
     *获取所有学段
     **/
     function get_grade()
@@ -59,6 +69,53 @@ class Common
       $page_num = 6;
       $sql = "select count(*) from rd_book where ";
       $sql_1 = "select * from rd_book where ";
+      if($type==0 && $grade==0)
+      {
+        $sql .= "1";
+        $sql_1 .= "1";
+      }
+      else
+      {
+        if($type!=0 && $grade!=0)
+        {
+          $sql .= "grade='$grade' and type='$type'";
+          $sql_1 .= "grade='$grade' and type='$type'";
+        }
+        else
+        {
+          if($type!=0 && $grade==0)
+          {
+            $sql .= "type='$type'";
+            $sql_1 .= "type='$type'";
+          }
+          else
+          {
+            $sql .= "grade='$grade'";
+            $sql_1 .= "grade='$grade'";
+          }
+        }
+      }
+      $total = $db->get_var($sql);
+      $this->read_list_pages = ceil($total/$page_num);
+      $start = ($page-1)*$page_num;
+      if($start < 1)
+      {
+        $start = 0;
+      }
+      $sql_1 .= " order by id desc limit $start,$page_num";
+      $book_list = $db->get_results($sql_1);
+      return $book_list;
+    }
+
+    /**
+    *获取所有的短篇阅读
+    **/
+    function get_books_short($page,$user_id,$type,$grade)
+    {
+      global $db;
+      $page_num = 6;
+      $sql = "select count(*) from rd_book_short where ";
+      $sql_1 = "select a.*,b.name as type_name,c.grade_name from rd_book_short a left join rd_book_short_type b on a.type=b.id left join rd_grade c on a.grade=c.id where ";
       if($type==0 && $grade==0)
       {
         $sql .= "1";
@@ -795,6 +852,9 @@ class Common
       }
       $sql .= " order by b.id desc";
       $lists = $db->get_results($sql);
+      if(!$lists){
+        return 0;
+      }
       if($status != -1)
       {
         $temp = [];
@@ -803,8 +863,9 @@ class Common
           $list->status = $status;
           if($status == 0)
           {
-            $sql = "select count(id) from rd_user_exam_scores where book_id='$book_id' and hege=0 and user_id='$user_id'";
-            if($db->get_var($sql)>0)
+            // $sql = "select count(id) from rd_user_exam_scores where book_id='$book_id' and hege=0 and user_id='$user_id'";
+            $sql = "select hege from rd_user_exam_scores where book_id='$book_id' and user_id='$user_id' order by id desc limit 1";
+            if($db->get_var($sql)==0)
             {
               $temp[] = $list;
             }
@@ -843,7 +904,7 @@ class Common
             }
             else
             {
-              $list->status = $db->get_var("select hege from rd_user_exam_scores where book_id='$book_id' and user_id='$user_id'");
+              $list->status = $db->get_var("select hege from rd_user_exam_scores where book_id='$book_id' and user_id='$user_id' order by id desc limit 1");
             }
             $temp[] = $list;
           }
@@ -924,7 +985,8 @@ class Common
           $list->status = $status;
           if($status == 0)
           {
-            $sql = "select count(id) from rd_user_exam_scores_short where book_id='$book_id' and hege=0 and user_id='$user_id'";
+            // $sql = "select count(id) from rd_user_exam_scores_short where book_id='$book_id' and hege=0 and user_id='$user_id'";
+            $sql = "select hege from rd_user_exam_scores where book_id='$book_id' and user_id='$user_id' order by id desc limit 1";
             if($db->get_var($sql)>0)
             {
               $temp[] = $list;
@@ -964,7 +1026,7 @@ class Common
             }
             else
             {
-              $list->status = $db->get_var("select hege from rd_user_exam_scores_short where book_id='$book_id' and user_id='$user_id'");
+              $list->status = $db->get_var("select hege from rd_user_exam_scores_short where book_id='$book_id' and user_id='$user_id' order by id desc limit 1");
             }
             $temp[] = $list;
           }

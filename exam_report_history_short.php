@@ -23,7 +23,7 @@
       #list tr td:last-child{border-right: 0;}
       #list tr:last-child td{border-bottom: 0;}
       #flag{
-              width:150px; height:100px; position:absolute; right:200px; top:160px; z-index:999;
+              width:150px; height:100px; position:absolute; right:30px; top:190px; z-index:999;
               transform:rotate(45deg);
               -ms-transform:rotate(45deg); /* Internet Explorer */
               -moz-transform:rotate(45deg); /* Firefox */
@@ -49,20 +49,6 @@
         }
       ?>
     <!-- top nav end -->
-    <!-- main nav start -->
-      <div class="container main-nav">
-        <div class="brand">
-            <img src="img/nav-brand.png" alt="">
-        </div>
-        <ul class="navigator">
-          <li><a href="index.php">首页</a></li>
-          <li><a href="full_reading.php">全本阅读</a></li>
-          <li><a href="page_reading.php" class="active">短篇阅读</a></li>
-          <li><a href="ing.php">语音朗读</a></li>
-          <li><a href="report.php">测评中心</a></li>
-        </ul>
-      </div>
-    <!-- main nav end -->
     <?php
       if($role != "学生")
       {
@@ -81,7 +67,7 @@
     <!-- list start -->
     <div style="width:100%; height:565px;">
       <?php
-        if(!isset($_GET['exam']))
+        if(!isset($_GET['book']))
         {
       ?>
         <center>
@@ -94,8 +80,8 @@
       <?php
           exit();
         }
-        $exam_id = intval($_GET['exam']);
-        if($exam_id < 1)
+        $book_id = intval($_GET['book']);
+        if($book_id < 1)
         {
       ?>
         <center>
@@ -109,6 +95,7 @@
           exit();
         }
         $exam = new Exam_short(1);
+        $exam_id = $db->get_var("select id from rd_user_exam_scores_short where user_id='$user_id' and book_id='$book_id' order by id desc limit 1");
         $exam_report = $exam->get_exam_report($user_id,$exam_id);
         // var_dump($exam_report);
         if($exam_report)
@@ -127,7 +114,7 @@
       </div>
       <div style="margin:0 auto; padding:10px; margin-top:10px; box-shadow:0 0 5px #ccc; width:790px;">
         <div style="text-align:center; font-size:16px; height:50px; line-height:50px; width:100%;">
-          测评结果
+          测评结果[<?php if($exam_report->total_score<count($exam_report->scores)*0.6){echo '不';} echo '合格';?>]
         </div>
         <table width="100%" height="50">
           <tr>

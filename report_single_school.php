@@ -100,6 +100,7 @@
         <div class="container mt20 mb20">
           <div class="box">
             <h4><?php echo $user->get_student_name($id);?>个人测评报告</h4>
+            
             <div class="col-lg-12 box_head">
               全本阅读
             </div>
@@ -277,6 +278,193 @@
 
               myChart_3.setOption(option_3);
             </script>
+
+
+
+
+
+
+
+            <div class="col-lg-12 box_head mt20">
+              短篇阅读
+            </div>
+            <div class="col-lg-12 box_graph">
+
+
+
+              <div class="col-lg-4 box_graph_item">
+                <div class="box_graph_item_title">阅读能力</div>
+                <div class="box_graph_graph" id="box_graph2_short"></div>
+              </div>
+              <?php
+                $score_percent_by_item = $user->get_score_percent_by_item_school2_short($id);
+              ?>
+              <script type="text/javascript">
+
+              var myChart_2_short = echarts.init(document.getElementById('box_graph2_short'),'default');
+              var option_2_short = {
+                tooltip : {
+                    trigger: 'axis'
+                },
+                calculable : true,
+                xAxis : [
+                    {
+                        type : 'value',
+                        min:0,
+                        max:3,
+                        axisLabel:{
+                          rotate:-90
+                        }
+                    }
+                ],
+                yAxis : [
+                    {
+                      type : 'category',
+                      data : ['字词积累','文句理解','文意把握','要点概括','内容探究']
+                    }
+                ],
+                series : [
+                    {
+                        type:'bar',
+                        barCategoryGap:'50%',
+                        data:[<?php echo implode(",",$score_percent_by_item);?>]
+                    }
+                ]
+              };
+              myChart_2_short.setOption(option_2_short);
+              </script>
+
+
+              <div class="col-lg-4 box_graph_item">
+                <div class="box_graph_item_title">阅读范围</div>
+                <div class="box_graph_graph" id="box_graph1_short"></div>
+              </div>
+              <?php
+                $pie_data = "";
+                $pie_data = $user->get_single_student_report_1_short($id);
+                if(count($pie_data)>0)
+                {
+            ?>
+                  <script type="text/javascript">
+                      var myChart_1_short = echarts.init(document.getElementById('box_graph1_short'),'default');
+                      var option_1_short = {
+                          tooltip : {
+                              trigger: 'item',
+                              formatter: "{b} : {c} ({d}%)"
+                          },
+                          legend: {
+                              orient: 'horizontal',
+                              left: 'right',
+                              data: [<?php
+                                    $out_string = '';
+                                    $s_string = '';
+                                    foreach($pie_data as $item)
+                                    {
+                                      if($item->num>0)
+                                      {
+                                          $out_string .= "'".$item->name."'";
+                                          $out_string .= ',';
+                                          $s_string .= "{value:$item->num,name:'$item->name'},";
+                                      }
+                                    }
+                                    $out_string = substr($out_string,0,-1);
+                                    $s_string = substr($s_string,0,-1);
+                                    echo $out_string;
+                              ?>]
+                          },
+                          series : [
+                              {
+                                  name: '阅读范围',
+                                  type: 'pie',
+                                  radius : '50%',
+                                  center: ['50%', '60%'],
+                                  data:[<?php echo $s_string;?>],
+                                  itemStyle: {
+                                      emphasis: {
+                                          shadowBlur: 10,
+                                          shadowOffsetX: 1,
+                                          shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                      }
+                                  }
+                              }
+                          ]
+                      };
+                    myChart_1_short.setOption(option_1_short);
+                  </script>
+            <?php
+                  }
+                  else
+                  {
+                    echo "暂时没有数据";
+                  }
+              ?>
+
+
+
+
+              <div class="col-lg-4 box_graph_item">
+                <div class="box_graph_item_title">阅读难度</div>
+                <div class="box_graph_graph" id="box_graph3_short"></div>
+              </div>
+            </div>
+            <?php
+            $raddar_data = $user->get_single_student_report_2_short($id);
+            $max = 1;
+            foreach($raddar_data as $data)
+            {
+              if($data>$max)
+              {
+                $max = $data;
+              }
+            }
+          ?>
+            <script type="text/javascript">
+            var myChart_3_short = echarts.init(document.getElementById('box_graph3_short'),'default');
+            var option_3_short = {
+                  tooltip : {
+                      trigger: 'axis'
+                  },
+                  polar : [
+                     {
+                         radius:80,
+                         indicator : [
+                             { text: '10级',max:<?php echo $max;?>},
+                             { text: '9级',max:<?php echo $max;?>},
+                             { text: '8级',max:<?php echo $max;?>},
+                             { text: '7级',max:<?php echo $max;?>},
+                             { text: '6级',max:<?php echo $max;?>},
+                             { text: '5级',max:<?php echo $max;?>},
+                             { text: '4级',max:<?php echo $max;?>},
+                             { text: '3级',max:<?php echo $max;?>},
+                             { text: '2级',max:<?php echo $max;?>},
+                             { text: '1级',max:<?php echo $max;?>}
+                          ]
+                      }
+                  ],
+                  calculable : true,
+                  series : [
+                      {
+                          name: '阅读难度',
+                          type: 'radar',
+                          data : [
+                              {
+                                  value : [<?php
+                                    echo $raddar_data[9].','.$raddar_data[8].','.$raddar_data[7].','.$raddar_data[6]
+                                          .','.$raddar_data[5].','.$raddar_data[4].','.$raddar_data[3].','
+                                          .$raddar_data[2].','.$raddar_data[1].','.$raddar_data[0];
+                                  ?>],
+                                  name : '阅读难度'
+                              }
+                          ]
+                      }
+                  ]
+              };
+
+              myChart_3_short.setOption(option_3_short);
+            </script>
+
+
+
 
 
             <div class="col-lg-12 box_head mt20">

@@ -75,7 +75,7 @@
         <div class="forget_cover">
           短篇阅读
           <div class="float_right" style="margin-right:5.8em;">
-            <button class="btn btn-success active" onclick="location.href='full_reading.php'">全部短篇书单</button>
+            <button class="btn btn-success active" onclick="location.href='page_reading.php'">全部短篇书单</button>
             <button class="btn btn-success" onclick="location.href='book_short_shelf.php'">我的短篇任务</button>
           </div>
         </div>
@@ -88,7 +88,7 @@
         <div class="col-lg-8">
           选择短篇类型:&nbsp;&nbsp;&nbsp;&nbsp;
           <div class="btn-group">
-              <button type="button" class="btn btn-default" id="type" style="max-width:6em; overflow:hidden;">图书类型</button>
+              <button type="button" class="btn btn-default" id="type" style="max-width:6em; overflow:hidden;">短篇类型</button>
               <button type="button" class="btn btn-default dropdown-toggle"
                   data-toggle="dropdown">
                   <span class="caret"></span>
@@ -97,7 +97,7 @@
               <ul class="dropdown-menu" role="menu">
                 <li><a href="javascript:void(0);" onclick="type_change(0)">全部类型</a></li>
                 <?php
-                  $types = $common->get_all_book_type();
+                  $types = $common->get_all_book_type_short();
                   foreach ($types as $type)
                   {
                 ?>
@@ -150,38 +150,6 @@
                 ?>
               </ul>
           </div>
-
-          &nbsp;&nbsp;
-          <div class="btn-group">
-              <button type="button" class="btn btn-default" id="list_type" style="max-width:6em; overflow:hidden;">书单类型</button>
-              <button type="button" class="btn btn-default dropdown-toggle"
-                  data-toggle="dropdown">
-                  <span class="caret"></span>
-                  <span class="sr-only">选择</span>
-              </button>
-              <ul class="dropdown-menu" role="menu">
-                <li><a href="javascript:void(0);" onclick="list_type_change(0)">全部类型</a></li>
-                <?php
-                  $list_types = $common->get_list_type();
-                  foreach ($list_types as $list_type)
-                  {
-                ?>
-                    <li><a href="javascript:void(0);" onclick="list_type_change(<?php echo $list_type->id?>)"><?php echo $list_type->name?></a></li>
-                    <?php
-                          if(isset($_GET['list_type']))
-                          {
-                            if($list_type->id==intval($_GET['list_type']))
-                            {
-                                echo '<script>$("#list_type").html("'.$list_type->name.'");</script>';
-                            }
-                          }
-                    ?>
-                <?php
-                  }
-                ?>
-              </ul>
-          </div>
-
 
           &nbsp;&nbsp;
           <div class="btn-group">
@@ -292,11 +260,11 @@
               <div style="display:table-cell;">
                 <p><?php echo $book->name;?></p>
                 <p class="gray f12" style="margin-bottom:5px;">作者：<?php echo $book->author;?></p>
-                <p class="gray f12" style="margin-bottom:5px;">学段：<?php echo $book->grade;?></p>
                 <p class="gray f12" style="margin-bottom:5px;">类型：<?php echo $book->type;?></p>
+                <p class="gray f12" style="margin-bottom:5px;">积分：<?php echo $book->score;?></p>
                 <p class="gray f12" style="margin-bottom:5px;">难度等级：<?php echo $book->level;?></p>
                 <p class="gray f12" style="margin-bottom:5px;">字数：<?php echo $book->wordcount;?></p>
-                <p class="gray f12" style="margin-bottom:5px;">积分：<?php echo $book->score;?></p>
+                <p class="gray f12" style="margin-bottom:5px;">学段：<?php echo $book->grade;?></p>
                 <?php
                   if($book->status == 1)
                   {
@@ -384,35 +352,35 @@
 
       function grade_change(id)
       {
-        location.href = "full_reading.php?grade="+id+"&type="+type+
+        location.href = "page_reading.php?grade="+id+"&type="+type+
                         "&list_type="+list_type+"&level_type="+level_type+
                         "&score_type="+score_type;
       }
 
       function type_change(id)
       {
-        location.href = "full_reading.php?grade="+grade+"&type="+id+
+        location.href = "page_reading.php?grade="+grade+"&type="+id+
                         "&list_type="+list_type+"&level_type="+level_type+
                         "&score_type="+score_type;
       }
 
       function list_type_change(id)
       {
-        location.href = "full_reading.php?grade="+grade+"&type="+type+
+        location.href = "page_reading.php?grade="+grade+"&type="+type+
                         "&list_type="+id+"&level_type="+level_type+
                         "&score_type="+score_type;
       }
 
       function level_type_change(id)
       {
-        location.href = "full_reading.php?grade="+grade+"&type="+type+
+        location.href = "page_reading.php?grade="+grade+"&type="+type+
                         "&list_type="+list_type+"&level_type="+id+
                         "&score_type="+score_type;
       }
 
       function score_type_change(id)
       {
-        location.href = "full_reading.php?grade="+grade+"&type="+type+
+        location.href = "page_reading.php?grade="+grade+"&type="+type+
                         "&list_type="+list_type+"&level_type="+level_type+
                         "&score_type="+id;
       }
@@ -451,8 +419,8 @@
         <div class="forget_cover">
           短篇阅读
           <div class="float_right" style="margin-right:5.8em;">
-            <button class="btn btn-success active" onclick="location.href='page_reading.php'">短篇书单定制</button>
-            <button class="btn btn-success" onclick="location.href='book_short_shelf.php'">短篇书单管理</button>
+            <!-- <button class="btn btn-success active" onclick="location.href='page_reading.php'">短篇书单定制</button>
+            <button class="btn btn-success" onclick="location.href='book_short_shelf.php'">短篇书单管理</button> -->
           </div>
         </div>
       </div>
@@ -462,9 +430,9 @@
     <div class="row">
       <div class="container">
         <div class="col-lg-8">
-          选择短篇书单类型:&nbsp;&nbsp;&nbsp;&nbsp;
+          选择:&nbsp;&nbsp;&nbsp;&nbsp;
           <div class="btn-group">
-              <button type="button" class="btn btn-default" id="list_type">书单类型</button>
+              <button type="button" class="btn btn-default" id="list_type">短篇类型</button>
               <button type="button" class="btn btn-default dropdown-toggle"
                   data-toggle="dropdown">
                   <span class="caret"></span>
@@ -473,7 +441,7 @@
               <ul class="dropdown-menu" role="menu">
                 <li><a href="javascript:void(0);" onclick="type_change(0)">全部类型</a></li>
                 <?php
-                  $types = $common->get_all_book_type();
+                  $types = $common->get_all_book_type_short();
                   foreach ($types as $type)
                   {
                 ?>
@@ -521,13 +489,13 @@
           &nbsp;&nbsp;&nbsp;&nbsp;
           <div class="btn-group" onclick="go()">
             <span class="btn btn-default">
-              <i class="glyphicon glyphicon-send">&nbsp;</i>推送书单
+              <i class="glyphicon glyphicon-send">&nbsp;</i>推送短篇
             </span>
           </div>
           &nbsp;&nbsp;&nbsp;&nbsp;
           <div class="btn-group" onclick="javascript:del_cookie('books_short'); alert('删除成功');">
             <span class="btn btn-default">
-              删除所有已选图书
+              删除所有已选短篇
             </span>
           </div>
         </div>
@@ -551,7 +519,7 @@
         $grade = isset($_GET['grade'])?intval($_GET['grade']):0;
         $type = isset($_GET['type'])?intval($_GET['type']):0;
         $page =isset($_GET['page'])?intval($_GET['page']):1;
-        $books = $common->get_books($page,$user_id,$type,$grade);
+        $books = $common->get_books_short($page,$user_id,$type,$grade);
         // $books = $common->get_read_list($page,$user_id,$type,$grade);
         if(isset($_GET['s']))
         {
@@ -570,17 +538,19 @@
               </div>
               <div class="col-lg-10">
                 <h5>
-                  <span>书名:<?php echo $book->name;?></span>&nbsp;&nbsp;
+                  <span>篇名:<?php echo $book->name;?></span>&nbsp;&nbsp;
                   <span>作者:<?php echo $book->author;?></span>&nbsp;&nbsp;
-                  <span>出版社:<?php echo $book->press;?></span>
+                  <span>类型:<?php echo $book->type_name;?></span>&nbsp;&nbsp;
                 </h5>
                 <p class="gray"><?php echo substr($book->bookdesc,0,402)."...";?></p>
                 <div class="float_left purple">
-                  已被推荐<?php echo $book->recommend_times;?>次
+                  <span>难度:<?php echo $book->level;?></span>&nbsp;&nbsp;
+                  <span>学段:<?php echo $book->grade_name;?></span>&nbsp;&nbsp;
+                  <span>字数:<?php echo $book->wordcount;?></span>
                 </div>
                 <div class="float_right">
                       <a href="javascript:void(0);" class="btn btn-info ml20" id="book<?php echo $book->id;?>" onclick="add2_book_list_short(<?php echo $book->id;?>)">
-                          加入书单
+                          推送
                       </a>
                 </div>
               </div>
@@ -629,7 +599,7 @@
                     }
                   }
                 ?>
-                <li><a href="full_reading.php?page=<?php echo $page-1>0?$page-1:1; echo '&'; echo $url;  ?>">上一页</a></li>
+                <li><a href="page_reading.php?page=<?php echo $page-1>0?$page-1:1; echo '&'; echo $url;  ?>">上一页</a></li>
                 <?php
                   $pages = $common->get_read_list_pages();
                   // echo $pages;
@@ -638,16 +608,16 @@
                   {
                     if($index == $page)
                     {
-                      echo "<li class=\"active\"><a href=\"full_reading.php?page=$index&$url\">$index</a></li>";
+                      echo "<li class=\"active\"><a href=\"page_reading.php?page=$index&$url\">$index</a></li>";
                     }
                     else
                     {
-                      echo "<li><a href=\"full_reading.php?page=$index&$url\">$index</a></li>";
+                      echo "<li><a href=\"page_reading.php?page=$index&$url\">$index</a></li>";
                     }
                     $index++;
                   }
                 ?>
-                <li><a href="full_reading.php?page=<?php echo $page+1>$pages?$pages:$page+1; echo '&'; echo $url;  ?>">下一页</a></li>
+                <li><a href="page_reading.php?page=<?php echo $page+1>$pages?$pages:$page+1; echo '&'; echo $url;  ?>">下一页</a></li>
             </ul>
           </center>
       <?php
@@ -663,11 +633,11 @@
       {
         if(type == 0)
         {
-          location.href = "full_reading.php?grade="+id;
+          location.href = "page_reading.php?grade="+id;
         }
         else
         {
-          location.href = "full_reading.php?grade="+id+"&type="+type;
+          location.href = "page_reading.php?grade="+id+"&type="+type;
         }
       }
 
@@ -675,11 +645,11 @@
       {
         if(grade == 0)
         {
-          location.href = "full_reading.php?type="+id;
+          location.href = "page_reading.php?type="+id;
         }
         else
         {
-          location.href = "full_reading.php?type="+id+"&grade="+grade;
+          location.href = "page_reading.php?type="+id+"&grade="+grade;
         }
       }
 

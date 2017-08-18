@@ -886,6 +886,29 @@
         return $ret;
       }
 
+
+      /**
+      *短篇阅读
+      *获取学生读书合格的本数和字数
+      **/
+      function get_read_book_number_and_wordcount_short()
+      {
+        global $db;
+        $user_id = $this->get_user_id();
+        $sql = "select wordcount from rd_book_short where id in(select DISTINCT(book_id) from ".
+                "rd_user_exam_scores_short where user_id='$user_id' and hege=1)";
+        $result = $db->get_results($sql);
+        $ret = [];
+        $ret['num'] = count($result);
+        $wordcount = 0;
+        for($i=0; $i<count($result); $i++)
+        {
+          $wordcount += $result[$i]->wordcount;
+        }
+        $ret['wordcount'] = $wordcount;
+        return $ret;
+      }
+
       /**
       *学校级别
       *获取5类题型的得分比例
@@ -936,6 +959,35 @@
         // {
         //   return [-1,-1,-1,-1,-1];
         // }
+      }
+
+
+      /**
+      *学校级别
+      *短篇阅读
+      *获取5类题型的得分比例
+      *'字词积累','文句理解','文意把握','要点概括','内容探究'
+      **/
+      function get_score_percent_by_item_school_short()
+      {
+        global $db;
+        $user_id = $this->get_user_id();
+        $item1_socre = $this->user_info->item1_score_short;
+        $item2_socre = $this->user_info->item2_score_short;
+        $item3_socre = $this->user_info->item3_score_short;
+        $item4_socre = $this->user_info->item4_score_short;
+        $item5_socre = $this->user_info->item5_score_short;
+        //获取测试的总次数
+        $times = $db->get_var("select count(*) from rd_user_exam_scores_short where user_id=$user_id");
+        if($times<1)
+        {
+          $times = 1;
+        }
+        $ret = [round($item1_socre/$times,2),round($item2_socre/$times,2),
+                round($item3_socre/$times,2),round($item4_socre/$times,2),
+                round($item5_socre/$times,2)
+                ];
+        return $ret;
       }
 
       /**
@@ -1148,6 +1200,37 @@
         // {
         //   return [-1,-1,-1,-1,-1];
         // }
+      }
+
+
+      /**
+      *学校级别
+      *短篇阅读
+      *'字词积累','文句理解','文意把握','要点概括','内容探究'
+      *获取5类题型的得分比例
+      *教师第三视角
+      **/
+      function get_score_percent_by_item_school2_short($id)
+      {
+        global $db;
+        $user_id = $id;
+        $user_info = $db->get_row("select item1_score_short,item2_score_short,item3_score_short,item4_score_short,item5_score_short from rd_user where id=$user_id");
+        $item1_socre = $user_info->item1_score_short;
+        $item2_socre = $user_info->item2_score_short;
+        $item3_socre = $user_info->item3_score_short;
+        $item4_socre = $user_info->item4_score_short;
+        $item5_socre = $user_info->item5_score_short;
+        //获取测试的总次数
+        $times = $db->get_var("select count(*) from rd_user_exam_scores_short where user_id=$user_id");
+        if($times<1)
+        {
+          $times = 1;
+        }
+        $ret = [round($item1_socre/$times,2),round($item2_socre/$times,2),
+                round($item3_socre/$times,2),round($item4_socre/$times,2),
+                round($item5_socre/$times,2)
+                ];
+        return $ret;
       }
 
       /**
@@ -1411,6 +1494,21 @@
       }
 
       /**
+      *教师用-短篇阅读
+      *获取教师测评中心第一个图的六项数据
+      **/
+      function get_class_report_score_1_short($class_id)
+      {
+        global $db;
+        $sql = "select round(avg(score_short),2) as avg_score,round(avg(item1_score_short),2) as item1,".
+                "round(avg(item2_score_short),2) as item2,round(avg(item3_score_short),2) as item3,".
+                "round(avg(item4_score_short),2) as item4,round(avg(item5_score_short),2) as item5 ".
+                "from rd_user where role=1 and class='$class_id'";
+        return $db->get_row($sql);
+      }
+
+
+      /**
       *教师用
       *获取教师测评中心第二个饼图的数据
       **/
@@ -1424,6 +1522,35 @@
         $datas = $db->get_results($sql);
         //取出所有的书的类型
         $sql = "select id,name from rd_book_type";
+        $book_types = $db->get_results($sql);
+        foreach($book_types as $type)
+        {
+          $type->num = 0;
+          foreach($datas as $data)
+          {
+            if($data->type == $type->id)
+            {
+              $type->num = $data->total;
+            }
+          }
+        }
+        return $book_types;
+      }
+
+      /**
+      *教师用-短篇阅读
+      *获取教师测评中心第二个饼图的数据
+      **/
+      function get_class_report_score_2_short($class_id)
+      {
+        global $db;
+        //取出当前班级所有学生测试合格的书的id
+        $sql = "select count(id) as total,type from rd_book_short where id in(".
+                "select book_id from rd_user_exam_scores_short where user_id in(".
+                "select id from rd_user where role=1 and class='$class_id') and hege=1) group by type";
+        $datas = $db->get_results($sql);
+        //取出所有的书的类型
+        $sql = "select id,name from rd_book_short_type";
         $book_types = $db->get_results($sql);
         foreach($book_types as $type)
         {
@@ -1470,6 +1597,40 @@
         return $book_types;
       }
 
+
+      /**
+      *教师用
+      *短篇阅读
+      *获取单个学生的阅读结构报告
+      **/
+      function get_single_student_report_1_short($user_id)
+      {
+        global $db;
+        //取出所有的书的类型
+        $sql = "select id,name from rd_book_short_type";
+        $book_types = $db->get_results($sql);
+        //取出学生看过的所有的书
+        $sql = "select count(id) as total,type from rd_book_short where id in(".
+                "select book_id from rd_user_exam_scores_short where user_id=$user_id and hege=1) group by type";
+        $datas = $db->get_results($sql);
+        foreach($book_types as $type)
+        {
+          $type->num = 0;
+          if(count($datas))
+          {
+            foreach($datas as $data)
+            {
+              if($data->type == $type->id)
+              {
+                $type->num = $data->total;
+              }
+            }
+          }
+        }
+        return $book_types;
+      }
+
+
       /**
       *教师用
       *获取教师测评中心的第三个图数据
@@ -1493,6 +1654,28 @@
       }
 
       /**
+      *教师用-短篇阅读
+      *获取教师测评中心的第三个图数据
+      **/
+      function get_class_report_score_3_short($class_id)
+      {
+        global $db;
+        $sql = "select count(id) as total,level from rd_book_short where id in(".
+                "select book_id from rd_user_exam_scores_short where user_id in(".
+                "select id from rd_user where role=1 and class='$class_id') and hege=1)group by level";
+        $datas = $db->get_results($sql);
+        $ret = [0,0,0,0,0,0,0,0,0,0];
+        if(count($datas)>0)
+        {
+          foreach($datas as $data)
+          {
+            $ret[$data->level-1] = $data->total;
+          }
+        }
+        return $ret;
+      }
+
+      /**
       *教师用
       *获取单个学生的阅读难度等级报告
       **/
@@ -1502,6 +1685,31 @@
         global $db;
         $sql = "select count(id) as total,level from rd_book where id in(".
                 "select DISTINCT(book_id) from rd_user_exam_scores where user_id=$user_id and hege=1)group by level";
+        $datas = $db->get_results($sql);
+        $ret = [0,0,0,0,0,0,0,0,0,0];
+        if(count($datas)>0)
+        {
+          foreach($datas as $data)
+          {
+            $index = $data->level-1;
+            $num = $data->total;
+            $ret[$index] = $num;
+          }
+        }
+        return $ret;
+      }
+
+      /**
+      *教师用
+      *短篇阅读
+      *获取单个学生的阅读难度等级报告
+      **/
+      function get_single_student_report_2_short($user_id)
+      {
+        global $db;
+        global $db;
+        $sql = "select count(id) as total,level from rd_book_short where id in(".
+                "select DISTINCT(book_id) from rd_user_exam_scores_short where user_id=$user_id and hege=1)group by level";
         $datas = $db->get_results($sql);
         $ret = [0,0,0,0,0,0,0,0,0,0];
         if(count($datas)>0)
@@ -1910,6 +2118,31 @@
           $id = $students[$i]->id;
           $sql = "select count(id) as num1,sum(wordcount) as num2 from rd_book where id in(select DISTINCT(book_id) from ".
                   "rd_user_exam_scores where user_id='$id' and hege=1)";
+          $row = $db->get_row($sql);
+          $num1 += $row->num1;
+          $num2 += $row->num2;
+        }
+        $ret['num1'] = $num1;
+        $ret['num2'] = $num2;
+        return $ret;
+      }
+
+      /**
+      *教师测评中心学生读书短篇总数和字数
+      **/
+      function get_students_read_num_and_wordcount_short($class)
+      {
+        global $db;
+        $user_id = $this->get_user_id();
+        $ret = [];
+        $students = $this->get_students_by_class($class);
+        $num1 = 0;
+        $num2 = 0;
+        for($i=0; $i<count($students); $i++)
+        {
+          $id = $students[$i]->id;
+          $sql = "select count(id) as num1,sum(wordcount) as num2 from rd_book_short where id in(select DISTINCT(book_id) from ".
+                  "rd_user_exam_scores_short where user_id='$id' and hege=1)";
           $row = $db->get_row($sql);
           $num1 += $row->num1;
           $num2 += $row->num2;

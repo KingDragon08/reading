@@ -58,13 +58,19 @@
         </div>
       </div>
       <br>
-      <div class="container">
+      <div class="container" style="position: relative;">
         <?php
           if($role == "学生")
           {
         ?>
         <!-- 学生开始 -->
+
+          <div class="btn btn-success btn-sm active" style="position: absolute; left:0px; top: 70px; z-index: 10000;" id="show1" onclick="show_1()">全本阅读</div>
+          <div class="btn btn-success btn-sm" id="show1_short" onclick="show_1_short()" style="position: absolute; left:0px; top: 110px; z-index: 10000;">短篇阅读</div>
+
           <div class="col-lg-6" style="height:300px;" id="graph1"></div>
+          <div class="col-lg-6" style="height:300px;" id="graph1_short"></div>
+
           <div class="col-lg-2" style="height:300px; padding:5px;">
             <img src="img/rabbit.png" alt="" class="img-responsive" style="margin-top:80px;">
           </div>
@@ -92,6 +98,24 @@
           </div>
           <script type="text/javascript" src="js/echarts-all.js"></script>
           <script type="text/javascript">
+          $(document).ready(function(){
+            $("#graph1_short").hide();
+          });
+
+          function show_1(){
+            $("#show1").addClass("active");
+            $("#show1_short").removeClass("active");
+            $("#graph1").show();
+            $("#graph1_short").hide();
+          }
+
+          function show_1_short(){
+            $("#show1_short").addClass("active");
+            $("#show1").removeClass("active");
+            $("#graph1_short").show();
+            $("#graph1").hide();
+          }
+
             //第一个图
             var myChart_1 = echarts.init(document.getElementById('graph1'),'default');
             var option_1 = {
@@ -149,6 +173,67 @@
             ]
           };
           myChart_1.setOption(option_1);
+
+
+
+          //第一个图-短篇阅读
+            var myChart_1_short = echarts.init(document.getElementById('graph1_short'),'default');
+            var option_1_short = {
+            title : {
+                text: '<?php echo $user_info->name?>的阅读－短篇阅读测评结果',
+                subtext: '共读<?php $kd_data = $user->get_read_book_number_and_wordcount_short(); echo $kd_data['num']; ?>本  <?php echo $kd_data['wordcount']; ?>字'
+            },
+            tooltip : {
+                trigger: 'axis'
+            },
+            toolbox: {
+                show : true,
+                feature : {
+                    dataView : {show: true, readOnly: false},
+                    saveAsImage : {show: true}
+                }
+            },
+            calculable : true,
+            xAxis : [
+                {
+                    type : 'category',
+                    data : ['字词积累','文句理解','文意把握','要点概括','内容探究']
+                }
+            ],
+            yAxis : [
+                {
+                    type : 'value',
+                    min:0,
+                    max:3
+                }
+            ],
+            series : [
+                {
+                    type:'bar',
+                    barCategoryGap:'50%',
+                    data:[<?php
+                        if($school_students_count)
+                        {
+                          $score_percent_by_item = $user->get_score_percent_by_item_school_short();
+                          $out_string = "";
+                          foreach($score_percent_by_item as $score)
+                          {
+                              $out_string .= round(floatval($score),2);
+                              $out_string .= ',';
+                          }
+                          $out_string = substr($out_string,0,-1);
+                          echo $out_string;
+                        }
+                        else
+                        {
+                          echo "0,0,0,0,0";
+                        }
+                    ?>]
+                }
+            ]
+          };
+          myChart_1_short.setOption(option_1_short);
+
 
           //第二个图
           var myChart_2 = echarts.init(document.getElementById('graph2'),'default');
@@ -374,8 +459,8 @@
                         data:[<?php
                             if(count($class_score)>0)
                             {
-                              echo $class_score->item1.','.$class_score->item2.','.$class_score->item3.','
-                                  .$class_score->item4.','.$class_score->item5;
+                              echo floatval($class_score->item1).','.floatval($class_score->item2).','.floatval($class_score->item3).','
+                                  .floatval($class_score->item4).','.floatval($class_score->item5);
                             }
                             else
                             {
@@ -471,7 +556,7 @@
                     $max = $data;
                   }
                 }
-                if($max > 0)
+                if($max > -1)
                 {
               ?>
                 <script type="text/javascript">
@@ -536,6 +621,240 @@
             </div>
           </div>
         </div>
+
+
+        <!-- 短篇阅读 -->
+        <div class="container mt20 mb20">
+          <script type="text/javascript" src='js/echarts-all.js'></script>
+          <div class="col-lg-8" id="graph1_short" style="height:400px; padding:0;">
+            <?php
+              $class_score = "";
+              if($user->get_class_students_count_teacher($class_id)>0)
+              {
+                $class_score = $user->get_class_report_score_1_short($class_id);
+              }
+              else
+              {
+                $class_score->avg_score = 0;
+                $class_score->item1 = 0;
+                $class_score->item2 = 0;
+                $class_score->item3 = 0;
+                $class_score->item4 = 0;
+                $class_score->item5 = 0;
+              }
+              $kd_nums = $user->get_students_read_num_and_wordcount_short($class_id);
+            ?>
+            <script type="text/javascript">
+                var myChart_1_short = echarts.init(document.getElementById('graph1_short'),'default');
+                var option_1_short = {
+                title:{
+                  text:"<?php echo "全本阅读－总平均分:".round(floatval($class_score->avg_score),2)."  共读".$kd_nums['num1']."本  ".$kd_nums['num2']."字";?>"
+                },
+                tooltip : {
+                    trigger: 'axis'
+                },
+                toolbox: {
+                    show : false,
+                    feature : {
+                        dataView : {show: true, readOnly: false},
+                        saveAsImage : {show: true}
+                    },
+                    orient:'vertical'
+                },
+                calculable : true,
+                xAxis : [
+                    {
+                        type : 'value'//,
+                        // min:0,
+                        // max:100
+                    }
+                ],
+                yAxis : [
+                    {
+                      type : 'category',
+                      data : ['字词积累','文句理解','文意把握','要点概括','内容探究']
+                    }
+                ],
+                series : [
+                    {
+                        type:'bar',
+                        barCategoryGap:'50%',
+                        data:[<?php
+                            if(count($class_score)>0)
+                            {
+                              echo floatval($class_score->item1).','.floatval($class_score->item2).','.floatval($class_score->item3).','
+                                  .floatval($class_score->item4).','.floatval($class_score->item5);
+                            }
+                            else
+                            {
+                              echo "0,0,0,0,0";
+                            }
+                        ?>]
+                    }
+                ]
+              };
+              myChart_1_short.setOption(option_1_short);
+            </script>
+          </div>
+          <div class="col-lg-4" style="height:400px;">
+            <div class="row" id="graph2_short" style="height:50%; text-align:center;">
+            <?php
+              $pie_data = "";
+              if($user->get_students_by_class($class_id))
+              {
+                $pie_data = $user->get_class_report_score_2_short($class_id);
+                if(count($pie_data)>0)
+                {
+            ?>
+                  <script type="text/javascript">
+                      var myChart_2_short = echarts.init(document.getElementById('graph2_short'),'default');
+                      var option_2_short = {
+                          tooltip : {
+                              trigger: 'item',
+                              formatter: "{b} : {c} ({d}%)"
+                          },
+                          legend: {
+                              orient: 'horizontal',
+                              left: 'right',
+                              data: [<?php
+                                    $out_string = '';
+                                    $s_string = '';
+                                    foreach($pie_data as $item)
+                                    {
+                                      if($item->num>0)
+                                      {
+                                          $out_string .= "'".$item->name."'";
+                                          $out_string .= ',';
+                                          $item->num = floatval($item->num);
+                                          $s_string .= "{value:$item->num,name:'$item->name'},";
+                                      }
+                                    }
+                                    $out_string = substr($out_string,0,-1);
+                                    $s_string = substr($s_string,0,-1);
+                                    echo $out_string;
+                              ?>]
+                          },
+                          series : [
+                              {
+                                  name: '短篇类别',
+                                  type: 'pie',
+                                  radius : '60%',
+                                  center: ['50%', '60%'],
+                                  data:[<?php echo $s_string;?>],
+                                  itemStyle: {
+                                      emphasis: {
+                                          shadowBlur: 10,
+                                          shadowOffsetX: 0,
+                                          shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                      }
+                                  }
+                              }
+                          ]
+                      };
+                    myChart_2_short.setOption(option_2_short);
+                  </script>
+            <?php
+                }
+                else
+                {
+                  echo "还没有学生完成测评";
+                }
+              }
+              else
+              {
+                echo "班内没有学生";
+              }
+            ?>
+            </div>
+            <div class="row" id="graph3_short" style="height:50%; text-align:center; margin-top:20px;">
+              <?php
+              $raddar_data = "";
+              if($user->get_students_by_class($class_id))
+              {
+                $raddar_data = $user->get_class_report_score_3_short($class_id);
+                $max = -1;
+                foreach($raddar_data as $data)
+                {
+                  if($data>$max)
+                  {
+                    $max = $data;
+                  }
+                }
+                if($max > -1)
+                {
+              ?>
+                <script type="text/javascript">
+                var myChart_3_short = echarts.init(document.getElementById('graph3_short'),'default');
+                var option_3_short = {
+                      title: {
+                        text:'难度等级'
+                      },
+                      tooltip : {
+                          trigger: 'axis'
+                      },
+                      polar : [
+                         {
+                             radius:60,
+                             indicator : [
+                                 { text: '10级',max:<?php echo $max;?>},
+                                 { text: '9级',max:<?php echo $max;?>},
+                                 { text: '8级',max:<?php echo $max;?>},
+                                 { text: '7级',max:<?php echo $max;?>},
+                                 { text: '6级',max:<?php echo $max;?>},
+                                 { text: '5级',max:<?php echo $max;?>},
+                                 { text: '4级',max:<?php echo $max;?>},
+                                 { text: '3级',max:<?php echo $max;?>},
+                                 { text: '2级',max:<?php echo $max;?>},
+                                 { text: '1级',max:<?php echo $max;?>}
+                              ]
+                          }
+                      ],
+                      calculable : true,
+                      series : [
+                          {
+                              name: '难度等级',
+                              type: 'radar',
+                              data : [
+                                  {
+                                      value : [<?php
+                                        echo $raddar_data[9].','.$raddar_data[8].','.$raddar_data[7].','.$raddar_data[6]
+                                              .','.$raddar_data[5].','.$raddar_data[4].','.$raddar_data[3].','
+                                              .$raddar_data[2].','.$raddar_data[1].','.$raddar_data[0];
+                                      ?>],
+                                      name : '难度等级'
+                                  }
+                              ]
+                          }
+                      ]
+                  };
+
+                  myChart_3_short.setOption(option_3_short);
+                </script>
+              <?php
+                }
+                else
+                {
+                  echo "暂无数据";
+                }
+              }
+              else
+              {
+                echo "班内没有学生";
+              }
+              ?>
+            </div>
+          </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
 
 
         <div class="container mt20 mb20">

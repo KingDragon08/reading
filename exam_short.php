@@ -141,7 +141,7 @@
         <?php
           //判断书是不是高年级的书
           global $db;
-          $grade = $db->get_var("select grade from rd_book where id='$book'");
+          $grade = $db->get_var("select grade from rd_book_short where id='$book'");
           if($grade>1)
           {
             exit();
@@ -275,7 +275,7 @@
               }
               $questions = $exam->get_questions();
               $counter = 1;
-              if(!$questions[9])
+              if(count($questions)<9)
               {
             ?>
               <center>
@@ -298,6 +298,7 @@
                     <div style="margin-top:20px; mergin-left:20px; font-size:18px; color:#662a7c;">
                       <img src="img/book_icon.png" alt="">
                       书籍名称《<?php echo $exam->get_book_name($book);?>》
+                      <div style="float:right; margin-right: 20px;" class="btn btn-success btn-sm" onclick="show_text()">阅读文本</div>
                     </div>
                     <table style="margin-top:50px; width:100%;">
                       <tr>
@@ -489,11 +490,41 @@
             }
             return ret;
           }
+          function show_text(){
+            $("#text").fadeIn();
+          }
+
+          function hide_text(){
+            $("#text").fadeOut();
+          }
       </script>
       </div>
     </div>
     <?php
       include_once("footer.php");
     ?>
+
+    <style media="screen">
+      .note_cover{position:fixed; left:0; top:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index: 10000;}
+      .note_container{width:800px; height:600px; overflow-x: hidden; overflow-y: scroll; border-radius:8px; box-shadow: 0 0 8px #ccc; padding:16px;}
+      .note_container{position:absolute; left:50%; top:50%; margin-left: -400px; margin-top:-300px; background:#fff;}
+      .mt10{margin-top:10px;}
+      .bookdesc{
+        padding:2em; line-height: 1.8em; text-align: left;
+      }
+    </style>
+
+    <div class="note_cover" id="text" style="display:none;">
+      <div class="note_container">
+      <center>
+        <p class="bookdesc">
+          <?php echo $exam->get_text();?>
+        </p>
+        <input type="button" value="关闭" class="btn btn-default" onclick="hide_text()">
+      </center>
+      </div>
+    </div>
+
+
   </body>
 </html>

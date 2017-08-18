@@ -12,7 +12,7 @@
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <title>乐智悦读-测验</title>
     <style media="screen">
-      .item{min-height:515px; width: 759px; height:auto; overflow: auto;}
+      .item{height:715px; width: 600px;}
       .question_title{margin-left:30px; margin-top:40px; font-size: 16px; font-weight: bold;}
       .answers{margin-left: 30px; margin-top:20px;}
       .question_ctr{margin-top:50px; text-align: center; clear: both;}
@@ -52,7 +52,7 @@
     <!-- top nav start-->
       <?php
         include_once("top.php");
-        include_once("class/exam.php");
+        include_once("class/exam_short.php");
         if(!isLogin())//如果没有登录则跳转到首页
         {
           header("Location:login.php");
@@ -97,7 +97,7 @@
     <!-- division panel start -->
       <div class="w100 forget">
         <div class="forget_cover" id="subtitle">
-          全本阅读（测试习题）
+          短篇阅读（测试习题）
           <div class="float_right" style="margin-right:5.8em;">
             <p id="time">
 
@@ -108,7 +108,7 @@
     <!-- division panel end -->
     <!-- list start -->
     <div class="container mt20 mb20">
-      <div style="width:960px; min-height:515px; height:auto; overflow-y:auto; margin:0 auto; box-shadow:0 0 5px #999; border-radius:5px;">
+      <div style="width:800px; height:715px; margin:0 auto; box-shadow:0 0 5px #999; border-radius:5px;">
         <?php
           if(!isset($_GET['book']))
           {
@@ -139,10 +139,10 @@
           }
         ?>
         <?php
-          //判断书是不是高年级的书
+          //判断是不是低年级的书
           global $db;
-          $grade = $db->get_var("select grade from rd_book where id='$book'");
-          if($grade>1)
+          $grade = $db->get_var("select grade from rd_book_short where id='$book'");
+          if($grade<2)
           {
             exit();
           }
@@ -158,6 +158,11 @@
               isset($_POST['question_id_8']) &&
               isset($_POST['question_id_9']) &&
               isset($_POST['question_id_10']) &&
+              isset($_POST['question_id_11']) &&
+              isset($_POST['question_id_12']) &&
+              isset($_POST['question_id_13']) &&
+              isset($_POST['question_id_14']) &&
+              isset($_POST['question_id_15']) &&
               isset($_POST['question_1']) &&
               isset($_POST['question_2']) &&
               isset($_POST['question_3']) &&
@@ -167,7 +172,12 @@
               isset($_POST['question_7']) &&
               isset($_POST['question_8']) &&
               isset($_POST['question_9']) &&
-              isset($_POST['question_10'])
+              isset($_POST['question_10'])&&
+              isset($_POST['question_11'])&&
+              isset($_POST['question_12'])&&
+              isset($_POST['question_13'])&&
+              isset($_POST['question_14'])&&
+              isset($_POST['question_15'])
           )
           {
               $question_ids = [];
@@ -181,6 +191,11 @@
               $question_ids[] = $_POST['question_id_8'];
               $question_ids[] = $_POST['question_id_9'];
               $question_ids[] = $_POST['question_id_10'];
+              $question_ids[] = $_POST['question_id_11'];
+              $question_ids[] = $_POST['question_id_12'];
+              $question_ids[] = $_POST['question_id_13'];
+              $question_ids[] = $_POST['question_id_14'];
+              $question_ids[] = $_POST['question_id_15'];
               $answers = [];
               $answers[] = $_POST['question_1'];
               $answers[] = $_POST['question_2'];
@@ -192,10 +207,15 @@
               $answers[] = $_POST['question_8'];
               $answers[] = $_POST['question_9'];
               $answers[] = $_POST['question_10'];
+              $answers[] = $_POST['question_11'];
+              $answers[] = $_POST['question_12'];
+              $answers[] = $_POST['question_13'];
+              $answers[] = $_POST['question_14'];
+              $answers[] = $_POST['question_15'];
               $answer_time = $_COOKIE["answer_time"];
               // setCookie("answer_time",600);
               // $_COOKIE["answer_time"] = 600;
-              $exam = new Exam($book);
+              $exam = new Exam_short($book);
               $can_exam = $exam->can_exam($user_id,$book);
               if($can_exam>0)
               {
@@ -224,28 +244,18 @@
               //写入得分情况并返回测试结果ID
               $exam_result_id = $exam->write_scores($user_id,$book,$scores,$answer_time,$answers,$question_ids);
               //转到测试结果页
-              /*
-              <center>
-                <img src="img/gongchengshi.jpeg" style="margin-top:20px;"/>
-                <br>
-                <p class="gray" id="tips">
-                  已打开结果展示页面...
-                </p>
-              </center>
-              */
-              echo "<script>location.href = 'exam_report.php?exam=$exam_result_id';</script>";
-              // header("Location:exam_report.php?exam=$exam_result_id");
+              echo "<script>location.href = 'exam_report_short.php?exam=$exam_result_id';</script>";
               exit();
           }
           else
           {
         ?>
         <form action="" id="kd_exam" method="post" onsubmit="return check();">
-        <div id="myCarousel" class="carousel slide" style="width:759px; float:left; min-height:515px; height:auto; overflow:auto; border-right:1px solid #ccc;">
+        <div id="myCarousel" class="carousel slide" style="width:599px; float:left; height:715px; border-right:1px solid #ccc;">
           <!-- 轮播（Carousel）项目 -->
-          <div class="carousel-inner" style="min-height:515px; height:auto; overflow:auto;">
+          <div class="carousel-inner" style="height:715px;">
             <?php
-              $exam = new Exam($book);
+              $exam = new Exam_short($book);
               //检查当前用户是否可以在当天进行测试
               //0 可以答题
               //1 已经通过
@@ -273,9 +283,9 @@
             <?php
                 exit();
               }
-              $questions = $exam->get_questions();
+              $questions = $exam->get_questions_2();
               $counter = 1;
-              if(count($questions)<9)
+              if(count($questions)<15)
               {
             ?>
               <center>
@@ -288,7 +298,7 @@
             <?php
                 exit();
               }
-              $coverimg = $questions[10];
+              $coverimg = $questions[15];
               array_pop($questions);
               foreach($questions as $question)
               {
@@ -298,16 +308,17 @@
                     <div style="margin-top:20px; mergin-left:20px; font-size:18px; color:#662a7c;">
                       <img src="img/book_icon.png" alt="">
                       书籍名称《<?php echo $exam->get_book_name($book);?>》
+                      <div style="float:right; margin-right: 20px;" class="btn btn-success btn-sm" onclick="show_text()">阅读文本</div>
                     </div>
                     <table style="margin-top:50px; width:100%;">
                       <tr>
-                        <td width="40%" valign="middle" align="left" style="padding-right:8px; line-height:24px;">
+                        <td width="50%" valign="middle" align="center">
                             <p>
                               第<?php echo $counter;?>题：<?php echo $question->question;?>
                             </p>
-                            <center><img src="<?php echo $coverimg;?>" alt="图书封面走丢了" style="max-width:80%;"></center>
+                            <img src="<?php echo $coverimg;?>" alt="图书封面走丢了" style="max-width:80%;">
                         </td>
-                        <td width="60%" valign="middle" id="kd_<?php echo $counter;?>">
+                        <td width="50%" valign="middle" id="kd_<?php echo $counter;?>">
                             <div class="choice_item_container" onclick="select_item(this,<?php echo $counter;?>,1)">
                               <div class="choice_item_left">
                                 A
@@ -351,7 +362,7 @@
                       {
                         echo '<input type="button" class="btn btn-default" value="上一题" onclick="prev_page()">&nbsp;';
                       }
-                      if($counter!=10)
+                      if($counter!=15)
                       {
                         echo '<input type="button" class="btn btn-default" value="下一题" onclick="next_page()">';
                       }
@@ -366,7 +377,7 @@
             ?>
           </div>
       </div>
-      <div class="" id="answer_panel" style="float:left; width:200px; height:515px; text-align:center; padding:10px;">
+      <div class="" id="answer_panel" style="float:left; width:200px; height:715px; text-align:center; padding:10px;">
           <input type="button" class="btn btn-default form-control" value="第1题" onclick="slide2page(0)">
           <input type="button" class="btn btn-default form-control" value="第2题" onclick="slide2page(1)">
           <input type="button" class="btn btn-default form-control" value="第3题" onclick="slide2page(2)">
@@ -377,19 +388,24 @@
           <input type="button" class="btn btn-default form-control" value="第8题" onclick="slide2page(7)">
           <input type="button" class="btn btn-default form-control" value="第9题" onclick="slide2page(8)">
           <input type="button" class="btn btn-default form-control" value="第10题" onclick="slide2page(9)">
+          <input type="button" class="btn btn-default form-control" value="第11题" onclick="slide2page(10)">
+          <input type="button" class="btn btn-default form-control" value="第12题" onclick="slide2page(11)">
+          <input type="button" class="btn btn-default form-control" value="第13题" onclick="slide2page(12)">
+          <input type="button" class="btn btn-default form-control" value="第14题" onclick="slide2page(13)">
+          <input type="button" class="btn btn-default form-control" value="第15题" onclick="slide2page(14)">
           <input type="submit" class="btn btn-danger form-control" value="交卷">
           <!-- <span id="time" style="display:inline-block; margin-top:20px;"></span> -->
       </div>
       </form>
       <script type="text/javascript" src="js/cookie.js"></script>
       <script>
-          answer_time = 10*40;
+          answer_time = 15*60;
           answer_interval = "";
           $().ready(function(){
             $('#myCarousel').carousel('pause');
             // if(!get_cookie("answer_time"))
             // {
-            set_cookie("answer_time",600)
+            set_cookie("answer_time",900);
             // }
             // else
             // {
@@ -397,7 +413,6 @@
             // }
 
             answer_interval = setInterval("count_time()",1000);
-
           });
 
           //计时
@@ -489,11 +504,45 @@
             }
             return ret;
           }
+
+          function show_text(){
+            $("#text").fadeIn();
+          }
+
+          function hide_text(){
+            $("#text").fadeOut();
+          }
+
       </script>
       </div>
     </div>
     <?php
       include_once("footer.php");
     ?>
+
+    <style media="screen">
+      .note_cover{position:fixed; left:0; top:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index: 10000;}
+      .note_container{width:800px; height:600px; overflow-x: hidden; overflow-y: scroll; border-radius:8px; box-shadow: 0 0 8px #ccc; padding:16px;}
+      .note_container{position:absolute; left:50%; top:50%; margin-left: -400px; margin-top:-300px; background:#fff;}
+      .mt10{margin-top:10px;}
+      .bookdesc{
+        padding:2em; line-height: 1.8em; text-align: left;
+      }
+    </style>
+
+    <div class="note_cover" id="text" style="display:none;">
+      <div class="note_container">
+      <center>
+        <p class="bookdesc">
+          <?php echo $exam->get_text();?>
+        </p>
+        <input type="button" value="关闭" class="btn btn-default" onclick="hide_text()">
+      </center>
+      </div>
+    </div>
+
+
+
+
   </body>
 </html>

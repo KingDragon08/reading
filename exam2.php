@@ -243,17 +243,7 @@
               //写入得分情况并返回测试结果ID
               $exam_result_id = $exam->write_scores($user_id,$book,$scores,$answer_time,$answers,$question_ids);
               //转到测试结果页
-          ?>
-              <center>
-                <img src="img/gongchengshi.jpeg" style="margin-top:20px;"/>
-                <br>
-                <p class="gray" id="tips">
-                  已打开结果展示页面...
-                </p>
-              </center>
-          <?php
-              echo "<script>openwin('exam_report.php?exam=$exam_result_id');</script>";
-              // header("Location:report.php");
+              echo "<script>location.href = 'exam_report.php?exam=$exam_result_id';</script>";
               exit();
           }
           else
@@ -294,7 +284,7 @@
               }
               $questions = $exam->get_questions_2();
               $counter = 1;
-              if(!$questions[14])
+              if(count($questions)<15)
               {
             ?>
               <center>
@@ -407,13 +397,13 @@
       </form>
       <script type="text/javascript" src="js/cookie.js"></script>
       <script>
-          answer_time = 10*60;
+          answer_time = 15*60;
           answer_interval = "";
           $().ready(function(){
             $('#myCarousel').carousel('pause');
             // if(!get_cookie("answer_time"))
             // {
-            set_cookie("answer_time",600)
+            set_cookie("answer_time",900)
             // }
             // else
             // {

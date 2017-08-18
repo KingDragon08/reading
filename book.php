@@ -90,7 +90,8 @@
     <!-- division panel start -->
       <div class="w100 forget">
         <div class="forget_cover">
-          <?php echo $book_info->name; ?>
+          <?php echo $book_info->name; ?>&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="btn btn-success" onclick="history.go(-1);">返回</button>
           <!-- <div class="float_right" style="margin-right:5.8em;">
             <button class="btn btn-success" onclick="location.href='full_reading.html'">书单</button>
             <button class="btn btn-success active" onclick="location.href='book_shelf.html'">我的书架</button>
@@ -385,7 +386,7 @@
       </style>
       <div class="note_cover" id="note" style="display:none;">
         <form class="" action="add_note.php" method="post" name="note" onsubmit="return check_note();">
-          <div class="note_container" <?if($role!='学生'){echo 'style="height:300px; margin-top:-150px;"';}?>>
+          <div class="note_container" <?php if($role!='学生'){echo 'style="height:300px; margin-top:-150px;"';}?>>
             <?php
               $questions = $book->get_book_note();
               $count = 1;

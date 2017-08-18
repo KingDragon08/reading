@@ -46,7 +46,8 @@
     <!-- forget panel start -->
       <div class="w100 forget">
         <div class="forget_cover">
-            推送短篇书单
+            推送短篇书单&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="btn btn-success" onclick="history.go(-1);">返回</button>
         <div class="float_right" style="margin-right:5.8em;">
           <button class="btn btn-success active" onclick="location.href='page_reading.php'">短篇书单定制</button>
           <button class="btn btn-success" onclick="location.href='book_short_shelf.php'">短篇书单管理</button>
@@ -112,7 +113,7 @@
       <form class="" action="" method="post" onsubmit="return check_push();">
       <div class="container mt20 mb20">
           <div class="col-lg-12" style="margin-bottom:20px;">
-            当前书单中的书：
+            已选篇目：
           </div>
           <div class="col-lg-12">
             <div class="col-lg-8">

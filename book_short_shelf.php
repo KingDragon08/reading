@@ -96,10 +96,10 @@
 <div class="row">
   <div class="container">
     <div class="col-lg-9">
-      选择短篇类型:&nbsp;&nbsp;&nbsp;&nbsp;
+      选择:&nbsp;&nbsp;&nbsp;&nbsp;
 
       <div class="btn-group">
-          <button type="button" class="btn btn-default" id="list_type">图书类型</button>
+          <button type="button" class="btn btn-default" id="list_type">类型</button>
           <button type="button" class="btn btn-default dropdown-toggle"
               data-toggle="dropdown">
               <span class="caret"></span>
@@ -108,7 +108,7 @@
           <ul class="dropdown-menu" role="menu">
             <li><a href="javascript:void(0);" onclick="type_change(0)">全部类型</a></li>
             <?php
-              $types = $common->get_all_book_type();
+              $types = $common->get_all_book_type_short();
               $status = isset($_GET['status'])?intval($_GET['status']):-1;
               foreach ($types as $type)
               {
@@ -542,7 +542,7 @@ if($role == "教师")
       ?>
           <tr>
             <td width="50%" height="40" align="center" valign="middle"><?php echo $data['name'];?></td>
-            <td width="50%" height="40" align="center" valign="middle"><?php echo $data['num'];?>本</td>
+            <td width="50%" height="40" align="center" valign="middle"><?php echo $data['num'];?>篇</td>
           </tr>
       <?php
           }
@@ -553,7 +553,7 @@ if($role == "教师")
   <div class="col-lg-9">
     <div class="col-lg-12">
       <div class="col-lg-8">
-        选择书单类型:&nbsp;&nbsp;&nbsp;&nbsp;
+        选择:&nbsp;&nbsp;&nbsp;&nbsp;
 
         <div class="btn-group">
             <button type="button" class="btn btn-default" id="list_type">历史书单</button>

@@ -95,7 +95,7 @@
           exit();
         }
         $exam = new Exam(1);
-        $exam_id = $db->get_var("select id from rd_user_exam_scores where user_id='$user_id' and book_id='$book_id' limit 1");
+        $exam_id = $db->get_var("select id from rd_user_exam_scores where user_id='$user_id' and book_id='$book_id' order by id desc limit 1");
         $exam_report = $exam->get_exam_report($user_id,$exam_id);
         // var_dump($exam_report);
         if($exam_report)

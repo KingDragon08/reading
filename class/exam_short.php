@@ -21,24 +21,39 @@ class Exam_short
     //获取第一类题
     $sql = "select * from rd_book_question_obj_short where book_id='$this->book_id' and view='1'";
     $question1 = $db->get_results($sql);
+    if(count($question1)<6){
+      return [];
+    }
     $rand1 = rand(0,5);
     $rand2 = $rand1>2?rand(0,$rand1-1):rand($rand1+1,5);
     $ret[] = $question1[$rand1];
     $ret[] = $question1[$rand2];
     $sql = "select * from rd_book_question_obj_short where book_id='$this->book_id' and view='2'";
     $question2 = $db->get_results($sql);
+    if(count($question2)<6){
+      return [];
+    }
     $ret[] = $question2[$rand1];
     $ret[] = $question2[$rand2];
     $sql = "select * from rd_book_question_obj_short where book_id='$this->book_id' and view='3'";
     $question3 = $db->get_results($sql);
+    if(count($question3)<6){
+      return [];
+    }
     $ret[] = $question3[$rand1];
     $ret[] = $question3[$rand2];
     $sql = "select * from rd_book_question_obj_short where book_id='$this->book_id' and view='4'";
     $question4 = $db->get_results($sql);
+    if(count($question4)<6){
+      return [];
+    }
     $ret[] = $question4[$rand1];
     $ret[] = $question4[$rand2];
     $sql = "select * from rd_book_question_obj_short where book_id='$this->book_id' and view='5'";
     $question5 = $db->get_results($sql);
+    if(count($question5)<6){
+      return [];
+    }
     $ret[] = $question5[$rand1];
     $ret[] = $question5[$rand2];
     //获取书的封面
@@ -67,26 +82,41 @@ class Exam_short
     //获取第一类题
     $sql = "select * from rd_book_question_obj_short where book_id='$this->book_id' and view='1'";
     $question1 = $db->get_results($sql);
+    if(count($question1)<9){
+      return [];
+    }
     $ret[] = $question1[$rand1];
     $ret[] = $question1[$rand2];
     $ret[] = $question1[$rand3];
     $sql = "select * from rd_book_question_obj_short where book_id='$this->book_id' and view='2'";
     $question2 = $db->get_results($sql);
+    if(count($question2)<9){
+      return [];
+    }
     $ret[] = $question2[$rand1];
     $ret[] = $question2[$rand2];
     $ret[] = $question2[$rand3];
     $sql = "select * from rd_book_question_obj_short where book_id='$this->book_id' and view='3'";
     $question3 = $db->get_results($sql);
+    if(count($question3)<9){
+      return [];
+    }
     $ret[] = $question3[$rand1];
     $ret[] = $question3[$rand2];
     $ret[] = $question3[$rand3];
     $sql = "select * from rd_book_question_obj_short where book_id='$this->book_id' and view='4'";
     $question4 = $db->get_results($sql);
+    if(count($question4)<9){
+      return [];
+    }
     $ret[] = $question4[$rand1];
     $ret[] = $question4[$rand2];
     $ret[] = $question4[$rand3];
     $sql = "select * from rd_book_question_obj_short where book_id='$this->book_id' and view='5'";
     $question5 = $db->get_results($sql);
+    if(count($question5)<9){
+      return [];
+    }
     $ret[] = $question5[$rand1];
     $ret[] = $question5[$rand2];
     $ret[] = $question5[$rand3];
@@ -157,7 +187,7 @@ class Exam_short
         $total_score++;
       }
     }
-    if($hege>=6)
+    if($hege>=intval(count($scores)*0.6))
     {
       $hege=1;
     }
@@ -173,15 +203,15 @@ class Exam_short
     $sql = "insert into rd_user_exam_scores_short(user_id,book_id,scores,hege,use_time,exam_time,answers,question_ids,score)values(".
             "$user_id,$book_id,'$temp_scores',$hege,$use_time,'$time_string','$answers','$question_ids','$total_score')";
     $db->query($sql);
-    //如果合格则更新用户表的score,item1_socre,item2_socre,item3_socre,item4_socre,item5_socre字段，方便排名
+    //如果合格则更新用户表的score_short,item1_socre_short,item2_socre_short,item3_socre_short,item4_socre_short,item5_socre_short字段，方便排名
     if($hege==1)
     {
-        $sql = "update rd_user set score=score+$total_score,".
-                "item1_score=item1_score+$scores[0]+$scores[1],".
-                "item2_score=item2_score+$scores[2]+$scores[3],".
-                "item3_score=item3_score+$scores[4]+$scores[5],".
-                "item4_score=item4_score+$scores[6]+$scores[7],".
-                "item5_score=item5_score+$scores[8]+$scores[9]".
+        $sql = "update rd_user set score_short=score_short+$total_score,".
+                "item1_score_short=item1_score_short+$scores[0]+$scores[1],".
+                "item2_score_short=item2_score_short+$scores[2]+$scores[3],".
+                "item3_score_short=item3_score_short+$scores[4]+$scores[5],".
+                "item4_score_short=item4_score_short+$scores[6]+$scores[7],".
+                "item5_score_short=item5_score_short+$scores[8]+$scores[9]".
                 " where id=$user_id";
         $db->query($sql);
     }
@@ -277,6 +307,17 @@ class Exam_short
     global $db;
     return $db->get_var("select name from rd_book_short where id='$book'");
   }
+
+  /**
+  *获取短篇的文字内容
+  **/
+  public function get_text(){
+    global $db;
+    $id = $this->book_id;
+    $sql = "select bookdesc from rd_book_short where id='$id'";
+    return $db->get_var($sql);
+  }
+
 
 }
 ?>

@@ -330,9 +330,9 @@
                 if($book->shelf_type==0)
                 {
               ?>
-                <a class="btn btn-small btn-success" style="padding:4px 12px;" href="controller/book_shelf.php?action=remove&book=<?php echo $book->id;?>">
+                <button class="btn btn-small btn-success" style="padding:4px 12px;" onclick="javascript:if(confirm('确认移除?')){location.href='controller/book_shelf.php?action=remove&book=<?php echo $book->id;?>'}">
                   <i class="glyphicon glyphicon-trash"></i>移除
-                </a>
+                </button>
               <?php
                 }
                 else

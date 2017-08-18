@@ -56,13 +56,21 @@
         </div>
       </div>
       <br>
-      <div class="container">
+      <div class="container" style="position: relative;">
         <?php
           if($role == "学生")
           {
         ?>
         <!-- 学生开始 -->
+
+          <div class="btn btn-success btn-sm active" style="position: absolute; left:0px; top: 70px; z-index: 10000;" id="show1" onclick="show_1()">全本阅读</div>
+          <div class="btn btn-success btn-sm" id="show1_short" onclick="show_1_short()" style="position: absolute; left:0px; top: 110px; z-index: 10000;">短篇阅读</div>
+
+
           <div class="col-lg-6" style="height:300px;" id="graph1"></div>
+          <div class="col-lg-6" style="height:300px;" id="graph1_short"></div>
+
+
           <div class="col-lg-2" style="height:300px; padding:5px;">
             <img src="img/rabbit.png" alt="" class="img-responsive" style="margin-top:80px;">
           </div>
@@ -90,6 +98,25 @@
           </div>
           <script type="text/javascript" src="js/echarts-all.js"></script>
           <script type="text/javascript">
+
+            $(document).ready(function(){
+              $("#graph1_short").hide();
+            });
+
+            function show_1(){
+              $("#show1").addClass("active");
+              $("#show1_short").removeClass("active");
+              $("#graph1").show();
+              $("#graph1_short").hide();
+            }
+
+            function show_1_short(){
+              $("#show1_short").addClass("active");
+              $("#show1").removeClass("active");
+              $("#graph1_short").show();
+              $("#graph1").hide();
+            }
+          
             //第一个图
             var myChart_1 = echarts.init(document.getElementById('graph1'),'default');
             var option_1 = {
@@ -148,6 +175,69 @@
             ]
           };
           myChart_1.setOption(option_1);
+
+
+          //第一个图
+          //短篇阅读
+            var myChart_1_short = echarts.init(document.getElementById('graph1_short'),'default');
+            var option_1_short = {
+            title : {
+                text: '<?php echo $user_info->name?>的阅读－短篇阅读测评结果',
+                subtext: '共读<?php $kd_data = $user->get_read_book_number_and_wordcount_short(); echo $kd_data['num']; ?>本  <?php echo $kd_data['wordcount']; ?>字'
+            },
+            tooltip : {
+                trigger: 'axis'
+            },
+            toolbox: {
+                show : true,
+                feature : {
+                    dataView : {show: true, readOnly: false},
+                    saveAsImage : {show: true}
+                }
+            },
+            calculable : true,
+            xAxis : [
+                {
+                    type : 'category',
+                    data : ['字词积累','文句理解','文意把握','要点概括','内容探究']
+                }
+            ],
+            yAxis : [
+                {
+                    type : 'value',
+                    min:0,
+                    max:3
+                }
+            ],
+            series : [
+                {
+                    type:'bar',
+                    barCategoryGap:'50%',
+                    data:[<?php
+                        if($class_students_count)
+                        {
+                          // $score_percent_by_item = $user->get_score_percent_by_item_class();
+                          $score_percent_by_item = $user->get_score_percent_by_item_school_short();
+                          $out_string = "";
+                          foreach($score_percent_by_item as $score)
+                          {
+                              $out_string .= round(floatval($score));
+                              $out_string .= ',';
+                          }
+                          $out_string = substr($out_string,0,-1);
+                          echo $out_string;
+                        }
+                        else
+                        {
+                          echo "0,0,0,0,0";
+                        }
+                    ?>]
+                }
+            ]
+          };
+          myChart_1_short.setOption(option_1_short);
+
+
 
           //第二个图
           var myChart_2 = echarts.init(document.getElementById('graph2'),'default');

@@ -142,7 +142,7 @@ class Speech
 
   /**
   *获取语音测评的语料
-  *type zi=>字 ci=>词 ju=>句
+  *type zi=>字 ci=>词 ju=>句 du=>明星领读
   **/
   function get_test($type,$page)
   {
@@ -151,7 +151,7 @@ class Speech
     $sql = "select * from $table where page_id=$page";
     $result = $db->get_results($sql);
     //字词的测评要随机抽取10个,当总的个数大于10的时候
-    if(count($result)>10 && $type!='ju')
+    if(count($result)>10 && $type!='ju' && $type!='du')
     {
       shuffle($result);
       $ret = [];

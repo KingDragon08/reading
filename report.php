@@ -648,7 +648,7 @@
                 var myChart_1_short = echarts.init(document.getElementById('graph1_short'),'default');
                 var option_1_short = {
                 title:{
-                  text:"<?php echo "全本阅读－总平均分:".round(floatval($class_score->avg_score),2)."  共读".$kd_nums['num1']."本  ".$kd_nums['num2']."字";?>"
+                  text:"<?php echo "短篇阅读－总平均分:".round(floatval($class_score->avg_score),2)."  共读".$kd_nums['num1']."本  ".$kd_nums['num2']."字";?>"
                 },
                 tooltip : {
                     trigger: 'axis'
@@ -871,7 +871,7 @@
               var myChart_yuyin_2 = echarts.init(document.getElementById('yuyin_graph2'),'default');
               var option_yuyin_2 = {
                 title: {
-                  text:'语音朗读报告'
+                  text:'语音朗读'
                 },
                 tooltip : {
                     trigger: 'axis'
@@ -921,7 +921,7 @@
               var myChart_yuyin_1 = echarts.init(document.getElementById('yuyin_graph1'),'default');
               var yuyin_option_1 = {
                 title: {
-                  text:'语音朗读报告',
+                  text:'',
                   position: 'center'
                 },
                 tooltip : {
@@ -979,11 +979,14 @@
 
 
 
+
+
         <div class="container">
           <div class="col-lg-1">
             <button type="button" class="btn btn-success mb10" id='kd_btn1' onclick="kd_change(1)" style="margin-top:90px;">阅读数量</button>
-            <button type="button" class="btn btn-default mb10" id='kd_btn2' onclick="kd_change(2)">阅读评分</button>
-            <button type="button" class="btn btn-default mb10" id='kd_btn3' onclick="kd_change(3)">朗读评分</button>
+            <button type="button" class="btn btn-default mb10" id='kd_btn2' onclick="kd_change(2)">全本阅读</button>
+            <button type="button" class="btn btn-default mb10" id='kd_btn4' onclick="kd_change(4)">短篇阅读</button>
+            <button type="button" class="btn btn-default mb10" id='kd_btn3' onclick="kd_change(3)">语音朗读</button>
           </div>
           <script type="text/javascript">
             $().ready(function(){
@@ -1000,9 +1003,12 @@
                 $("#kd_btn2").addClass("btn-default");
                 $("#kd_btn3").removeClass("btn-success");
                 $("#kd_btn3").addClass("btn-default");
+                $("#kd_btn4").removeClass("btn-success");
+                $("#kd_btn4").addClass("btn-default");
                 $("#graph4").show();
                 $("#graph5_1").hide();
                 $("#graph6").hide();
+                $("#graph6_1").hide();
               }
               if(i==2)
               {
@@ -1012,9 +1018,12 @@
                 $("#kd_btn1").addClass("btn-default");
                 $("#kd_btn3").removeClass("btn-success");
                 $("#kd_btn3").addClass("btn-default");
+                $("#kd_btn4").removeClass("btn-success");
+                $("#kd_btn4").addClass("btn-default");
                 $("#graph6").show();
                 $("#graph4").hide();
                 $("#graph5_1").hide();
+                $("#graph6_1").hide();
               }
               if(i==3)
               {
@@ -1024,12 +1033,31 @@
                 $("#kd_btn2").addClass("btn-default");
                 $("#kd_btn1").removeClass("btn-success");
                 $("#kd_btn1").addClass("btn-default");
+                $("#kd_btn4").removeClass("btn-success");
+                $("#kd_btn4").addClass("btn-default");
                 $("#graph5_1").show();
                 $("#graph6").hide();
                 $("#graph4").hide();
+                $("#graph6_1").hide();
+              }
+              if(i==4){
+                $("#kd_btn4").addClass("btn-success");
+                $("#kd_btn4").removeClass("btn-default");
+                $("#kd_btn2").removeClass("btn-success");
+                $("#kd_btn2").addClass("btn-default");
+                $("#kd_btn3").removeClass("btn-success");
+                $("#kd_btn3").addClass("btn-default");
+                $("#kd_btn1").removeClass("btn-success");
+                $("#kd_btn1").addClass("btn-default");
+                $("#graph4").hide();
+                $("#graph5_1").hide();
+                $("#graph6").hide();
+                $("#graph6_1").show();
               }
             }
           </script>
+
+
           <div class="col-lg-11" style="padding-right:0;">
             <div style="height:300px; width:100%;" id="graph4">
             <?php
@@ -1099,7 +1127,9 @@
             ?>
               </div>
 
-              <!--阅读评分-->
+
+
+              <!--全本阅读-->
               <div class="container" id="graph6" style="height:300px; width:100%; padding-right:1px;">
                 <?php
                   $students = $user->get_students_by_class($class_id);
@@ -1121,7 +1151,7 @@
                   var myChart_6 = echarts.init(document.getElementById('graph6'),'default');
                   var option_6 = {
                     title: {
-                      text:'阅读评分'
+                      text:'全本阅读'
                     },
                     tooltip: {
                         trigger: 'axis'
@@ -1145,7 +1175,7 @@
                     },
                     series: [
                         {
-                            name:'阅读评分',
+                            name:'全本阅读',
                             type:'line',
                             data:[<?php echo $data_string;?>]
                         }
@@ -1161,7 +1191,6 @@
                   }
                 ?>
               </div>
-
 
 
 
@@ -1205,10 +1234,7 @@
               var myChart_5_1 = echarts.init(document.getElementById('graph5_1'),'default');
               var option_5_1 = {
                 title: {
-                  text:'朗读评分
-              title: {
-                text:'语文成绩'
-              },'
+                  text:'语音朗读'
                 },
                 tooltip: {
                     trigger: 'axis'
@@ -1251,53 +1277,76 @@
               myChart_5_1.setOption(option_5_1);
               </script>
             </div>
+
+
+            <!--短篇阅读-->
+              <div class="container" id="graph6_1" style="height:300px; width:100%; padding-right:1px;">
+                <?php
+                  $students = $user->get_students_by_class($class_id);
+                  if($students)
+                  {
+                    $name_string = "";
+                    $data_string = "";
+                    foreach ($students as $student)
+                    {
+                      $name_string .= "'".$student->name."'";
+                      $name_string .= ",";
+                      $data_string .= $student->score_short;
+                      $data_string .= ",";
+                    }
+                    $name_string = substr($name_string,0,-1);
+                    $data_string = substr($data_string,0,-1);
+                  ?>
+                  <script type="text/javascript">
+                  var myChart_6_1 = echarts.init(document.getElementById('graph6_1'),'default');
+                  var option_6_1 = {
+                    title: {
+                      text:'短篇阅读'
+                    },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    xAxis: {
+                        type: 'category',
+                        boundaryGap: false,
+                        data: [<?php echo $name_string;?>],
+                        axisLabel:{
+                          rotate:-90
+                        }
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [
+                        {
+                            name:'短篇阅读',
+                            type:'line',
+                            data:[<?php echo $data_string;?>]
+                        }
+                    ]
+                  };
+                  myChart_6_1.setOption(option_6_1);
+                  </script>
+                  <?php
+                  }
+                  else
+                  {
+                    echo "班内没有学生";
+                  }
+                ?>
+              </div>
+
+
           </div>
         </div>
 
-      <script type="text/javascript">
-        var myChart_5_3 = echarts.init(document.getElementById('graph5_3'),'default');
-        var option_5_3 = {
-        title:{
-          text:"语音评分(短文)",
-          x:'center'
-        },
-        tooltip : {
-            trigger: 'axis'
-        },
-        toolbox: {
-            show : false
-        },
-        calculable : true,
-        xAxis : [
-            {
-                type : 'category',
-                axisLabel:{
-                  rotate:-90
-                },
-                data:[<?php echo $name_string;?>]
-            }
-        ],
-        yAxis : [
-            {
-              type : 'value'
-            }
-        ],
-        series : [
-            {
-                type:'bar',
-                barCategoryGap:'50%',
-                data:[<?php echo $data_string;?>]
-            }
-        ]
-      };
-      myChart_5_3.setOption(option_5_3);
-      </script>
-
-
-
-
-
-
+      
 
 
 

@@ -310,7 +310,7 @@
                     </div>
                     <table style="margin-top:50px; width:100%;">
                       <tr>
-                        <td width="50%" valign="middle" align="center">
+                        <td width="50%" valign="top" align="center">
                             <p>
                               第<?php echo $counter;?>题：<?php echo $question->question;?>
                             </p>
@@ -397,13 +397,13 @@
       </form>
       <script type="text/javascript" src="js/cookie.js"></script>
       <script>
-          answer_time = 15*60;
+          answer_time = 15*40;
           answer_interval = "";
           $().ready(function(){
             $('#myCarousel').carousel('pause');
             // if(!get_cookie("answer_time"))
             // {
-            set_cookie("answer_time",900)
+            set_cookie("answer_time",600)
             // }
             // else
             // {
@@ -491,7 +491,7 @@
                 counter++;
               }
             });
-            if(counter>9)
+            if(counter>15)
             {
               clearInterval(answer_interval);
               ret = true;

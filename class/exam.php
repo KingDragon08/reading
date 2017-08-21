@@ -206,13 +206,25 @@ class Exam
     //如果合格则更新用户表的score,item1_socre,item2_socre,item3_socre,item4_socre,item5_socre字段，方便排名
     if($hege==1)
     {
-        $sql = "update rd_user set score=score+$total_score,".
+        if(count($scores)==10)
+        {
+          $sql = "update rd_user set score=score+$total_score,".
                 "item1_score=item1_score+$scores[0]+$scores[1],".
                 "item2_score=item2_score+$scores[2]+$scores[3],".
                 "item3_score=item3_score+$scores[4]+$scores[5],".
                 "item4_score=item4_score+$scores[6]+$scores[7],".
                 "item5_score=item5_score+$scores[8]+$scores[9]".
-                " where id=$user_id";
+                " where id=$user_id";  
+        }
+        else{
+          $sql = "update rd_user set score=score+$total_score,".
+                "item1_score=item1_score+$scores[0]+$scores[1]+$scores[2],".
+                "item2_score=item2_score+$scores[3]+$scores[4]+$scores[5],".
+                "item3_score=item3_score+$scores[6]+$scores[7]+$scores[8],".
+                "item4_score=item4_score+$scores[9]+$scores[10]+$scores[11],".
+                "item5_score=item5_score+$scores[12]+$scores[13]+$scores[14]".
+                " where id=$user_id";   
+        }
         $db->query($sql);
     }
     //获取刚插入记录的id

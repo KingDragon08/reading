@@ -47,6 +47,13 @@
       .first{border-radius: 5px 0 0 5px;}
       .last{border-radius: 0 5px 5px 0; border-right: 1px solid #ccc;}
       .first.last{border-radius: 5px;}
+      .listen{position:fixed; z-index: 9999; bottom:50px; width: 100px;
+              height: 100px; right: 100px; border-radius: 99px;
+              box-shadow: 0 0 20px #333; background-color:#fff; font-size: 120px;
+              color: #71cba4; background-image: url('img/audio.png');
+              background-size: 60%; background-repeat: no-repeat; 
+              background-position: center center; cursor: pointer;
+      }
     </style>
   </head>
   <body>
@@ -108,7 +115,7 @@
        exit();
      }
      ?>
-
+     <div class="listen"></div>
     <div class="container mt20 mb20">
       <?php
         $textbook = 0;
@@ -412,8 +419,6 @@
             }
           ?>
           <!-- 句结束 -->
-
-
 
 
         </div>

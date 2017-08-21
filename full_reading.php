@@ -419,6 +419,7 @@
 
       function add2_book_shelf(book)
       {
+        alert("添加成功");
         location.href = "controller/book_shelf.php?action=add2shelf&book="+book;
       }
 

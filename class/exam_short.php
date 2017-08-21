@@ -21,41 +21,35 @@ class Exam_short
     //获取第一类题
     $sql = "select * from rd_book_question_obj_short where book_id='$this->book_id' and view='1'";
     $question1 = $db->get_results($sql);
-    if(count($question1)<6){
+    if(count($question1)<3){
       return [];
     }
-    $rand1 = rand(0,5);
-    $rand2 = $rand1>2?rand(0,$rand1-1):rand($rand1+1,5);
+    $rand1 = rand(0,2);
     $ret[] = $question1[$rand1];
-    $ret[] = $question1[$rand2];
     $sql = "select * from rd_book_question_obj_short where book_id='$this->book_id' and view='2'";
     $question2 = $db->get_results($sql);
-    if(count($question2)<6){
+    if(count($question2)<3){
       return [];
     }
     $ret[] = $question2[$rand1];
-    $ret[] = $question2[$rand2];
     $sql = "select * from rd_book_question_obj_short where book_id='$this->book_id' and view='3'";
     $question3 = $db->get_results($sql);
-    if(count($question3)<6){
+    if(count($question3)<3){
       return [];
     }
     $ret[] = $question3[$rand1];
-    $ret[] = $question3[$rand2];
     $sql = "select * from rd_book_question_obj_short where book_id='$this->book_id' and view='4'";
     $question4 = $db->get_results($sql);
-    if(count($question4)<6){
+    if(count($question4)<3){
       return [];
     }
     $ret[] = $question4[$rand1];
-    $ret[] = $question4[$rand2];
     $sql = "select * from rd_book_question_obj_short where book_id='$this->book_id' and view='5'";
     $question5 = $db->get_results($sql);
-    if(count($question5)<6){
+    if(count($question5)<3){
       return [];
     }
     $ret[] = $question5[$rand1];
-    $ret[] = $question5[$rand2];
     //获取书的封面
     $ret[] = $db->get_var("select coverimg from rd_book_short where id='$this->book_id'");
     return $ret;
@@ -66,63 +60,64 @@ class Exam_short
   **/
   function get_questions_2()
   {
-    global $db;
-    $ret = [];
-    $rand1 = rand(0,8);
-    $rand2 = $rand1;
-    while($rand2==$rand1)
-    {
-      $rand2 = rand(0,8);
-    }
-    $rand3 = $rand2;
-    while($rand3==$rand2 || $rand3==$rand1)
-    {
-      $rand3 = rand(0,8);
-    }
-    //获取第一类题
-    $sql = "select * from rd_book_question_obj_short where book_id='$this->book_id' and view='1'";
-    $question1 = $db->get_results($sql);
-    if(count($question1)<9){
-      return [];
-    }
-    $ret[] = $question1[$rand1];
-    $ret[] = $question1[$rand2];
-    $ret[] = $question1[$rand3];
-    $sql = "select * from rd_book_question_obj_short where book_id='$this->book_id' and view='2'";
-    $question2 = $db->get_results($sql);
-    if(count($question2)<9){
-      return [];
-    }
-    $ret[] = $question2[$rand1];
-    $ret[] = $question2[$rand2];
-    $ret[] = $question2[$rand3];
-    $sql = "select * from rd_book_question_obj_short where book_id='$this->book_id' and view='3'";
-    $question3 = $db->get_results($sql);
-    if(count($question3)<9){
-      return [];
-    }
-    $ret[] = $question3[$rand1];
-    $ret[] = $question3[$rand2];
-    $ret[] = $question3[$rand3];
-    $sql = "select * from rd_book_question_obj_short where book_id='$this->book_id' and view='4'";
-    $question4 = $db->get_results($sql);
-    if(count($question4)<9){
-      return [];
-    }
-    $ret[] = $question4[$rand1];
-    $ret[] = $question4[$rand2];
-    $ret[] = $question4[$rand3];
-    $sql = "select * from rd_book_question_obj_short where book_id='$this->book_id' and view='5'";
-    $question5 = $db->get_results($sql);
-    if(count($question5)<9){
-      return [];
-    }
-    $ret[] = $question5[$rand1];
-    $ret[] = $question5[$rand2];
-    $ret[] = $question5[$rand3];
-    //获取书的封面
-    $ret[] = $db->get_var("select coverimg from rd_book_short where id='$this->book_id'");
-    return $ret;
+    return $this->get_questions();
+    // global $db;
+    // $ret = [];
+    // $rand1 = rand(0,8);
+    // $rand2 = $rand1;
+    // while($rand2==$rand1)
+    // {
+    //   $rand2 = rand(0,8);
+    // }
+    // $rand3 = $rand2;
+    // while($rand3==$rand2 || $rand3==$rand1)
+    // {
+    //   $rand3 = rand(0,8);
+    // }
+    // //获取第一类题
+    // $sql = "select * from rd_book_question_obj_short where book_id='$this->book_id' and view='1'";
+    // $question1 = $db->get_results($sql);
+    // if(count($question1)<9){
+    //   return [];
+    // }
+    // $ret[] = $question1[$rand1];
+    // $ret[] = $question1[$rand2];
+    // $ret[] = $question1[$rand3];
+    // $sql = "select * from rd_book_question_obj_short where book_id='$this->book_id' and view='2'";
+    // $question2 = $db->get_results($sql);
+    // if(count($question2)<9){
+    //   return [];
+    // }
+    // $ret[] = $question2[$rand1];
+    // $ret[] = $question2[$rand2];
+    // $ret[] = $question2[$rand3];
+    // $sql = "select * from rd_book_question_obj_short where book_id='$this->book_id' and view='3'";
+    // $question3 = $db->get_results($sql);
+    // if(count($question3)<9){
+    //   return [];
+    // }
+    // $ret[] = $question3[$rand1];
+    // $ret[] = $question3[$rand2];
+    // $ret[] = $question3[$rand3];
+    // $sql = "select * from rd_book_question_obj_short where book_id='$this->book_id' and view='4'";
+    // $question4 = $db->get_results($sql);
+    // if(count($question4)<9){
+    //   return [];
+    // }
+    // $ret[] = $question4[$rand1];
+    // $ret[] = $question4[$rand2];
+    // $ret[] = $question4[$rand3];
+    // $sql = "select * from rd_book_question_obj_short where book_id='$this->book_id' and view='5'";
+    // $question5 = $db->get_results($sql);
+    // if(count($question5)<9){
+    //   return [];
+    // }
+    // $ret[] = $question5[$rand1];
+    // $ret[] = $question5[$rand2];
+    // $ret[] = $question5[$rand3];
+    // //获取书的封面
+    // $ret[] = $db->get_var("select coverimg from rd_book_short where id='$this->book_id'");
+    // return $ret;
   }
 
   /**
@@ -207,11 +202,11 @@ class Exam_short
     if($hege==1)
     {
         $sql = "update rd_user set score_short=score_short+$total_score,".
-                "item1_score_short=item1_score_short+$scores[0]+$scores[1],".
-                "item2_score_short=item2_score_short+$scores[2]+$scores[3],".
-                "item3_score_short=item3_score_short+$scores[4]+$scores[5],".
-                "item4_score_short=item4_score_short+$scores[6]+$scores[7],".
-                "item5_score_short=item5_score_short+$scores[8]+$scores[9]".
+                "item1_score_short=item1_score_short+$scores[0],".
+                "item2_score_short=item2_score_short+$scores[1],".
+                "item3_score_short=item3_score_short+$scores[2],".
+                "item4_score_short=item4_score_short+$scores[3],".
+                "item5_score_short=item5_score_short+$scores[4]".
                 " where id=$user_id";
         $db->query($sql);
     }

@@ -153,6 +153,11 @@
                       <a href="javascript:void(0);" style="padding:0.5em 2em;" class="label label-lg label-default label-circle mr10" onclick="show_note()">&nbsp;读书笔记&nbsp;</a>
                   <?php
                     }
+                    else{
+                  ?>
+                    <a href="javascript:void(0);" style="padding:0.5em 2em;" class="label label-lg label-default label-circle mr10" onclick="alert('已经提交过了，不可再次作答.')">&nbsp;读书笔记&nbsp;</a>
+                  <?php 
+                    }
                   ?>
 
                   <!-- <a href="javascript:void(0);" class="label label-lg label-default label-circle mr10" onclick="exam()">&nbsp;相关习题&nbsp;</a> -->

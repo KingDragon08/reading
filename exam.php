@@ -301,7 +301,7 @@
                     </div>
                     <table style="margin-top:50px; width:100%;">
                       <tr>
-                        <td width="40%" valign="middle" align="left" style="padding-right:8px; line-height:24px;">
+                        <td width="40%" valign="top" align="left" style="padding-right:8px; line-height:24px;">
                             <p>
                               第<?php echo $counter;?>题：<?php echo $question->question;?>
                             </p>
@@ -389,7 +389,7 @@
             $('#myCarousel').carousel('pause');
             // if(!get_cookie("answer_time"))
             // {
-            set_cookie("answer_time",600)
+            set_cookie("answer_time",400)
             // }
             // else
             // {

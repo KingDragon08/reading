@@ -75,8 +75,8 @@
         <div class="forget_cover">
           短篇阅读
           <div class="float_right" style="margin-right:5.8em;">
-            <button class="btn btn-success active" onclick="location.href='page_reading.php'">全部短篇书单</button>
-            <button class="btn btn-success" onclick="location.href='book_short_shelf.php'">我的短篇任务</button>
+            <button class="btn btn-success active" onclick="location.href='page_reading.php'">全部短篇</button>
+            <button class="btn btn-success" onclick="location.href='book_short_shelf.php'">我的短篇</button>
           </div>
         </div>
       </div>
@@ -86,7 +86,7 @@
     <div class="row">
       <div class="container">
         <div class="col-lg-8">
-          选择短篇类型:&nbsp;&nbsp;&nbsp;&nbsp;
+          选择:&nbsp;&nbsp;&nbsp;&nbsp;
           <div class="btn-group">
               <button type="button" class="btn btn-default" id="type" style="max-width:6em; overflow:hidden;">短篇类型</button>
               <button type="button" class="btn btn-default dropdown-toggle"
@@ -432,7 +432,7 @@
         <div class="col-lg-8">
           选择:&nbsp;&nbsp;&nbsp;&nbsp;
           <div class="btn-group">
-              <button type="button" class="btn btn-default" id="list_type">短篇类型</button>
+              <button type="button" class="btn btn-default" id="list_type">类型</button>
               <button type="button" class="btn btn-default dropdown-toggle"
                   data-toggle="dropdown">
                   <span class="caret"></span>

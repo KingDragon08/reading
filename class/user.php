@@ -1415,7 +1415,7 @@
       function get_students_by_class($class_id)
       {
         global $db;
-        $students = $db->get_results("select id,name,score,chinese_score,headimg from rd_user where role=1 and class='$class_id' order by id");
+        $students = $db->get_results("select id,name,score,score_short,chinese_score,headimg from rd_user where role=1 and class='$class_id' order by id");
         if($students)
         {
           foreach($students as $student)

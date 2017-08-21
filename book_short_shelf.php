@@ -85,8 +85,8 @@
     <div class="forget_cover">
       全本阅读
       <div class="float_right" style="margin-right:5.8em;">
-        <button class="btn btn-success" onclick="location.href='page_reading.php'">全部短篇书单</button>
-        <button class="btn btn-success active" onclick="location.href='book_short_shelf.php'">我的短篇任务</button>
+        <button class="btn btn-success" onclick="location.href='page_reading.php'">全部短篇</button>
+        <button class="btn btn-success active" onclick="location.href='book_short_shelf.php'">我的短篇</button>
       </div>
     </div>
   </div>
@@ -303,7 +303,7 @@
               if($book->status==2)
               {
               ?>
-                <a class="btn btn-small btn-success" style="padding:4px 12px;" href="exam<?php if($book->grade>2){echo 2;}?>_short.php?book=<?php echo $book->id;?>">
+                <a class="btn btn-small btn-success" style="padding:4px 12px;" href="exam<?php if($book->grade>=2){echo 2;}?>_short.php?book=<?php echo $book->id;?>">
                   <i class="glyphicon glyphicon-file">我要测评</i>
                 </a>
                 <!-- <a class="btn btn-small btn-success" style="padding:4px 12px;" href="temp.php">
@@ -325,7 +325,7 @@
               if($book->status==0)
               {
               ?>
-                <a class="btn btn-small btn-success" style="padding:4px 12px;" href="exam<?php if($book->grade>2){echo 2;}?>_short.php?book=<?php echo $book->id;?>">
+                <a class="btn btn-small btn-success" style="padding:4px 12px;" href="exam<?php if($book->grade>=2){echo 2;}?>_short.php?book=<?php echo $book->id;?>">
                   <i class="glyphicon glyphicon-file">再次测评</i>
                 </a>
                 <!-- <a class="btn btn-small btn-success" style="padding:4px 12px;" href="temp.php">

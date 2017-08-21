@@ -153,21 +153,11 @@
               isset($_POST['question_id_3']) &&
               isset($_POST['question_id_4']) &&
               isset($_POST['question_id_5']) &&
-              isset($_POST['question_id_6']) &&
-              isset($_POST['question_id_7']) &&
-              isset($_POST['question_id_8']) &&
-              isset($_POST['question_id_9']) &&
-              isset($_POST['question_id_10']) &&
               isset($_POST['question_1']) &&
               isset($_POST['question_2']) &&
               isset($_POST['question_3']) &&
               isset($_POST['question_4']) &&
-              isset($_POST['question_5']) &&
-              isset($_POST['question_6']) &&
-              isset($_POST['question_7']) &&
-              isset($_POST['question_8']) &&
-              isset($_POST['question_9']) &&
-              isset($_POST['question_10'])
+              isset($_POST['question_5'])
           )
           {
               $question_ids = [];
@@ -176,22 +166,12 @@
               $question_ids[] = $_POST['question_id_3'];
               $question_ids[] = $_POST['question_id_4'];
               $question_ids[] = $_POST['question_id_5'];
-              $question_ids[] = $_POST['question_id_6'];
-              $question_ids[] = $_POST['question_id_7'];
-              $question_ids[] = $_POST['question_id_8'];
-              $question_ids[] = $_POST['question_id_9'];
-              $question_ids[] = $_POST['question_id_10'];
               $answers = [];
               $answers[] = $_POST['question_1'];
               $answers[] = $_POST['question_2'];
               $answers[] = $_POST['question_3'];
               $answers[] = $_POST['question_4'];
               $answers[] = $_POST['question_5'];
-              $answers[] = $_POST['question_6'];
-              $answers[] = $_POST['question_7'];
-              $answers[] = $_POST['question_8'];
-              $answers[] = $_POST['question_9'];
-              $answers[] = $_POST['question_10'];
               $answer_time = $_COOKIE["answer_time"];
               // setCookie("answer_time",600);
               // $_COOKIE["answer_time"] = 600;
@@ -223,18 +203,7 @@
               $scores = $exam->scores($question_ids,$answers);
               //写入得分情况并返回测试结果ID
               $exam_result_id = $exam->write_scores($user_id,$book,$scores,$answer_time,$answers,$question_ids);
-              //转到测试结果页
-              /*
-              <center>
-                <img src="img/gongchengshi.jpeg" style="margin-top:20px;"/>
-                <br>
-                <p class="gray" id="tips">
-                  已打开结果展示页面...
-                </p>
-              </center>
-              */
               echo "<script>location.href = 'exam_report_short.php?exam=$exam_result_id';</script>";
-              // header("Location:exam_report.php?exam=$exam_result_id");
               exit();
           }
           else
@@ -275,7 +244,7 @@
               }
               $questions = $exam->get_questions();
               $counter = 1;
-              if(count($questions)<9)
+              if(count($questions)<5)
               {
             ?>
               <center>
@@ -288,7 +257,7 @@
             <?php
                 exit();
               }
-              $coverimg = $questions[10];
+              $coverimg = $questions[5];
               array_pop($questions);
               foreach($questions as $question)
               {
@@ -298,11 +267,11 @@
                     <div style="margin-top:20px; mergin-left:20px; font-size:18px; color:#662a7c;">
                       <img src="img/book_icon.png" alt="">
                       书籍名称《<?php echo $exam->get_book_name($book);?>》
-                      <div style="float:right; margin-right: 20px;" class="btn btn-success btn-sm" onclick="show_text()">阅读文本</div>
+                      <div style="float:right; margin-right: 20px;" class="btn btn-success btn-sm" onclick="show_text()">点击进入阅读文本</div>
                     </div>
                     <table style="margin-top:50px; width:100%;">
                       <tr>
-                        <td width="40%" valign="middle" align="left" style="padding-right:8px; line-height:24px;">
+                        <td width="40%" valign="top" align="left" style="padding-right:8px; line-height:24px;">
                             <p>
                               第<?php echo $counter;?>题：<?php echo $question->question;?>
                             </p>
@@ -352,7 +321,7 @@
                       {
                         echo '<input type="button" class="btn btn-default" value="上一题" onclick="prev_page()">&nbsp;';
                       }
-                      if($counter!=10)
+                      if($counter!=5)
                       {
                         echo '<input type="button" class="btn btn-default" value="下一题" onclick="next_page()">';
                       }
@@ -384,13 +353,13 @@
       </form>
       <script type="text/javascript" src="js/cookie.js"></script>
       <script>
-          answer_time = 10*40;
+          answer_time = 5*40;
           answer_interval = "";
           $().ready(function(){
             $('#myCarousel').carousel('pause');
             // if(!get_cookie("answer_time"))
             // {
-            set_cookie("answer_time",600)
+            set_cookie("answer_time",200)
             // }
             // else
             // {
@@ -479,7 +448,7 @@
                 counter++;
               }
             });
-            if(counter>9)
+            if(counter>=5)
             {
               clearInterval(answer_interval);
               ret = true;

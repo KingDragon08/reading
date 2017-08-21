@@ -130,21 +130,21 @@
               if(count($exam_report->scores)==10)
               {
             ?>
-                <td height="30" align="center" valign="middle" width="20%">字词积累：<?php echo intval($exam_report->scores[0])+intval($exam_report->scores[1])?>/2分</td>
-                <td height="30" align="center" valign="middle" width="20%">文句理解：<?php echo intval($exam_report->scores[2])+intval($exam_report->scores[3])?>/2分</td>
-                <td height="30" align="center" valign="middle" width="20%">文意把握：<?php echo intval($exam_report->scores[4])+intval($exam_report->scores[5])?>/2分</td>
-                <td height="30" align="center" valign="middle" width="20%">要点概括：<?php echo intval($exam_report->scores[6])+intval($exam_report->scores[7])?>/2分</td>
-                <td height="30" align="center" valign="middle" width="20%">内容探究：<?php echo intval($exam_report->scores[8])+intval($exam_report->scores[9])?>/2分</td>
+                <td height="30" align="center" valign="middle" width="20%">字词积累：<?php echo intval($exam_report->scores[0])?>/1分</td>
+                <td height="30" align="center" valign="middle" width="20%">文句理解：<?php echo intval($exam_report->scores[1])?>/1分</td>
+                <td height="30" align="center" valign="middle" width="20%">文意把握：<?php echo intval($exam_report->scores[2])?>/1分</td>
+                <td height="30" align="center" valign="middle" width="20%">要点概括：<?php echo intval($exam_report->scores[3])?>/1分</td>
+                <td height="30" align="center" valign="middle" width="20%">内容探究：<?php echo intval($exam_report->scores[4])?>/1分</td>
             <?php
               }
               else
               {
             ?>
-                <td height="30" align="center" valign="middle" width="20%">字词积累：<?php echo intval($exam_report->scores[0])+intval($exam_report->scores[1])+intval($exam_report->scores[2])?>/3分</td>
-                <td height="30" align="center" valign="middle" width="20%">文句理解：<?php echo intval($exam_report->scores[3])+intval($exam_report->scores[4])+intval($exam_report->scores[5])?>/3分</td>
-                <td height="30" align="center" valign="middle" width="20%">文意把握：<?php echo intval($exam_report->scores[6])+intval($exam_report->scores[7])+intval($exam_report->scores[8])?>/3分</td>
-                <td height="30" align="center" valign="middle" width="20%">要点概括：<?php echo intval($exam_report->scores[9])+intval($exam_report->scores[10])+intval($exam_report->scores[11])?>/3分</td>
-                <td height="30" align="center" valign="middle" width="20%">内容探究：<?php echo intval($exam_report->scores[12])+intval($exam_report->scores[13])+intval($exam_report->scores[14])?>/3分</td>
+                <td height="30" align="center" valign="middle" width="20%">字词积累：<?php echo intval($exam_report->scores[0])?>/1分</td>
+                <td height="30" align="center" valign="middle" width="20%">文句理解：<?php echo intval($exam_report->scores[1])?>/1分</td>
+                <td height="30" align="center" valign="middle" width="20%">文意把握：<?php echo intval($exam_report->scores[2])?>/1分</td>
+                <td height="30" align="center" valign="middle" width="20%">要点概括：<?php echo intval($exam_report->scores[3])?>/1分</td>
+                <td height="30" align="center" valign="middle" width="20%">内容探究：<?php echo intval($exam_report->scores[4])?>/1分</td>
             <?php
               }
             ?>

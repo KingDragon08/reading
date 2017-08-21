@@ -342,11 +342,6 @@
           <input type="button" class="btn btn-default form-control" value="第3题" onclick="slide2page(2)">
           <input type="button" class="btn btn-default form-control" value="第4题" onclick="slide2page(3)">
           <input type="button" class="btn btn-default form-control" value="第5题" onclick="slide2page(4)">
-          <input type="button" class="btn btn-default form-control" value="第6题" onclick="slide2page(5)">
-          <input type="button" class="btn btn-default form-control" value="第7题" onclick="slide2page(6)">
-          <input type="button" class="btn btn-default form-control" value="第8题" onclick="slide2page(7)">
-          <input type="button" class="btn btn-default form-control" value="第9题" onclick="slide2page(8)">
-          <input type="button" class="btn btn-default form-control" value="第10题" onclick="slide2page(9)">
           <input type="submit" class="btn btn-danger form-control" value="交卷">
           <!-- <span id="time" style="display:inline-block; margin-top:20px;"></span> -->
       </div>

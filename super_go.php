@@ -173,7 +173,7 @@
             $("#corum").html('<?php echo $corum;?>');
           });
         </script>
-        <div style="width:800px; height:565px; margin:0 auto; box-shadow:0 0 5px #999; border-radius:5px;">
+        <div style="width:800px; margin:0 auto; box-shadow:0 0 5px #999; border-radius:5px; display: table;">
           <div class="col-lg-12 mt20">
             <img src="img/book_icon.png" alt="">
             跟读文本：<?php if($type=='ju' || $type=='du'){echo explode(">",$corum)[3];}else{echo explode(">",$corum)[2];}?>

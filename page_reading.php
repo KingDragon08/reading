@@ -542,7 +542,7 @@
                   <span>作者:<?php echo $book->author;?></span>&nbsp;&nbsp;
                   <span>类型:<?php echo $book->type_name;?></span>&nbsp;&nbsp;
                 </h5>
-                <p class="gray"><?php echo substr($book->bookdesc,0,402)."...";?></p>
+                <p class="gray"><?php echo mb_substr($book->bookdesc,0,140,'utf-8')."...";?></p>
                 <div class="float_left purple">
                   <span>难度:<?php echo $book->level;?></span>&nbsp;&nbsp;
                   <span>学段:<?php echo $book->grade_name;?></span>&nbsp;&nbsp;

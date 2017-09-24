@@ -71,9 +71,9 @@
           foreach($notes as $note)
           {
     ?>
-            <div class="col-ls-3 col-md-3 col-sm-3 col-xs-3" style="margin-top:12px;">
+            <div class="col-ls-3 col-md-3 col-sm-3 col-xs-3" style="margin-top:12px; height: 216px;">
               <div class="img-responsive classmate" style="background-image:url('<?php echo $note->coverimg;?>')"></div>
-              <p style="text-align:center;"><?php echo $note->name;?></p>
+              <p style="text-align:center; height: 20px; overflow:hidden;"><?php echo $note->name;?></p>
               <button type="button" class="btn btn-success classmate_button" name="button" onclick="notes_detail('<?php echo $note->id;?>',<?php echo $id;?>)">
                 查看读书笔记
               </button>

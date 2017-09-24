@@ -46,8 +46,7 @@
     <!-- forget panel start -->
       <div class="w100 forget">
         <div class="forget_cover">
-            推送书单&nbsp;&nbsp;&nbsp;&nbsp;
-            <button class="btn btn-success" onclick="history.go(-1);">返回</button>
+            推送书单
         <div class="float_right" style="margin-right:5.8em;">
           <button class="btn btn-success active" onclick="location.href='full_reading.php'">书单定制</button>
           <button class="btn btn-success" onclick="location.href='book_shelf.php'">书单管理</button>
@@ -98,12 +97,21 @@
             <img src="img/gongchengshi.jpeg" style="margin-top:20px;"/>
             <br>
             <p class="gray" id="tips">
-              推送成功
+              推送成功,3秒后返回“书单定制”页面
             </p>
           </center>
           <script type="text/javascript" src="js/cookie.js"></script>
           <script type="text/javascript">
             del_cookie('books');
+            var timeLeast = 2;
+            setInterval(function(){
+              if(timeLeast==0){
+                location.href="full_reading.php";
+              } else {
+                document.getElementById("tips").innerHTML = "推送成功,"+timeLeast+"秒后返回“书单定制”页面";
+              }
+              timeLeast--;
+            },1000);
           </script>
     <?php
             exit();

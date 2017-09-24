@@ -1781,7 +1781,7 @@
       {
         global $db;
         $students = $this->get_students_by_class($class_id);
-        $sql = "select average from rd_speech_exam_results where type='zi' and user_id in(".
+        $sql = "select `average` from rd_speech_exam_results where type='zi' and user_id in(".
               " select id from rd_user where role=1 and class='$class_id' order by id)";
         $data = $db->get_results($sql);
         return [$students,$data];
@@ -1795,7 +1795,7 @@
       {
         global $db;
         $students = $this->get_students_by_class($class_id);
-        $sql = "select average from rd_speech_exam_results where type='ci' and user_id in(".
+        $sql = "select `average` from rd_speech_exam_results where type='ci' and user_id in(".
               " select id from rd_user where role=1 and class='$class_id' order by id)";
         $data = $db->get_results($sql);
         return [$students,$data];
@@ -1809,7 +1809,7 @@
       {
         global $db;
         $students = $this->get_students_by_class($class_id);
-        $sql = "select average from rd_speech_exam_results where type='ju' and user_id in(".
+        $sql = "select `average` from rd_speech_exam_results where type='ju' and user_id in(".
               " select id from rd_user where role=1 and class='$class_id' order by id)";
         $data = $db->get_results($sql);
         return [$students,$data];

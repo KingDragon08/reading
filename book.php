@@ -142,7 +142,7 @@
                     <font>积分：<?php echo $book_info->score ?></font>
                   </span>
                 </div>
-                <div class="col-lg-12 mt10 mb10" style="padding:0;">
+                <div class="col-lg-12 mt10 mb10" style="padding:0; margin-top: 30px; margin-bottom: 30px;">
                   <a href="#comment" style="padding:0.5em 2em;" class="label label-lg label-default label-circle mr10">&nbsp;写书评&nbsp;</a>
                   <?php
                     //检测是否已经答过本书的读书笔记
@@ -203,7 +203,7 @@
                 ?>
                       <a href="javascript:void(0);" class="list-group-item" title="评论详情" data-toggle="popover" data-container="body" data-placement="bottom" data-content="<?php echo $comment->content;?>">
                           <p class="list-group-item-heading">
-                              <?php echo mb_substr($comment->content,0,49).'...'; ?>
+                              <?php echo mb_substr($comment->content,0,49,'utf-8').'...'; ?>
                           </p>
                           <div class="list-group-item-text" style="margin-bottom:16px;">
                               <div class="float_left f12">用户：<?php echo $comment->username; ?></div>
@@ -249,7 +249,7 @@
                   ?>
                     <li>
                         <a href="book.php?book=<?php echo $_GET['book']?>&page=<?php echo $pages;?>">
-                          1
+                          <?php echo $pages;?>
                         </a>
                     </li>
                   <?php

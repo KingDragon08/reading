@@ -85,7 +85,20 @@
                       "values('$user_id','$teacher_id','". $db->escape($title) ."','". $db->escape($content) .
                       "','$sendtime','4','0')";
               $db->query($sql);
-              $com->tips('读书笔记提交成功!');
+              $com->tips('读书笔记提交成功!3秒后跳转到“全部书单”图书列表');
+          ?>
+            <script type="text/javascript">
+              var timeLeast = 2;
+              setInterval(function(){
+                if(timeLeast==0){
+                  location.href="full_reading.php";
+                } else {
+                  document.getElementById("tips").innerHTML = "读书笔记提交成功!"+timeLeast+"秒后跳转到“全部书单”图书列表";
+                }
+                timeLeast--;
+              },1000);
+            </script>
+          <?php
             }
           ?>
       </div>

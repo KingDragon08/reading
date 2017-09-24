@@ -284,7 +284,7 @@
         ?>
           <div class="col-lg-4 mb20" style="height:220px;<?php if($counter%3==1 && $counter!=1) echo "clear:both;"?>">
             <div class="col-lg-6 book_img">
-              <a href="book.php?book=<?php echo $book->id;?>" target="_blank">
+              <a href="book.php?book=<?php echo $book->id;?>">
                 <img src="<?php echo $book->coverimg;?>" style="width:120px; height:160px; margin-top:30px;"/>
               </a>
             </div>
@@ -575,7 +575,7 @@
                   <span>作者:<?php echo $book->author;?></span>&nbsp;&nbsp;
                   <span>出版社:<?php echo $book->press;?></span>
                 </h5>
-                <p class="gray"><?php echo substr($book->bookdesc,0,402)."...";?></p>
+                <p class="gray"><?php echo mb_substr($book->bookdesc,0,140,'utf-8')."...";?></p>
                 <div class="float_left purple">
                   已被推荐<?php echo $book->recommend_times;?>次
                 </div>

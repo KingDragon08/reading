@@ -127,11 +127,7 @@
                 trigger: 'axis'
             },
             toolbox: {
-                show : true,
-                feature : {
-                    dataView : {show: true, readOnly: false},
-                    saveAsImage : {show: true}
-                }
+                show : false
             },
             calculable : true,
             xAxis : [
@@ -187,11 +183,7 @@
                 trigger: 'axis'
             },
             toolbox: {
-                show : true,
-                feature : {
-                    dataView : {show: true, readOnly: false},
-                    saveAsImage : {show: true}
-                }
+                show : false
             },
             calculable : true,
             xAxis : [
@@ -245,11 +237,7 @@
               trigger: 'axis'
           },
           toolbox: {
-              show : true,
-              feature : {
-                  dataView : {show: true, readOnly: false},
-                  saveAsImage : {show: true}
-              }
+              show : false
           },
           calculable : true,
           xAxis : [
@@ -992,6 +980,7 @@
             $().ready(function(){
               $("#graph5_1").hide();
               $("#graph6").hide();
+              $("#graph6_1").hide();
             });
             function kd_change(i)
             {
@@ -1206,6 +1195,8 @@
                   $scores_3 = $data_3[1];
                   $name_string = "";
                   $data_string_1 = "";
+                  $data_string_2 = "";
+                  $data_string_3 = "";
                   if($students)
                   {
                     for($i=0; $i<count($students); $i++)
@@ -1372,7 +1363,7 @@
               $chinese_score[] = $user->get_chinese_score($student->id);
               $chinese_score_recently[] = $user->get_chinese_score_recently($student->id);
             }
-            array_multisort($chinese_score,SORT_ASC,$students);
+            // array_multisort($chinese_score,SORT_ASC,$students);
             foreach($students as $key=>$student)
             {
               $name_string .= "'".$student->name."'";

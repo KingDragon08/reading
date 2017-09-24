@@ -23,7 +23,7 @@
       #list tr td:last-child{border-right: 0;}
       #list tr:last-child td{border-bottom: 0;}
       #flag{
-              width:150px; height:100px; position:absolute; right:200px; top:160px; z-index:999;
+              width:150px; height:100px; position:absolute; right:280px; top:280px; z-index:999;
               transform:rotate(45deg);
               -ms-transform:rotate(45deg); /* Internet Explorer */
               -moz-transform:rotate(45deg); /* Firefox */
@@ -119,7 +119,20 @@
       </div>
       <div class="w100 forget">
         <div class="forget_cover">
-          测评结果
+          测评结果&nbsp;&nbsp;&nbsp;&nbsp;
+          <button class="btn btn-success" onclick="javascript:location.href='book_shelf.php'">返回任务</button>&nbsp;&nbsp;&nbsp;&nbsp;
+          <?php
+            if(count($exam_report->scores)==10){
+          ?>
+            <button class="btn btn-success" onclick="javascript:location.href='exam.php?book=<?php echo intval($_GET['book']);?>'">再次测评</button>
+          <?php
+            } else {
+          ?>
+            <button class="btn btn-success" onclick="javascript:location.href='exam2.php?book=<?php echo intval($_GET['book']);?>'">再次测评</button>
+          <?php
+            }
+          ?>
+          
           <div class="float_right" style="margin-right:5.8em; font-size:14px; font-weight:normal;">
               测试时间：<?php echo date("Y-m-d",$exam_report->exam_time);?>
           </div>
@@ -131,10 +144,10 @@
         </div>
         <table width="100%" height="50">
           <tr>
-            <td height="50" align="center" valign="middle" width="25%">阅读材料：<?php echo $exam_report->book_name;?></td>
-            <td height="50" align="center" valign="middle" width="25%">试题数量：<?php echo count($exam_report->scores);?>题</td>
-            <td height="50" align="center" valign="middle" width="25%">用时：<?php echo $exam_report->use_time;?></td>
-            <td height="50" align="center" valign="middle" width="25%">得分：<?php echo $exam_report->total_score;?>/<?php echo count($exam_report->scores);?>分</td>
+            <td height="50" align="left" valign="middle" width="40%">阅读材料：<?php echo $exam_report->book_name;?></td>
+            <td height="50" align="center" valign="middle" width="20%">试题数量：<?php echo count($exam_report->scores);?>题</td>
+            <td height="50" align="center" valign="middle" width="20%">用时：<?php echo $exam_report->use_time;?></td>
+            <td height="50" align="center" valign="middle" width="20%">得分：<?php echo $exam_report->total_score;?>/<?php echo count($exam_report->scores);?>分</td>
           </tr>
         </table>
         <table width="100%" height="30" style="background:#f2f2f2;">
@@ -230,6 +243,7 @@
           ?>
         </table>
       </div>
+      <br>
       <?php
           include_once("footer_dialog.php");
         }

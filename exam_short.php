@@ -203,13 +203,14 @@
               $scores = $exam->scores($question_ids,$answers);
               //写入得分情况并返回测试结果ID
               $exam_result_id = $exam->write_scores($user_id,$book,$scores,$answer_time,$answers,$question_ids);
-              echo "<script>location.href = 'exam_report_short.php?exam=$exam_result_id';</script>";
+              echo "<script>location.href = 'exam_report_short.php?exam=$exam_result_id&book=$bookId';</script>";
               exit();
           }
           else
           {
         ?>
         <form action="" id="kd_exam" method="post" onsubmit="return check();">
+        <input type="hidden" name="bookId" value="<?php echo $book;?>">
         <div id="myCarousel" class="carousel slide" style="width:759px; float:left; min-height:515px; height:auto; overflow:auto; border-right:1px solid #ccc;">
           <!-- 轮播（Carousel）项目 -->
           <div class="carousel-inner" style="min-height:515px; height:auto; overflow:auto;">

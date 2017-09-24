@@ -680,16 +680,20 @@ if($role == "教师")
   ?>
       <center>
         <ul class="pagination">
-            <li><a href="book_shelf.php?<?php echo $url;?>page=<?php echo $page-1>0?$page-1:1;?>">上一页</a></li>
+            <li><a href="book_shelf.php?<?php echo $url;?>page=1">首页</a></li>
             <?php
-              for($i=1;$i<=$common->get_pages();$i++)
+              $pages = $common->get_pages();
+              $index = $page-3>1?$page-3:1;
+              $end = $index + 10;
+              while($index<$end && $index<$pages)
               {
             ?>
-                <li class="<?php if($i==$page) echo 'active';?>"><a href="book_shelf.php?<?php echo $url;?>page=<?php echo $i;?>"><?php echo $i;?></a></li>
+                <li class="<?php if($index==$page) echo 'active';?>"><a href="book_shelf.php?<?php echo $url;?>page=<?php echo $index;?>"><?php echo $index;?></a></li>
             <?php
+                $index++;
               }
             ?>
-            <li><a href="book_shelf.php?<?php echo $url;?>page=<?php echo $page+1>$common->get_pages()?$common->get_pages():$page+1;?>">下一页</a></li>
+            <li><a href="book_shelf.php?<?php echo $url;?>page=<?php echo $pages;?>">尾页</a></li>
         </ul>
       </center>
   </div>

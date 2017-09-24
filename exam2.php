@@ -179,6 +179,7 @@
               isset($_POST['question_15'])
           )
           {
+              $bookId = intval($_POST['bookId']);
               $question_ids = [];
               $question_ids[] = $_POST['question_id_1'];
               $question_ids[] = $_POST['question_id_2'];
@@ -243,13 +244,14 @@
               //写入得分情况并返回测试结果ID
               $exam_result_id = $exam->write_scores($user_id,$book,$scores,$answer_time,$answers,$question_ids);
               //转到测试结果页
-              echo "<script>location.href = 'exam_report.php?exam=$exam_result_id';</script>";
+              echo "<script>location.href = 'exam_report.php?exam=$exam_result_id&book=$bookId';</script>";
               exit();
           }
           else
           {
         ?>
         <form action="" id="kd_exam" method="post" onsubmit="return check();">
+        <input type="hidden" name="bookId" value="<?php echo $book;?>">
         <div id="myCarousel" class="carousel slide" style="width:599px; float:left; height:715px; border-right:1px solid #ccc;">
           <!-- 轮播（Carousel）项目 -->
           <div class="carousel-inner" style="height:715px;">

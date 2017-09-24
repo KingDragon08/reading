@@ -76,9 +76,15 @@
             </td>
           </tr>
           <tr>
-            <td height="50" align="left" valign="middle"colspan="3">
-              <input type="submit" name="submit" value="确认更改" class="btn btn-danger form-control">
-            </td>
+            <?php
+              if(!intval($user_info->school)){
+            ?>
+              <td height="50" align="left" valign="middle"colspan="3">
+                <input type="submit" name="submit" value="确认更改" class="btn btn-danger form-control">
+              </td>
+            <?php
+              }
+            ?>
           </tr>
         </table>
       </div>

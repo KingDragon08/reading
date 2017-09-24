@@ -49,8 +49,8 @@
             推送短篇书单&nbsp;&nbsp;&nbsp;&nbsp;
             <button class="btn btn-success" onclick="history.go(-1);">返回</button>
         <div class="float_right" style="margin-right:5.8em;">
-          <button class="btn btn-success active" onclick="location.href='page_reading.php'">短篇书单定制</button>
-          <button class="btn btn-success" onclick="location.href='book_short_shelf.php'">短篇书单管理</button>
+          <button class="btn btn-success active" onclick="location.href='page_reading.php'">短篇定制</button>
+          <button class="btn btn-success" onclick="location.href='book_short_shelf.php'">短篇管理</button>
         </div>
       </div>
     </div>

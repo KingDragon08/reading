@@ -170,6 +170,7 @@
               isset($_POST['question_10'])
           )
           {
+              $bookId = intval($_POST['bookId']);
               $question_ids = [];
               $question_ids[] = $_POST['question_id_1'];
               $question_ids[] = $_POST['question_id_2'];
@@ -233,7 +234,7 @@
                 </p>
               </center>
               */
-              echo "<script>location.href = 'exam_report.php?exam=$exam_result_id';</script>";
+              echo "<script>location.href = 'exam_report.php?exam=$exam_result_id&book=$bookId';</script>";
               // header("Location:exam_report.php?exam=$exam_result_id");
               exit();
           }
@@ -241,6 +242,7 @@
           {
         ?>
         <form action="" id="kd_exam" method="post" onsubmit="return check();">
+        <input type="hidden" name="bookId" value="<?php echo $book;?>">
         <div id="myCarousel" class="carousel slide" style="width:759px; float:left; min-height:515px; height:auto; overflow:auto; border-right:1px solid #ccc;">
           <!-- 轮播（Carousel）项目 -->
           <div class="carousel-inner" style="min-height:515px; height:auto; overflow:auto;">

@@ -333,31 +333,23 @@
         <ul class="pagination">
             <?php
               $url = '';
-              if($grade != 0)
-              {
-                if($type !=0)
-                {
-                  $url = "grade=$grade&type=$type";
-                }
-                else
-                {
-                  $url = "grade=$grade";
-                }
-              }
-              else
-              {
-                if($type != 0)
-                {
-                  $url = "type=$type";
-                }
-              }
+              $p_grade = isset($_GET['grade'])?intval($_GET['grade']):0;
+              $p_type = isset($_GET['type'])?intval($_GET['type']):0;
+              $p_list_type = $list_type;
+              $p_level_type = $level_type;
+              $p_score_type = $score_type;
+              $url = "grade=$p_grade&type=$p_type&list_type=$p_list_type&level_type=$p_level_type&score_type=$p_score_type";
             ?>
             <li><a href="full_reading.php?page=<?php echo $page-1>0?$page-1:1; echo '&'; echo $url;  ?>">上一页</a></li>
             <?php
               $pages = $common->get_read_list_pages();
               // echo $pages;
               $index = 1;
-              while($index <= $pages)
+              $start = $page-5>0?$page-5:1;
+              $end = $page+5<=$pages?$page+5:$pages;
+              $index = $start;
+              echo "<li><a href=\"full_reading.php?page=$1&$url\">首页</a></li>";
+              while($index <= $end)
               {
                 if($index == $page)
                 {
@@ -368,6 +360,10 @@
                   echo "<li><a href=\"full_reading.php?page=$index&$url\">$index</a></li>";
                 }
                 $index++;
+              }
+              if($end<$pages){
+                echo "<li><a href=\"javascript:;\">...</a></li>";
+                echo "<li><a href=\"full_reading.php?page=$pages&$url\">$pages</a></li>";
               }
             ?>
             <li><a href="full_reading.php?page=<?php echo $page+1>$pages?$pages:$page+1; echo '&'; echo $url;  ?>">下一页</a></li>
@@ -611,31 +607,23 @@
             <ul class="pagination">
                 <?php
                   $url = '';
-                  if($grade != 0)
-                  {
-                    if($type !=0)
-                    {
-                      $url = "grade=$grade&type=$type";
-                    }
-                    else
-                    {
-                      $url = "grade=$grade";
-                    }
-                  }
-                  else
-                  {
-                    if($type != 0)
-                    {
-                      $url = "type=$type";
-                    }
-                  }
+                  $p_grade = isset($_GET['grade'])?intval($_GET['grade']):0;
+                  $p_type = isset($_GET['type'])?intval($_GET['type']):0;
+                  $p_list_type = $list_type;
+                  $p_level_type = $level_type;
+                  $p_score_type = $score_type;
+                  $url = "grade=$p_grade&type=$p_type&list_type=$p_list_type&level_type=$p_level_type&score_type=$p_score_type";
                 ?>
                 <li><a href="full_reading.php?page=<?php echo $page-1>0?$page-1:1; echo '&'; echo $url;  ?>">上一页</a></li>
                 <?php
                   $pages = $common->get_read_list_pages();
                   // echo $pages;
                   $index = 1;
-                  while($index <= $pages)
+                  $start = $page-5>0?$page-5:1;
+                  $end = $page+5<=$pages?$page+5:$pages;
+                  $index = $start;
+                  echo "<li><a href=\"full_reading.php?page=1&$url\">首页</a></li>";
+                  while($index <= $end)
                   {
                     if($index == $page)
                     {
@@ -646,6 +634,10 @@
                       echo "<li><a href=\"full_reading.php?page=$index&$url\">$index</a></li>";
                     }
                     $index++;
+                  }
+                  if($end<$pages){
+                    echo "<li><a href=\"javascript:;\">...</a></li>";
+                    echo "<li><a href=\"full_reading.php?page=$pages&$url\">$pages</a></li>";
                   }
                 ?>
                 <li><a href="full_reading.php?page=<?php echo $page+1>$pages?$pages:$page+1; echo '&'; echo $url;  ?>">下一页</a></li>

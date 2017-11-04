@@ -368,13 +368,21 @@
           $prior_page = $page-1>0?$page-1:1;
           $next_page = $page+1>$common->get_pages()?$common->get_pages():$page+1;
         ?>
+        <li><a href="book_shelf.php?<?php echo $url;?>1">首页</a></li>
         <li><a href="<?php echo $url.$prior_page;?>">上一页</a></li>
         <?php
-          for($i=1; $i<=$common->get_pages(); $i++)
+          $pages=$common->get_pages();
+          $start = $page-5>0?$page-5:1;
+          $end = $page+5<=$pages?$page+5:$pages;
+          for($i=$start; $i<=$end; $i++)
           {
         ?>
           <li class="<?php if($i==$page){echo 'active';}?>"><a href="<?php echo $url.$i;?>"><?php echo $i;?></a></li>
         <?php
+          }
+          if($end<$pages){
+            echo "<li><a href=\"javascript:;\">...</a></li>";
+            echo "<li><a href=\"$url".$pages."\">$pages</a></li>";
           }
         ?>
         <li><a href="<?php echo $url.$next_page;?>">下一页</a></li>

@@ -16,7 +16,7 @@
 
            <form id="tab" method="post" action="" autocomplete="off">
 				<label>图书名称</label>
-				<{html_options name=book_id id="DropDownTimezone" class="input-xlarge" options=$book_options selected=0}>
+				<input type="text" name="book_id" value="" placeholder="输入书的ID号">
 				<label>测试题</label>
 				<textarea name="question" rows="3" class="input-xlarge" required="true"><{$_POST.question}></textarea>
 				<label>选项一</label>

@@ -9,7 +9,7 @@ if (Common::isPost ()) {
 
 		OSAdmin::alert("error",ErrorMessage::NEED_PARAM);
 	}else{
-		$input_data = array ('book_id' => $book_id,
+		$input_data = array ('book_id' => intval($book_id),
 							'question' => $question,
 							'choice1' => $choice1,
 							'choice2' => $choice2,

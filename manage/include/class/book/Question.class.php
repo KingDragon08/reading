@@ -63,19 +63,19 @@ class Question extends Base{
 				break;
 
 			case '2':
-				return '信息提取';
+				return '信息获取';
 				break;
 
 			case '3':
-				return '意义构建';
-				break;
-
-			case '4':
 				return '直接推论';
 				break;
 
+			case '4':
+				return '组织概括';
+				break;
+
 			case '5':
-				return '评判思考';
+				return '批判思考';
 				break;
 
 			default:
@@ -175,9 +175,9 @@ class Question extends Base{
 
 		$options_array = array(
 			'1' => '细节认知',
-			'2' => '信息提取',
-			'3' => '意义构建',
-			'4' => '直接推论',
+			'2' => '信息获取',
+			'3' => '直接推论',
+			'4' => '组织该哟',
 			'5' => '批判思考'
 		);
 

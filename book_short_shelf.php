@@ -135,8 +135,8 @@
               <span class="sr-only">选择</span>
           </button>
           <ul class="dropdown-menu" role="menu">
-              <li><a href="javascript:void(0);" onclick="type_change(-1)">教师推送</a></li>
-              <li><a href="javascript:void(0);" onclick="type_change(-2)">自选书单</a></li>
+              <li><a href="javascript:void(0);" onclick="list_type_change(1)">教师推送</a></li>
+              <li><a href="javascript:void(0);" onclick="list_type_change(2)">自选书单</a></li>
           </ul>
           <?php
             if(isset($_GET['type']))
@@ -259,19 +259,20 @@
 
     <?php
       $grade = isset($_GET['grade'])?intval($_GET['grade']):0;
-      $type = isset($_GET['type'])?intval($_GET['type']):0;
+      $bookType = isset($_GET['bookType'])?intval($_GET['bookType']):0;
+      $listType = isset($_GET['listType'])?intval($_GET['listType']):0;
       $status = isset($_GET['status'])?intval($_GET['status']):-1;
       $page =isset($_GET['page'])?intval($_GET['page']):1;
       $endtime =isset($_GET['endtime'])?intval($_GET['endtime']):0;
       // $books = $common->get_lists_task($user_id,$grade,$type,$status,$page);
-      if($endtime!=0)
-      {
-          $books = $common->get_books_task_short($user_id,0,0,-1,1,$endtime);
-      }
-      else
-      {
-          $books = $common->get_books_task_short($user_id,$grade,$type,$status,$page,$endtime);
-      }
+      // if($endtime!=0)
+      // {
+      //     $books = $common->get_books_task_short($user_id,0,0,-1,1,$endtime);
+      // }
+      // else
+      // {
+          $books = $common->get_books_task_short($user_id,$grade,$bookType,$listType,$status,$page,$endtime);
+      // }
       if($books)
       {
         $counter=0;
@@ -374,7 +375,7 @@
   <center>
     <ul class="pagination">
         <?php
-          $url = "book_short_shelf.php?grade=".$grade."&type=".$type."&status=".$status."&page=";
+          $url = "book_short_shelf.php?grade=".$grade."&bookType=".$bookType."&listType=".$listType."&status=".$status."&page=";
           $prior_page = $page-1>0?$page-1:1;
           $next_page = $page+1>$common->get_pages()?$common->get_pages():$page+1;
         ?>
@@ -397,91 +398,60 @@
 <!-- booklist panel end -->
 
 <script type="text/javascript">
-  var grade = <?php echo isset($_GET['grade'])?intval($_GET['grade']):0 ?>;
-  var type = <?php echo isset($_GET['type'])?intval($_GET['type']):0 ?>;
-  var status = <?php echo isset($_GET['status'])?intval($_GET['status']):-1?>;
+  var grade = <?php echo $grade ?>;
+  var bookType = <?php echo $bookType ?>;
+  var listType = <?php echo $listType ?>;
+  var status = <?php echo $status ?>;
+  var page = <?php echo $page ?>;
+  var endtime = <?php echo $endtime ?>;
 
+  //学段改变
   function grade_change(id)
   {
-    if(type == 0)
-    {
-      if(status == -1)
-      {
-        location.href = "book_short_shelf.php?grade="+id;
-      }
-      else
-      {
-        location.href = "book_short_shelf.php?grade="+id+"&status="+status;
-      }
-    }
-    else
-    {
-      if(status == -1)
-      {
-        location.href = "book_short_shelf.php?grade="+id+"&type="+type;
-      }
-      else
-      {
-        location.href = "book_short_shelf.php?grade="+id+"&type="+type+"&status="+status;
-      }
-    }
+    grade = id;
+    var url = "book_short_shelf.php?grade="+grade+"&bookType="+bookType+
+              "&listType="+listType+"&status="+status+"&endtime"+endtime+
+              "&page=1";
+    location.href = url;
   }
 
+  //图书类型改变
   function type_change(id)
   {
-    if(grade == 0)
-    {
-      if(status == -1)
-      {
-        location.href = "book_short_shelf.php?type="+id;
-      }
-      else
-      {
-        location.href = "book_short_shelf.php?type="+id+"&status="+status;
-      }
-    }
-    else
-    {
-      if(status == -1)
-      {
-        location.href = "book_short_shelf.php?type="+id+"&grade="+grade;
-      }
-      else
-      {
-        location.href = "book_short_shelf.php?type="+id+"&grade="+grade+"&status="+status;
-      }
-    }
+    bookType = id;
+    var url = "book_short_shelf.php?grade="+grade+"&bookType="+bookType+
+              "&listType="+listType+"&status="+status+"&endtime"+endtime+
+              "&page=1";
+    location.href = url;
   }
 
+  //测评状态改变
   function change_status(id)
   {
-    if(grade == 0)
-    {
-      if(type == 0)
-      {
-        location.href = "book_short_shelf.php?status="+id;
-      }
-      else
-      {
-        location.href = "book_short_shelf.php?status="+id+"&type="+type;
-      }
-    }
-    else
-    {
-      if(type == 0)
-      {
-        location.href = "book_short_shelf.php?status="+id+"&grade="+grade;
-      }
-      else
-      {
-        location.href = "book_short_shelf.php?status="+id+"&grade="+grade+"&type="+type;
-      }
-    }
+    status = id;
+    var url = "book_short_shelf.php?grade="+grade+"&bookType="+bookType+
+              "&listType="+listType+"&status="+status+"&endtime"+endtime+
+              "&page=1";
+    location.href = url;
   }
 
+  //截止日期改变
   function endtime_change(endtime)
   {
-    location.href = "book_short_shelf.php?endtime="+endtime;
+    endtime = endtime;
+    var url = "book_short_shelf.php?grade="+grade+"&bookType="+bookType+
+              "&listType="+listType+"&status="+status+"&endtime"+endtime+
+              "&page=1";
+    location.href = url;
+  }
+
+  //书单类型改变
+  function list_type_change(type){
+    listType = type;
+    var url = "book_short_shelf.php?grade="+grade+"&bookType="+bookType+
+              "&listType="+listType+"&status="+status+"&endtime"+endtime+
+              "&page=1";
+    location.href = url;
   }
 
 </script>
@@ -556,13 +526,13 @@ if($role == "教师")
         选择:&nbsp;&nbsp;&nbsp;&nbsp;
 
         <div class="btn-group">
-            <button type="button" class="btn btn-default" id="list_type">历史书单</button>
+            <button type="button" class="btn btn-default" id="list_type" style="max-width: 300px; overflow:scroll;">历史书单</button>
             <button type="button" class="btn btn-default dropdown-toggle"
                 data-toggle="dropdown">
                 <span class="caret"></span>
                 <span class="sr-only">选择</span>
             </button>
-            <ul class="dropdown-menu" role="menu">
+            <ul class="dropdown-menu" role="menu" style="max-height: 300px; overflow-y: scroll;">
               <li><a href="book_short_shelf.php?id=0">全部历史书单</a></li>
               <?php
                 $grades = $common->get_grade();
@@ -688,6 +658,7 @@ if($role == "教师")
       {
         $url .= "id=$id&";
       }
+      if($common->get_pages()>1){
   ?>
       <center>
         <ul class="pagination">
@@ -703,10 +674,13 @@ if($role == "教师")
             <li><a href="book_short_shelf.php?<?php echo $url;?>page=<?php echo $page+1>$common->get_pages()?$common->get_pages():$page+1;?>">下一页</a></li>
         </ul>
       </center>
+      <?php 
+    }
+  }
+      ?>
   </div>
 </div>
 <?php
-  }
 }
 ?>
     <?php

@@ -820,10 +820,14 @@ class Common
 
     /**
     *分页获取我的任务中的所有书单列表
-    *grade:0 type:0 status:-1 page:1
-    *status 0:测试未通过 1:测试通过 2:未测试
+    *grade:0 年级,默认全选0
+    *bookType:0 图书类型,默认全选0,
+    *listType:0 教师推送＝》1，自选书单2
+    *status:-1 1-》通过测评，0-》未通过测评，2-》未测试,默认－1显示全部
+    *page:1，页码
+    *endtime:0,截止日期
     **/
-    function get_books_task($user_id,$grade,$type,$status,$page,$endtime)
+    function get_books_task($user_id,$grade,$bookType,$listType,$status,$page,$endtime)
     {
       global $db;
       // $sql = "select a.* from rd_read_list as a left join rd_user_read_list as b on ".
@@ -834,24 +838,21 @@ class Common
       {
         $sql .= "and a.grade='$grade' ";
       }
-      if($type!=0 && $type!=-1 && $type!=-2)
+      if($bookType!=0)
       {
         $sql .= "and a.type='$type' ";
       }
-      if($type == -1)
-      {
+      if($listType==1){
         $sql .= "and b.type=1";
       }
-      if($type == -2)
-      {
-        $sql .= "and b.type=0";
+      if($listType==2){
+        $sql .= "and b.type=0"; 
       }
       if($endtime!=0)
       {
         $sql .= "and b.endtime='$endtime' ";
       }
       $sql .= " order by b.id desc";
-      // echo $sql;
       $lists = $db->get_results($sql);
       if(!$lists){
         return 0;
@@ -862,16 +863,18 @@ class Common
         foreach ($lists as $list) {
           $book_id = $list->id;
           $list->status = $status;
-          if($status == 0)
+          //首先查询是否已经参加过考试
+          $sql = "select count(id) from rd_user_exam_scores where book_id='$book_id' and user_id='$user_id'";
+          $hasExamed = $db->get_var($sql);
+          if($status == 0)//未通过测评
           {
-            // $sql = "select count(id) from rd_user_exam_scores where book_id='$book_id' and hege=0 and user_id='$user_id'";
             $sql = "select hege from rd_user_exam_scores where book_id='$book_id' and user_id='$user_id' order by id desc limit 1";
-            if($db->get_var($sql)==0)
+            if($hasExamed>0 && $db->get_var($sql)==0)
             {
               $temp[] = $list;
             }
           }
-          if($status == 1)
+          if($status == 1)//通过测评
           {
             $sql = "select count(id) from rd_user_exam_scores where book_id='$book_id' and hege=1 and user_id='$user_id'";
             if($db->get_var($sql)>0)
@@ -879,13 +882,13 @@ class Common
               $temp[] = $list;
             }
           }
-          if($status == 2)
+          if($hasExamed==0 && $status==2)//未测试
           {
-            $sql = "select count(id) from rd_user_exam_scores where book_id='$book_id' and user_id='$user_id'";
-            if($db->get_var($sql)<1)
-            {
+            // $sql = "select count(id) from rd_user_exam_scores where book_id='$book_id' and user_id='$user_id'";
+            // if($db->get_var($sql)<1)
+            // {
               $temp[] = $list;
-            }
+            // }
           }
         }
         $lists = $temp;
@@ -944,12 +947,17 @@ class Common
       }
     }
 
+    
     /**
-    *分页获取我的短篇任务中的所有书单列表
-    *grade:0 type:0 status:-1 page:1
-    *status 0:测试未通过 1:测试通过 2:未测试
+    *分页获取我的任务中的所有书单列表
+    *grade:0 年级,默认全选0
+    *bookType:0 图书类型,默认全选0,
+    *listType:0 教师推送＝》1，自选书单2
+    *status:-1 1-》通过测评，0-》未通过测评，2-》未测试,默认－1显示全部
+    *page:1，页码
+    *endtime:0,截止日期
     **/
-    function get_books_task_short($user_id,$grade,$type,$status,$page,$endtime)
+    function get_books_task_short($user_id,$grade,$bookType,$listType,$status,$page,$endtime)
     {
       global $db;
       // $sql = "select a.* from rd_read_list as a left join rd_user_read_list as b on ".
@@ -960,17 +968,15 @@ class Common
       {
         $sql .= "and a.grade='$grade' ";
       }
-      if($type!=0 && $type!=-1 && $type!=-2)
+      if($bookType!=0)
       {
         $sql .= "and a.type='$type' ";
       }
-      if($type == -1)
-      {
+      if($listType==1){
         $sql .= "and b.type=1";
       }
-      if($type == -2)
-      {
-        $sql .= "and b.type=0";
+      if($listType==2){
+        $sql .= "and b.type=0"; 
       }
       if($endtime!=0)
       {
@@ -978,22 +984,27 @@ class Common
       }
       $sql .= " order by b.id desc";
       $lists = $db->get_results($sql);
+      if(!$lists){
+        return 0;
+      }
       if($status != -1)
       {
         $temp = [];
         foreach ($lists as $list) {
           $book_id = $list->id;
           $list->status = $status;
-          if($status == 0)
+          //首先查询是否已经参加过考试
+          $sql = "select count(id) from rd_user_exam_scores_short where book_id='$book_id' and user_id='$user_id'";
+          $hasExamed = $db->get_var($sql);
+          if($status == 0)//未通过测评
           {
-            // $sql = "select count(id) from rd_user_exam_scores_short where book_id='$book_id' and hege=0 and user_id='$user_id'";
-            $sql = "select hege from rd_user_exam_scores where book_id='$book_id' and user_id='$user_id' order by id desc limit 1";
-            if($db->get_var($sql)>0)
+            $sql = "select hege from rd_user_exam_scores_short where book_id='$book_id' and user_id='$user_id' order by id desc limit 1";
+            if($hasExamed>0 && $db->get_var($sql)==0)
             {
               $temp[] = $list;
             }
           }
-          if($status == 1)
+          if($status == 1)//通过测评
           {
             $sql = "select count(id) from rd_user_exam_scores_short where book_id='$book_id' and hege=1 and user_id='$user_id'";
             if($db->get_var($sql)>0)
@@ -1001,13 +1012,13 @@ class Common
               $temp[] = $list;
             }
           }
-          if($status == 2)
+          if($hasExamed==0 && $status==2)//未测试
           {
-            $sql = "select count(id) from rd_user_exam_scores_short where book_id='$book_id' and user_id='$user_id'";
-            if($db->get_var($sql)<1)
-            {
+            // $sql = "select count(id) from rd_user_exam_scores where book_id='$book_id' and user_id='$user_id'";
+            // if($db->get_var($sql)<1)
+            // {
               $temp[] = $list;
-            }
+            // }
           }
         }
         $lists = $temp;
@@ -1065,6 +1076,129 @@ class Common
         return 0;
       }
     }
+
+
+    // /**
+    // *分页获取我的短篇任务中的所有书单列表
+    // *grade:0 type:0 status:-1 page:1
+    // *status 0:测试未通过 1:测试通过 2:未测试
+    // **/
+    // function get_books_task_short($user_id,$grade,$type,$status,$page,$endtime)
+    // {
+    //   global $db;
+    //   // $sql = "select a.* from rd_read_list as a left join rd_user_read_list as b on ".
+    //   //         "a.id=b.book_list_id where b.user_id='$user_id' ";
+    //   $sql = "select a.*,b.addtime,b.endtime,b.type as shelf_type from rd_book_short a left join rd_user_read_book_short b on ".
+    //           "a.id=b.book_id where b.removed=0 and b.user_id='$user_id' ";
+    //   if($grade != 0)
+    //   {
+    //     $sql .= "and a.grade='$grade' ";
+    //   }
+    //   if($type!=0 && $type!=-1 && $type!=-2)
+    //   {
+    //     $sql .= "and a.type='$type' ";
+    //   }
+    //   if($type == -1)
+    //   {
+    //     $sql .= "and b.type=1";
+    //   }
+    //   if($type == -2)
+    //   {
+    //     $sql .= "and b.type=0";
+    //   }
+    //   if($endtime!=0)
+    //   {
+    //     $sql .= "and b.endtime='$endtime' ";
+    //   }
+    //   $sql .= " order by b.id desc";
+    //   $lists = $db->get_results($sql);
+    //   if($status != -1)
+    //   {
+    //     $temp = [];
+    //     foreach ($lists as $list) {
+    //       $book_id = $list->id;
+    //       $list->status = $status;
+    //       if($status == 0)
+    //       {
+    //         // $sql = "select count(id) from rd_user_exam_scores_short where book_id='$book_id' and hege=0 and user_id='$user_id'";
+    //         $sql = "select hege from rd_user_exam_scores where book_id='$book_id' and user_id='$user_id' order by id desc limit 1";
+    //         if($db->get_var($sql)>0)
+    //         {
+    //           $temp[] = $list;
+    //         }
+    //       }
+    //       if($status == 1)
+    //       {
+    //         $sql = "select count(id) from rd_user_exam_scores_short where book_id='$book_id' and hege=1 and user_id='$user_id'";
+    //         if($db->get_var($sql)>0)
+    //         {
+    //           $temp[] = $list;
+    //         }
+    //       }
+    //       if($status == 2)
+    //       {
+    //         $sql = "select count(id) from rd_user_exam_scores_short where book_id='$book_id' and user_id='$user_id'";
+    //         if($db->get_var($sql)<1)
+    //         {
+    //           $temp[] = $list;
+    //         }
+    //       }
+    //     }
+    //     $lists = $temp;
+    //   }
+    //   else
+    //   {
+    //     $temp = [];
+    //     if(count($lists)>0)
+    //     {
+    //       foreach ($lists as $list)
+    //       {
+    //         $book_id = $list->id;
+    //         $sql = "select count(id) from rd_user_exam_scores_short where book_id='$book_id' and user_id='$user_id'";
+    //         if($db->get_var($sql)<1)
+    //         {
+    //           $list->status = 2;
+    //         }
+    //         else
+    //         {
+    //           $list->status = $db->get_var("select hege from rd_user_exam_scores_short where book_id='$book_id' and user_id='$user_id' order by id desc limit 1");
+    //         }
+    //         $temp[] = $list;
+    //       }
+    //     }
+    //   }
+    //   //获取书单下边第一本书的封面图片、积分等信息
+    //   $temp = [];
+    //   $now = time();
+    //   if(count($lists))
+    //   {
+    //     foreach($lists as $list)
+    //     {
+    //       if($list->shelf_type!=0)
+    //       {
+    //           $list->restime = $this->get_restime($list->endtime-$now);
+    //       }
+    //       else
+    //       {
+    //         $list->restime = "自选不过期";
+    //       }
+    //       $temp[] = $list;
+    //     }
+    //     $lists = $temp;
+    //     $page_num = 6;
+    //     $this->pages = ceil(count($lists)/$page_num);
+    //     $start = ($page-1)*$page_num;
+    //     if($start < 0)
+    //     {
+    //       $start = 0;
+    //     }
+    //     return array_slice($lists,$start,$page_num);
+    //   }
+    //   else
+    //   {
+    //     return 0;
+    //   }
+    // }
 
 
 
@@ -1293,7 +1427,7 @@ class Common
           {
             foreach ($classes as $class) {
               $class_id = $class->id;
-              $sql = "select count(*) from rd_user_exam_scores where book_id='$book_id' and user_id ".
+              $sql = "select count(distinct(user_id)) from rd_user_exam_scores where book_id='$book_id' and user_id ".
                       "in(select id from rd_user where class='$class_id')";
               $r->num += $db->get_var($sql);
             }
@@ -1338,7 +1472,7 @@ class Common
             {
               foreach ($classes as $class) {
                 $class_id = $class->id;
-                $sql = "select count(*) from rd_user_exam_scores_short where book_id='$book_id' and user_id ".
+                $sql = "select count(distinct(user_id)) from rd_user_exam_scores_short where book_id='$book_id' and user_id ".
                         "in(select id from rd_user where class='$class_id')";
                 $r->num += $db->get_var($sql);
               }
@@ -1386,7 +1520,7 @@ class Common
         {
           foreach ($classes as $class) {
             $class_id = $class->id;
-            $sql = "select count(*) from rd_user_exam_scores where book_id='$book_id' and user_id ".
+            $sql = "select count(distinct(user_id)) from rd_user_exam_scores where book_id='$book_id' and user_id ".
                     "in(select id from rd_user where class='$class_id')";
             $r->num += $db->get_var($sql);
           }
@@ -1426,7 +1560,7 @@ class Common
           {
             foreach ($classes as $class) {
               $class_id = $class->id;
-              $sql = "select count(*) from rd_user_exam_scores_short where book_id='$book_id' and user_id ".
+              $sql = "select count(distinct(user_id)) from rd_user_exam_scores_short where book_id='$book_id' and user_id ".
                       "in(select id from rd_user where class='$class_id')";
               $r->num += $db->get_var($sql);
             }
@@ -1449,7 +1583,7 @@ class Common
     {
       global $db;
       $sql = "select a.* from rd_book a left join rd_book_list b on a.id=b.book_id where b.list_id in ".
-              "(select id from rd_read_list where user_id='$user_id') and a.name like '%".$db->escape($keywords)."%'";
+              "(select id from rd_read_list where user_id='$user_id') and a.name like '%".$db->escape($keywords)."%' group by b.book_id";
       $ret = $db->get_results($sql);
       foreach($ret as $r)
       {
@@ -1460,7 +1594,7 @@ class Common
         {
           foreach ($classes as $class) {
             $class_id = $class->id;
-            $sql = "select count(*) from rd_user_exam_scores where book_id='$book_id' and user_id ".
+            $sql = "select count(distinct(user_id)) from rd_user_exam_scores where book_id='$book_id' and user_id ".
                     "in(select id from rd_user where class='$class_id')";
             $r->num += $db->get_var($sql);
           }
@@ -1491,7 +1625,7 @@ class Common
         {
           foreach ($classes as $class) {
             $class_id = $class->id;
-            $sql = "select count(*) from rd_user_exam_scores_short where book_id='$book_id' and user_id ".
+            $sql = "select count(distinct(user_id)) from rd_user_exam_scores_short where book_id='$book_id' and user_id ".
                     "in(select id from rd_user where class='$class_id')";
             $r->num += $db->get_var($sql);
           }

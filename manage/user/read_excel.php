@@ -113,10 +113,11 @@ function batchAddBooks($batch_data)
 			'bookdesc' => $info[4],
 			'coverimg' => $info[5],
 			'type' => $info[6],
-			'score' => $info[7],
-			'level' => $info[8],
-			'grade' => $info[9],
-			'wordcount' => $info[10],
+			'list_type' => $info[7],
+			'score' => $info[8],
+			'level' => $info[9],
+			'grade' => $info[10],
+			'wordcount' => $info[11],
 			'addtime' => time(),
 		);
 		$res = Book::addBook($data);
@@ -151,14 +152,14 @@ function batchAddObjQues($batch_data)
 	for ($i=1; $i < $len; $i++) {
 		$info = $batch_data[$i];
 		$data = array(
-			// 'id' => 1,
 			'book_id' => $info[0],
 			'question' => $info[1],
 			'choice1' => $info[2],
 			'choice2' => $info[3],
-			'choice4' => $info[4],
-			'answer' => $info[5],
-			'view' => $info[6],
+			'choice3' => $info[4],
+			'choice4' => $info[5],
+			'answer' => $info[6],
+			'view' => $info[7],
 			'addtime' => time(),
 		);
 		$res = Question::addInfo($data);

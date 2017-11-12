@@ -35,7 +35,6 @@ if (Common::isPost () && checkToken($token, $form_token)) {
 			OSAdmin::alert("error",$message);
 		}
 		$file = $_FILES['excel']['tmp_name'];
-		echo $file;
 		// var_dump($file);
 		$excel_array = ExcelReader::readXLS($file);
 
@@ -150,7 +149,7 @@ function batchAddObjQues($batch_data)
 	if ($len < 2) {
 		return '无内容添加';
 	}
-	var_dump($batch_data);
+	// var_dump($batch_data);
 	for ($i=1; $i < $len; $i++) {
 		$info = $batch_data[$i];
 		$data = array(

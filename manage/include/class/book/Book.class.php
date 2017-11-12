@@ -51,8 +51,8 @@ class Book extends Base{
 		// var_dump($list);
 		if(!empty($list)){
 			foreach($list as &$item){
-				$item['addtime']= date('Y-m-d', $item['addtime']);
-				$item['presstime']= date('Y-m-d', $item['presstime']);
+				// $item['addtime']= date('Y-m-d', $item['addtime']);
+				// $item['presstime']= date('Y-m-d', $item['presstime']);
 				$item['type_name']=BookType::getGroupById($item['type'])['name'];
 				$item['grade_name']=Grade::getGradeById($item['grade'])['grade_name'];
 				$item['short_desc']= mb_substr($item['bookdesc'], 0, 40).'...';
@@ -80,8 +80,8 @@ class Book extends Base{
 		// var_dump($list);
 		if(!empty($list)){
 			foreach($list as &$item){
-				$item['addtime']= date('Y-m-d', $item['addtime']);
-				$item['presstime']= date('Y-m-d', $item['presstime']);
+				// $item['addtime']= date('Y-m-d', $item['addtime']);
+				// $item['presstime']= date('Y-m-d', $item['presstime']);
 				$item['type_name']=BookType::getGroupById($item['type'])['name'];
 				$item['grade_name']=Grade::getGradeById($item['grade'])['grade_name'];
 				// $item['short_desc']= substr($item['bookdesc'], 10);
@@ -136,7 +136,7 @@ class Book extends Base{
 		// var_dump($list);
 
 		if ($list) {
-			$list[0]['presstime']= date('Y-m-d', $list[0]['presstime']);
+			// $list[0]['presstime']= date('Y-m-d', $list[0]['presstime']);
 			return $list[0];
 		}
 
@@ -196,8 +196,8 @@ class Book extends Base{
 		$list=$db->query($sql)->fetchAll();
 		if(!empty($list)){
 			foreach($list as &$item){
-				$item['addtime']= date('Y-m-d', $item['addtime']);
-				$item['presstime']= date('Y-m-d', $item['presstime']);
+				// $item['addtime']= date('Y-m-d', $item['addtime']);
+				// $item['presstime']= date('Y-m-d', $item['presstime']);
 				$item['type_name']=BookType::getGroupById($item['type'])['name'];
 				$item['grade_name']=Grade::getGradeById($item['grade'])['grade_name'];
 			}

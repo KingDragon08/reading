@@ -22,19 +22,19 @@ define('COMPANY_NAME' ,'北京乐智起航文化发展有限公司');
 // OSAdmin 数据库设置
 define('OSA_DB_ID' ,'reading');
 $DATABASE_LIST[OSA_DB_ID] = array (
-	'server' => '123.57.31.72',
+	'server' => 'www.lezhireading.com',
 	'port' => '3306',
-	'username' => 'root',
-	'password' => '123456',
+	'username' => 'KingDragon',
+	'password' => '939407Lq252324',
 	'db_name' => 'reading');
 
 // 样例数据库设置
 define('SAMPLE_DB_ID' ,'sample');
 $DATABASE_LIST[SAMPLE_DB_ID] = array (
-	'server' => '127.0.0.1',
+	'server' => 'www.lezhireading.com',
 	'port' => '3306',
-	'username' => 'root',
-	'password' => '123456',
+	'username' => 'KingDragon',
+	'password' => '939407Lq252324',
 	'db_name' => 'reading');
 
 

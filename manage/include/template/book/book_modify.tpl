@@ -25,7 +25,7 @@
 				<label>出版社</label>
 				<input type="text" name="press" value="<{$book.press}>" class="input-xlarge" autofocus="true" required="true" >
 				<label>出版时间</label>
-				<input type="date" name="presstime" value="<{$book.presstime}>" class="input-xlarge" autofocus="true" required="true" >
+				<input type="text" name="presstime" value="<{$book.presstime}>" class="input-xlarge" autofocus="true" required="true" >
 				<label>图书类型</label>
 				<{html_options name=book_type id="DropDownTimezone" class="input-xlarge" options=$book_type_options selected=$book.type}>
 				<label>学段</label>

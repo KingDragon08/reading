@@ -43,7 +43,7 @@ if (Common::isPost ()) {
 		$update_data = array ('name' => $book_name,
 							'author' => $author_name,
 							'press' => $press,
-							'presstime' => strtotime($presstime),
+							'presstime' => $presstime,
 							'bookdesc' => $bookdesc,
 							'type' => $book_type,
 							'score' => $score,

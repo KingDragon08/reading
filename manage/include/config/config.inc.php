@@ -15,7 +15,7 @@ define('TEMPLATE_CONFIGS', ADMIN_BASE . '/config/');
 define('TEMPLATE_CACHE', ADMIN_BASE . '/cache/');
 
 // OSAdmin 常量
-define('ADMIN_URL' ,'https://101.200.45.105/manage');
+define('ADMIN_URL' ,'https://www.lezhireading.com/manage');
 define('ADMIN_TITLE' ,'管理后台');
 define('COMPANY_NAME' ,'北京乐智起航文化发展有限公司');
 

@@ -32,7 +32,7 @@ if (Common::isPost ()) {
 		    //使用对象中的upload方法， 就可以上传文件， 方法需要传一个上传表单的名子 pic, 如果成功返回true, 失败返回false
 		    if($up -> upload("coverimg")) {
 		        //获取上传后文件名子
-				$imgpath = "http://101.200.45.105/reading/manage/uploads/".$up->getFileName();
+				$imgpath = "https://www.lezhireading.com/manage/uploads/".$up->getFileName();
 
 		    } else {
 		        //获取上传失败以后的错误提示

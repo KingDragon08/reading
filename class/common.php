@@ -851,6 +851,7 @@ class Common
         $sql .= "and b.endtime='$endtime' ";
       }
       $sql .= " order by b.id desc";
+      // echo $sql;
       $lists = $db->get_results($sql);
       if(!$lists){
         return 0;

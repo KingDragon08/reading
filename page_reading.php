@@ -76,7 +76,7 @@
           短篇阅读
           <div class="float_right" style="margin-right:5.8em;">
             <button class="btn btn-success active" onclick="location.href='page_reading.php'">全部短篇</button>
-            <button class="btn btn-success" onclick="location.href='book_short_shelf.php'">我的短篇</button>
+            <button class="btn btn-success" onclick="location.href='book_short_shelf.php'">我的书单</button>
           </div>
         </div>
       </div>
@@ -299,48 +299,34 @@
       </div>
       <center>
         <ul class="pagination">
-            <?php
-              $url = '';
-              if($grade != 0)
-              {
-                if($type !=0)
-                {
-                  $url = "grade=$grade&type=$type";
-                }
-                else
-                {
-                  $url = "grade=$grade";
-                }
-              }
-              else
-              {
-                if($type != 0)
-                {
-                  $url = "type=$type";
-                }
-              }
-            ?>
-            <li><a href="page_reading.php?page=<?php echo $page-1>0?$page-1:1; echo '&'; echo $url;  ?>">上一页</a></li>
-            <?php
-              $pages = $common->get_read_list_pages();
-              // echo $pages;
-              $index = 1;
-              while($index <= $pages)
-              {
-                if($index == $page)
-                {
-                  echo "<li class=\"active\"><a href=\"page_reading.php?page=$index&$url\">$index</a></li>";
-                }
-                else
-                {
-                  echo "<li><a href=\"page_reading.php?page=$index&$url\">$index</a></li>";
-                }
-                $index++;
-              }
-            ?>
-            <li><a href="page_reading.php?page=<?php echo $page+1>$pages?$pages:$page+1; echo '&'; echo $url;  ?>">下一页</a></li>
-        </ul>
-      </center>
+          <?php
+            $url = "page_reading.php?grade=".$grade."&type=".$type.
+                        "&list_type=".$list_type."&level_type=".$level_type.
+                        "&score_type=".$score_type."&page=";
+            $prior_page = $page-1>0?$page-1:1;
+            $next_page = $page+1>$common->get_pages()?$common->get_pages():$page+1;
+          ?>
+          <li><a href="page_reading.php?<?php echo $url;?>1">首页</a></li>
+          <li><a href="<?php echo $url.$prior_page;?>">上一页</a></li>
+          <?php
+            $pages = $common->get_read_list_pages();
+            $start = $page-5>0?$page-5:1;
+            $end = $page+5<=$pages?$page+5:$pages;
+            for($i=$start; $i<=$end; $i++)
+            {
+          ?>
+            <li class="<?php if($i==$page){echo 'active';}?>"><a href="<?php echo $url.$i;?>"><?php echo $i;?></a></li>
+          <?php
+            }
+            if($end<$pages){
+              echo "<li><a href=\"javascript:;\">...</a></li>";
+              echo "<li><a href=\"$url".$pages."\">$pages</a></li>";
+            }
+          ?>
+          <li><a href="<?php echo $url.$next_page;?>">下一页</a></li>
+      </ul>
+
+        
     </div>
     <!-- booklist panel end -->
     <script type="text/javascript">
@@ -493,7 +479,7 @@
             </span>
           </div>
           &nbsp;&nbsp;&nbsp;&nbsp;
-          <div class="btn-group" onclick="javascript:del_cookie('books_short'); alert('删除成功');">
+          <div class="btn-group" onclick="javascript:del_cookie('books_short'); alert('删除成功'); history.go(0);">
             <span class="btn btn-default">
               删除所有已选短篇
             </span>
@@ -575,52 +561,37 @@
       <?php
         if(!isset($_GET['s']))
         {
-      ?>
-          <center style="clear:both;">
-            <ul class="pagination">
-                <?php
-                  $url = '';
-                  if($grade != 0)
-                  {
-                    if($type !=0)
+          $pages = $common->get_read_list_pages();
+          $url = "page_reading.php?grade=$grade&type=$type&page=";
+          $page = isset($_GET['page'])?intval($_GET['page']):1;
+          $prior_page = $page-1>0?$page-1:1;
+          $next_page = $page+1>$pages?$pages:$page+1;
+          if($pages>1){
+        ?>
+            <center>
+              <ul class="pagination">
+                  <li><a href="<?php echo $url;?>1">首页</a></li>
+                  <li><a href="<?php echo $url.$prior_page;?>">上一页</a></li>
+                  <?php
+                    $index = $page-3>1?$page-3:1;
+                    $end = $index + 10;
+                    while($index<=$end && $index<=$pages)
                     {
-                      $url = "grade=$grade&type=$type";
+                  ?>
+                      <li class="<?php if($index==$page) echo 'active';?>"><a href="<?php echo $url.$index;?>"><?php echo $index;?></a></li>
+                  <?php
+                      $index++;
                     }
-                    else
-                    {
-                      $url = "grade=$grade";
+                    if($end<=$pages){
+                      echo "<li><a href=\"javascript:;\">...</a></li>";
+                      echo "<li><a href=\"$url"."$pages.\">$pages</a></li>";
                     }
-                  }
-                  else
-                  {
-                    if($type != 0)
-                    {
-                      $url = "type=$type";
-                    }
-                  }
-                ?>
-                <li><a href="page_reading.php?page=<?php echo $page-1>0?$page-1:1; echo '&'; echo $url;  ?>">上一页</a></li>
-                <?php
-                  $pages = $common->get_read_list_pages();
-                  // echo $pages;
-                  $index = 1;
-                  while($index <= $pages)
-                  {
-                    if($index == $page)
-                    {
-                      echo "<li class=\"active\"><a href=\"page_reading.php?page=$index&$url\">$index</a></li>";
-                    }
-                    else
-                    {
-                      echo "<li><a href=\"page_reading.php?page=$index&$url\">$index</a></li>";
-                    }
-                    $index++;
-                  }
-                ?>
-                <li><a href="page_reading.php?page=<?php echo $page+1>$pages?$pages:$page+1; echo '&'; echo $url;  ?>">下一页</a></li>
-            </ul>
-          </center>
-      <?php
+                  ?>
+                  <li><a href="<?php echo $url.$next_page;?>">下一页</a></li>
+              </ul>
+            </center>
+    <?php
+          }
         }
       ?>
     </div>
@@ -631,26 +602,28 @@
       var type = <?php echo isset($_GET['type'])?intval($_GET['type']):0 ?>;
       function grade_change(id)
       {
-        if(type == 0)
-        {
-          location.href = "page_reading.php?grade="+id;
-        }
-        else
-        {
-          location.href = "page_reading.php?grade="+id+"&type="+type;
-        }
+        location.href = "page_reading.php?grade="+id+"&type="+type;
+        // if(type == 0)
+        // {
+        //   location.href = "page_reading.php?grade="+id;
+        // }
+        // else
+        // {
+        //   location.href = "page_reading.php?grade="+id+"&type="+type;
+        // }
       }
 
       function type_change(id)
       {
-        if(grade == 0)
-        {
-          location.href = "page_reading.php?type="+id;
-        }
-        else
-        {
-          location.href = "page_reading.php?type="+id+"&grade="+grade;
-        }
+        // if(grade == 0)
+        // {
+        //   location.href = "page_reading.php?type="+id;
+        // }
+        // else
+        // {
+        //   location.href = "page_reading.php?type="+id+"&grade="+grade;
+        // }
+        location.href = "page_reading.php?type="+id+"&grade="+grade;
       }
 
       function go()

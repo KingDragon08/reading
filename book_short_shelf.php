@@ -83,10 +83,10 @@
 <!-- division panel start -->
   <div class="w100 forget">
     <div class="forget_cover">
-      全本阅读
+      短篇阅读
       <div class="float_right" style="margin-right:5.8em;">
         <button class="btn btn-success" onclick="location.href='page_reading.php'">全部短篇</button>
-        <button class="btn btn-success active" onclick="location.href='book_short_shelf.php'">我的短篇</button>
+        <button class="btn btn-success active" onclick="location.href='book_short_shelf.php'">我的书单</button>
       </div>
     </div>
   </div>
@@ -128,24 +128,25 @@
       </div>
       &nbsp;&nbsp;
       <div class="btn-group">
-          <button type="button" class="btn btn-default" id="kd_type">教师推送</button>
+          <button type="button" class="btn btn-default" id="kd_type">全部书单</button>
           <button type="button" class="btn btn-default dropdown-toggle"
               data-toggle="dropdown">
               <span class="caret"></span>
               <span class="sr-only">选择</span>
           </button>
           <ul class="dropdown-menu" role="menu">
+              <li><a href="javascript:void(0);" onclick="list_type_change(0)">全部书单</a></li>
               <li><a href="javascript:void(0);" onclick="list_type_change(1)">教师推送</a></li>
               <li><a href="javascript:void(0);" onclick="list_type_change(2)">自选书单</a></li>
           </ul>
           <?php
-            if(isset($_GET['type']))
+            if(isset($_GET['listType']))
             {
-              if(intval($_GET['type'])==-1)
+              if(intval($_GET['listType'])==1)
               {
                 echo '<script>$("#kd_type").html("教师推送");</script>';
               }
-              if(intval($_GET['type'])==-2)
+              if(intval($_GET['listType'])==2)
               {
                 echo '<script>$("#kd_type").html("自选书单");</script>';
               }
@@ -379,13 +380,21 @@
           $prior_page = $page-1>0?$page-1:1;
           $next_page = $page+1>$common->get_pages()?$common->get_pages():$page+1;
         ?>
+        <li><a href="book_shelf.php?<?php echo $url;?>1">首页</a></li>
         <li><a href="<?php echo $url.$prior_page;?>">上一页</a></li>
         <?php
-          for($i=1; $i<=$common->get_pages(); $i++)
+          $pages=$common->get_pages();
+          $start = $page-5>0?$page-5:1;
+          $end = $page+5<=$pages?$page+5:$pages;
+          for($i=$start; $i<=$end; $i++)
           {
         ?>
           <li class="<?php if($i==$page){echo 'active';}?>"><a href="<?php echo $url.$i;?>"><?php echo $i;?></a></li>
         <?php
+          }
+          if($end<$pages){
+            echo "<li><a href=\"javascript:;\">...</a></li>";
+            echo "<li><a href=\"$url".$pages."\">$pages</a></li>";
           }
         ?>
         <li><a href="<?php echo $url.$next_page;?>">下一页</a></li>
@@ -658,23 +667,34 @@ if($role == "教师")
       {
         $url .= "id=$id&";
       }
-      if($common->get_pages()>1){
+      $pages = $common->get_pages();
+      $prior_page = $page-1>0?$page-1:1;
+      $next_page = $page+1>$pages?$pages:$page+1;
+      if($pages>1){
   ?>
       <center>
         <ul class="pagination">
-            <li><a href="book_short_shelf.php?<?php echo $url;?>page=<?php echo $page-1>0?$page-1:1;?>">上一页</a></li>
+            <li><a href="book_short_shelf.php?<?php echo $url;?>page=1">首页</a></li>
+            <li><a href="book_short_shelf.php?<?php echo $url.'&page='.$prior_page;?>">上一页</a></li>
             <?php
-              for($i=1;$i<=$common->get_pages();$i++)
+              $index = $page-3>1?$page-3:1;
+              $end = $index + 10;
+              while($index<=$end && $index<=$pages)
               {
             ?>
-                <li class="<?php if($i==$page) echo 'active';?>"><a href="book_short_shelf.php?<?php echo $url;?>page=<?php echo $i;?>"><?php echo $i;?></a></li>
+                <li class="<?php if($index==$page) echo 'active';?>"><a href="book_short_shelf.php?<?php echo $url;?>page=<?php echo $index;?>"><?php echo $index;?></a></li>
             <?php
+                $index++;
+              }
+              if($end<=$pages){
+                echo "<li><a href=\"javascript:;\">...</a></li>";
+                echo "<li><a href=\"book_short_shelf.php?$url&page=".$pages."\">$pages</a></li>";
               }
             ?>
-            <li><a href="book_short_shelf.php?<?php echo $url;?>page=<?php echo $page+1>$common->get_pages()?$common->get_pages():$page+1;?>">下一页</a></li>
+            <li><a href="book_short_shelf.php?<?php echo $url.'&page='.$next_page;?>">下一页</a></li>
         </ul>
       </center>
-      <?php 
+      <?php
     }
   }
       ?>

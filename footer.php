@@ -1,5 +1,5 @@
 <!-- footer start -->
-  <div class="footer">
+  <div class="footer mt20">
     <table width="90%" height="160" align="center">
       <tr>
         <td width="65%" align="left" height="160" valign="middle">

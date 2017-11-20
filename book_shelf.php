@@ -86,7 +86,7 @@
       全本阅读
       <div class="float_right" style="margin-right:5.8em;">
         <button class="btn btn-success" onclick="location.href='full_reading.php'">全部书单</button>
-        <button class="btn btn-success active" onclick="location.href='book_shelf.php'">我的任务</button>
+        <button class="btn btn-success active" onclick="location.href='book_shelf.php'">我的书单</button>
       </div>
     </div>
   </div>
@@ -128,13 +128,14 @@
       </div>
       &nbsp;&nbsp;
       <div class="btn-group">
-          <button type="button" class="btn btn-default" id="kd_type">教师推送</button>
+          <button type="button" class="btn btn-default" id="kd_type">全部书单</button>
           <button type="button" class="btn btn-default dropdown-toggle"
               data-toggle="dropdown">
               <span class="caret"></span>
               <span class="sr-only">选择</span>
           </button>
           <ul class="dropdown-menu" role="menu">
+              <li><a href="javascript:void(0);" onclick="list_type_change(0)">全部书单</a></li>
               <li><a href="javascript:void(0);" onclick="list_type_change(1)">教师推送</a></li>
               <li><a href="javascript:void(0);" onclick="list_type_change(2)">自选书单</a></li>
           </ul>
@@ -656,23 +657,30 @@ if($role == "教师")
         $url .= "id=$id&";
       }
       $pages = $common->get_pages();
+      $prior_page = $page-1>0?$page-1:1;
+      $next_page = $page+1>$pages?$pages:$page+1;
       if($pages>1){
   ?>
       <center>
         <ul class="pagination">
             <li><a href="book_shelf.php?<?php echo $url;?>page=1">首页</a></li>
+            <li><a href="book_shelf.php?<?php echo $url.'&page='.$prior_page;?>">上一页</a></li>
             <?php
               $index = $page-3>1?$page-3:1;
               $end = $index + 10;
-              while($index<$end && $index<$pages)
+              while($index<=$end && $index<=$pages)
               {
             ?>
                 <li class="<?php if($index==$page) echo 'active';?>"><a href="book_shelf.php?<?php echo $url;?>page=<?php echo $index;?>"><?php echo $index;?></a></li>
             <?php
                 $index++;
               }
+              if($end<=$pages){
+                echo "<li><a href=\"javascript:;\">...</a></li>";
+                echo "<li><a href=\"book_shelf.php?$url&page=".$pages."\">$pages</a></li>";
+              }
             ?>
-            <li><a href="book_shelf.php?<?php echo $url;?>page=<?php echo $pages;?>">尾页</a></li>
+            <li><a href="book_shelf.php?<?php echo $url.'&page='.$next_page;?>">下一页</a></li>
         </ul>
       </center>
       <?php

@@ -24,7 +24,7 @@
       }
       .choice_item_container{
         width:90%; height:auto; min-height:40px; border:1px solid #e5e5e5; border-radius:5px;
-        margin-bottom: 8px; overflow: auto; display: flex;
+        margin-bottom: 8px; overflow: auto; display: flex; overflow-x: hidden;
       }
       .choice_item_left{
         width:40px; line-height:38px; text-align:center; float: left;
@@ -203,7 +203,7 @@
               $scores = $exam->scores($question_ids,$answers);
               //写入得分情况并返回测试结果ID
               $exam_result_id = $exam->write_scores($user_id,$book,$scores,$answer_time,$answers,$question_ids);
-              echo "<script>location.href = 'exam_report_short.php?exam=$exam_result_id&book=$bookId';</script>";
+              echo "<script>location.href = 'exam_report_short.php?exam=$exam_result_id&book=$book';</script>";
               exit();
           }
           else

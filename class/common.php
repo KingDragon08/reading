@@ -591,31 +591,33 @@ class Common
     function search_books_short($keywords,$user_id)
     {
       global $db;
-      $sql  = "select * from rd_book_short where name like '%".$db->escape($keywords)."%' order by id desc";
+      // $sql  = "select * from rd_book_short where name like '%".$db->escape($keywords)."%' order by id desc";
+      $sql = "select a.*,b.name as type_name,c.grade_name from rd_book_short a left join rd_book_short_type b on a.type=b.id left join rd_grade c on a.grade=c.id where a.name like '%".$db->escape($keywords)."%' order by id desc group by a.id";
       // print $sql;
       @$books = $db->get_results($sql);
-      $ret = array();
-      if($books)
-      {
-        foreach ($books as $book)
-        {
-          $book_id = $book->id;
-          $sql = "select count(*) from rd_user_read_book_short where user_id='$user_id' and book_id='$book_id'".
-                  " and removed=0";
-          if($db->get_var($sql))
-          {
-            $book->status = 1;
-          }
-          else
-          {
-            $book->status = 0;
-          }
-          $sql = "select grade_name from rd_grade where id='$book->grade'";
-          $book->grade = $db->get_var($sql);
-          $ret[] = $book;
-        }
-      }
-      return $ret;
+      // $ret = array();
+      // if($books)
+      // {
+      //   foreach ($books as $book)
+      //   {
+      //     $book_id = $book->id;
+      //     $sql = "select count(*) from rd_user_read_book_short where user_id='$user_id' and book_id='$book_id'".
+      //             " and removed=0";
+      //     if($db->get_var($sql))
+      //     {
+      //       $book->status = 1;
+      //     }
+      //     else
+      //     {
+      //       $book->status = 0;
+      //     }
+      //     $sql = "select grade_name from rd_grade where id='$book->grade'";
+      //     $book->grade = $db->get_var($sql);
+      //     $ret[] = $book;
+      //   }
+      // }
+      // return $ret;
+      return $books;
     }
 
     /**
@@ -1414,14 +1416,14 @@ class Common
       $end = $start + $page_num;
       if($db->get_var("select count(id) from rd_read_list where id='$id' and user_id='$user_id'")>0)
       {
-        $sql = "select a.* from rd_book a left join rd_book_list b on a.id=b.book_id where b.list_id='$id' limit $start,$end";
+        $sql = "select a.* from rd_book a left join rd_book_list b on a.id=b.book_id where b.list_id='$id' limit $start,$page_num";
         $sql_1 = "select count(*) from rd_book a left join rd_book_list b on a.id=b.book_id where b.list_id='$id'";
         $this->pages = ceil($db->get_var($sql_1)/$page_num);
         $ret = $db->get_results($sql);
+        $classes = $db->get_results("select id from rd_class where teacher_id='$user_id'");
         foreach ($ret as $r)
         {
           $book_id = $r->id;
-          $classes = $db->get_results("select id from rd_class where teacher_id='$user_id'");
           $r->num = 0;
           if(count($classes)>0)
           {
@@ -1457,16 +1459,16 @@ class Common
       $end = $start + $page_num;
       if($db->get_var("select count(id) from rd_read_list_short where id='$id' and user_id='$user_id'")>0)
       {
-        $sql = "select a.* from rd_book_short a left join rd_book_list_short b on a.id=b.book_id where b.list_id='$id' limit $start,$end";
+        $sql = "select a.* from rd_book_short a left join rd_book_list_short b on a.id=b.book_id where b.list_id='$id' limit $start,$page_num";
         $sql_1 = "select count(*) from rd_book_short a left join rd_book_list_short b on a.id=b.book_id where b.list_id='$id'";
         $this->pages = ceil($db->get_var($sql_1)/$page_num);
         $ret = $db->get_results($sql);
         if($ret)
         {
+          $classes = $db->get_results("select id from rd_class where teacher_id='$user_id'");
           foreach ($ret as $r)
           {
             $book_id = $r->id;
-            $classes = $db->get_results("select id from rd_class where teacher_id='$user_id'");
             $r->num = 0;
             if(count($classes)>0)
             {
@@ -1511,16 +1513,16 @@ class Common
               "(select id from rd_read_list where user_id='$user_id')";
       $this->pages = ceil($db->get_var($sql_1)/$page_num);
       $ret = array_slice($db->get_results($sql),$start,$page_num);
+      $classes = $db->get_results("select id from rd_class where teacher_id='$user_id'");
       foreach($ret as $r)
       {
         $book_id = $r->id;
-        $classes = $db->get_results("select id from rd_class where teacher_id='$user_id'");
         $r->num = 0;
         if(count($classes)>0)
         {
           foreach ($classes as $class) {
             $class_id = $class->id;
-            $sql = "select count(distinct(user_id)) from rd_user_exam_scores where book_id='$book_id' and user_id ".
+            $sql = "select count(distinct(user_id)) from rd_user_exam_scores where book_id='$book_id' and hege=1 and user_id ".
                     "in(select id from rd_user where class='$class_id')";
             $r->num += $db->get_var($sql);
           }
@@ -1551,16 +1553,16 @@ class Common
       if($temp)
       {
         $ret = array_slice($temp,$start,$page_num);
+        $classes = $db->get_results("select id from rd_class where teacher_id='$user_id'");
         foreach($ret as $r)
         {
           $book_id = $r->id;
-          $classes = $db->get_results("select id from rd_class where teacher_id='$user_id'");
           $r->num = 0;
           if(count($classes)>0)
           {
             foreach ($classes as $class) {
               $class_id = $class->id;
-              $sql = "select count(distinct(user_id)) from rd_user_exam_scores_short where book_id='$book_id' and user_id ".
+              $sql = "select count(distinct(user_id)) from rd_user_exam_scores_short where book_id='$book_id' and hege=1 and user_id ".
                       "in(select id from rd_user where class='$class_id')";
               $r->num += $db->get_var($sql);
             }
@@ -1585,16 +1587,16 @@ class Common
       $sql = "select a.* from rd_book a left join rd_book_list b on a.id=b.book_id where b.list_id in ".
               "(select id from rd_read_list where user_id='$user_id') and a.name like '%".$db->escape($keywords)."%' group by b.book_id";
       $ret = $db->get_results($sql);
+      $classes = $db->get_results("select id from rd_class where teacher_id='$user_id'");
       foreach($ret as $r)
       {
         $book_id = $r->id;
-        $classes = $db->get_results("select id from rd_class where teacher_id='$user_id'");
         $r->num = 0;
         if(count($classes)>0)
         {
           foreach ($classes as $class) {
             $class_id = $class->id;
-            $sql = "select count(distinct(user_id)) from rd_user_exam_scores where book_id='$book_id' and user_id ".
+            $sql = "select count(distinct(user_id)) from rd_user_exam_scores where book_id='$book_id' and hege=1 and user_id ".
                     "in(select id from rd_user where class='$class_id')";
             $r->num += $db->get_var($sql);
           }
@@ -1614,18 +1616,18 @@ class Common
     {
       global $db;
       $sql = "select a.* from rd_book_short a left join rd_book_list_short b on a.id=b.book_id where b.list_id in ".
-              "(select id from rd_read_list_short where user_id='$user_id') and a.name like '%".$db->escape($keywords)."%'";
+              "(select id from rd_read_list_short where user_id='$user_id') and a.name like '%".$db->escape($keywords)."%' group by b.book_id";
       $ret = $db->get_results($sql);
+      $classes = $db->get_results("select id from rd_class where teacher_id='$user_id'");
       foreach($ret as $r)
       {
         $book_id = $r->id;
-        $classes = $db->get_results("select id from rd_class where teacher_id='$user_id'");
         $r->num = 0;
         if(count($classes)>0)
         {
           foreach ($classes as $class) {
             $class_id = $class->id;
-            $sql = "select count(distinct(user_id)) from rd_user_exam_scores_short where book_id='$book_id' and user_id ".
+            $sql = "select count(distinct(user_id)) from rd_user_exam_scores_short where book_id='$book_id' and hege=1 and user_id ".
                     "in(select id from rd_user where class='$class_id')";
             $r->num += $db->get_var($sql);
           }

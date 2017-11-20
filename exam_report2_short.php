@@ -121,7 +121,7 @@
         <div class="forget_cover">
           测评结果&nbsp;&nbsp;&nbsp;&nbsp;
           <button class="btn btn-success" onclick="javascript:location.href='book_short_shelf.php'">返回任务</button>&nbsp;&nbsp;&nbsp;&nbsp;
-          <button class="btn btn-success" onclick="javascript:location.href='exam_short.php?book=<?php echo intval($_GET['book']);?>'">再次测评</button>
+          <button class="btn btn-success" onclick="javascript:location.href='exam2_short.php?book=<?php echo intval($_GET['book']);?>'">再次测评</button>
           <div class="float_right" style="margin-right:5.8em; font-size:14px; font-weight:normal;">
               测试时间：<?php echo date("Y-m-d",$exam_report->exam_time);?>
           </div>

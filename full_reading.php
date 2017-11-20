@@ -76,7 +76,7 @@
           全本阅读
           <div class="float_right" style="margin-right:5.8em;">
             <button class="btn btn-success active" onclick="location.href='full_reading.php'">全部书单</button>
-            <button class="btn btn-success" onclick="location.href='book_shelf.php'">我的任务</button>
+            <button class="btn btn-success" onclick="location.href='book_shelf.php'">我的书单</button>
           </div>
         </div>
       </div>

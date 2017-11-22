@@ -33,6 +33,7 @@
       .choice_item_right{
         float:left; line-height: 38px; padding-left: 0.5em;
         width:calc(100% - 40px);  border-left:1px solid #e5e5e5;
+        max-height: 120px; overflow-y: scroll;
       }
       .choice_item_container:hover{
         cursor: pointer; border:1px solid #662a7c;

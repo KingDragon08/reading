@@ -24,7 +24,7 @@
       }
       .choice_item_container{
         width:90%; height:auto; min-height:40px; border:1px solid #e5e5e5; border-radius:5px;
-        margin-bottom: 8px; overflow: auto; display: flex; overflow-x: hidden;
+        margin-bottom: 8px; display: flex; overflow-x: hidden;
       }
       .choice_item_left{
         width:40px; line-height:38px; text-align:center; float: left;

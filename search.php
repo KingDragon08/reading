@@ -95,12 +95,16 @@
             }
             if($books)
             {
+              $counter=0;
               foreach($books as $book)
               {
+                $counter++;
         ?>
-            <div class="col-lg-4 mb20">
+            <div class="col-lg-4 mb20" style="height:220px;<?php if($counter%3==1 && $counter!=1) echo "clear:both;"?>">
               <div class="col-lg-6 book_img">
-                <img src="<?php echo $book->coverimg;?>" width="100%"/>
+                <a href="book.php?book=<?php echo $book->id;?>">
+                  <img src="<?php echo $book->coverimg;?>" style="width:120px; height:160px; margin-top:30px;"/>
+                </a>
               </div>
               <div class="col-lg-6 book_info" style="display:table;">
                 <div style="display:table-cell; vertical-align:middle;">
@@ -170,6 +174,10 @@
   </body>
   <script type="text/javascript" src="js/full_reading.js"></script>
   <script type="text/javascript">
+    function add2_book_shelf(book)
+    {
+      location.href = "controller/book_shelf.php?action=add2shelf&book="+book;
+    }
     function add2_book_shelf_short(book)
     {
       location.href = "controller/book_shelf_short.php?action=add2shelf&book="+book;
